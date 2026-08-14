@@ -150,4 +150,42 @@ doc.events[0].deleted = false;
   eq("overdue by km", api.dueStatus(A, chain).state, "due");
 }
 
+/* --- merge: a wiped device must never blank out the cloud ---
+   Regression. A device whose storage Safari evicted boots with empty maps and a
+   FRESH mtime, so whole-doc last-writer-wins handed it every field and the
+   odometer was erased in the cloud for real. */
+{
+  const mergeSrc = cut("function mergeDocs(", "async function pull(");
+  const mergeDocs = new Function(mergeSrc + "; return mergeDocs;")();
+
+  const cloud = { mtime: 1000, odo:{ "faraoll-g50":1450, "twitter-rider-boost":8000 },
+    annualKm:{ "faraoll-g50":4000 }, photos:{ "faraoll-g50":"data:image/jpeg;base64,AAA" },
+    events:[{ id:"a1", mtime:1000, bike:"faraoll-g50", partCost:1648, labourCost:600, date:"2026-08-14" }],
+    checks:{ "faraoll-g50-checklist-v3": { "рама/руль":1, "рама/седло":1 } }, migratedAt:null };
+  const wiped = { mtime: 2000, odo:{}, annualKm:{}, photos:{}, events:[], checks:{},
+    migratedAt:"2026-08-14T00:00:00Z" };
+
+  const m = mergeDocs(wiped, cloud);
+  eq("odometer survives a wiped device", m.odo["faraoll-g50"], 1450);
+  eq("second odometer survives",         m.odo["twitter-rider-boost"], 8000);
+  eq("annual km survives",               m.annualKm["faraoll-g50"], 4000);
+  eq("photo survives",                   m.photos["faraoll-g50"], "data:image/jpeg;base64,AAA");
+  eq("events survive",                   m.events.length, 1);
+  eq("checks survive",                   Object.keys(m.checks["faraoll-g50-checklist-v3"]).length, 2);
+
+  // and the reverse: a real newer edit still wins key by key
+  const edited = { mtime: 3000, odo:{ "faraoll-g50":1600 }, annualKm:{}, photos:{}, events:[],
+    checks:{ "faraoll-g50-checklist-v3": { "рама/руль":0 } }, migratedAt:null };
+  const m2 = mergeDocs(edited, cloud);
+  eq("newer odometer wins",        m2.odo["faraoll-g50"], 1600);
+  eq("untouched odometer kept",    m2.odo["twitter-rider-boost"], 8000);
+  eq("uncheck propagates",         m2.checks["faraoll-g50-checklist-v3"]["рама/руль"], 0);
+  eq("other tick untouched",       m2.checks["faraoll-g50-checklist-v3"]["рама/седло"], 1);
+
+  // a deletion must not be resurrected by the other side's stale copy
+  const deleted = { mtime: 3000, odo:{}, annualKm:{}, photos:{}, checks:{}, migratedAt:null,
+    events:[{ id:"a1", mtime:3000, deleted:true, bike:"faraoll-g50", partCost:1648, labourCost:600, date:"2026-08-14" }] };
+  eq("tombstone survives merge", mergeDocs(deleted, cloud).events[0].deleted, true);
+}
+
 console.log(`ok — ${n} assertions`);

@@ -364,7 +364,7 @@ function migrateChecks() {
     }));
   }
   DOC().migratedAt = new Date().toISOString();
-  persist(true);
+  persist(n > 0);
   return n;
 }
 
@@ -389,16 +389,29 @@ let syncTok = localStorage.getItem(SYNC_TOK_KEY) || '';
 let syncState = 'off', syncMsg = '';
 
 function mergeDocs(mine, theirs) {
-  // events: append-only union by id, tombstones win (a delete must survive a merge)
-  const out = Object.assign({}, theirs.mtime >= mine.mtime ? theirs : mine);
+  const newer = (theirs.mtime || 0) >= (mine.mtime || 0) ? theirs : mine;
+  const older = newer === theirs ? mine : theirs;
+  const out = Object.assign({}, newer);
+
+  // events: union by id, latest write per id wins (tombstones included, so a
+  // delete survives the merge instead of being resurrected by the other side)
   const byId = new Map();
   for (const e of [...(theirs.events||[]), ...(mine.events||[])]) {
     const prev = byId.get(e.id);
     if (!prev || (e.mtime||0) >= (prev.mtime||0)) byId.set(e.id, e);
   }
   out.events = [...byId.values()];
-  // scalar maps: whole-doc last-writer-wins, already picked by the Object.assign above
-  out.checks = (theirs.mtime >= mine.mtime ? theirs : mine).checks || {};
+
+  // Maps merge KEY BY KEY, never wholesale. A device whose storage Safari just
+  // evicted boots with empty maps and a fresh mtime — replacing the map wholesale
+  // would let it blank out the odometer for every bike in the cloud.
+  for (const k of ['odo', 'annualKm', 'photos'])
+    out[k] = Object.assign({}, older[k] || {}, newer[k] || {});
+
+  out.checks = {};
+  for (const key of new Set([...Object.keys(older.checks||{}), ...Object.keys(newer.checks||{})]))
+    out.checks[key] = Object.assign({}, (older.checks||{})[key], (newer.checks||{})[key]);
+
   out.migratedAt = mine.migratedAt || theirs.migratedAt || null;
   out.mtime = Math.max(mine.mtime||0, theirs.mtime||0);
   return out;
@@ -1164,7 +1177,7 @@ document.addEventListener('click', e => {
   if (t.dataset.check) {
     const m = DOC().checks[buildKey] || (DOC().checks[buildKey] = {});
     const id = t.dataset.check;
-    if (m[id]) delete m[id]; else m[id] = 1;
+    m[id] = m[id] ? 0 : 1;
     t.classList.toggle('done', !!m[id]);
     const sec = t.closest('section');
     if (sec) {
