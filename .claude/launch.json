@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bikes",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-c",
+        "import os; os.chdir('/Users/DanilSeveryanov/Documents/bikes'); import http.server as h, socketserver as s; s.TCPServer(('',8731), h.SimpleHTTPRequestHandler).serve_forever()"
+      ],
+      "port": 8731
+    }
+  ]
+}

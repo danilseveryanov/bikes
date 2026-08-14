@@ -1,0 +1,441 @@
+[
+ {
+  "id": "chain-wear",
+  "task": "Цепь — замер износа, замена по 0.5%",
+  "category": "drivetrain",
+  "interval_km": 2500,
+  "interval_months": 12,
+  "wear_indicator": "Измеритель износа цепи проваливается на отметке 0.5%. Для 11/12 скоростей это предел — дальше начинает съедать кассету",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275"
+  ],
+  "source_type": "manufacturer",
+  "source_note": "Shimano: замена цепи 11/12 ск. при удлинении 0.5%",
+  "part_keywords": [
+   "цепь"
+  ],
+  "est_part_cost": 3200,
+  "est_labour_cost": 500
+ },
+ {
+  "id": "chain-wear-kids",
+  "task": "Цепь 9 ск. — замер износа, замена по 0.75%",
+  "category": "drivetrain",
+  "interval_km": 1500,
+  "interval_months": 12,
+  "wear_indicator": "Измеритель проваливается на 0.75%. У 9 скоростей цепь толще и допуск больше, чем у 12",
+  "bikes": [
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "manufacturer",
+  "source_note": "Shimano: для 9-скоростных цепей предел износа 0.75%",
+  "part_keywords": [
+   "цепь"
+  ],
+  "est_part_cost": 1800,
+  "est_labour_cost": 500
+ },
+ {
+  "id": "cassette",
+  "task": "Кассета — замена (обычно с каждой 2–3 цепью)",
+  "category": "drivetrain",
+  "interval_km": 7500,
+  "interval_months": 36,
+  "wear_indicator": "Свежая цепь проскакивает под нагрузкой на часто используемых звёздах; зубья приобретают форму акульего плавника",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275"
+  ],
+  "source_type": "estimate",
+  "source_note": "Практическое правило: 3 цепи на кассету при своевременной замене цепи",
+  "part_keywords": [
+   "кассета"
+  ],
+  "est_part_cost": 7000,
+  "est_labour_cost": 700
+ },
+ {
+  "id": "chainring",
+  "task": "Передняя звезда — проверка зубьев",
+  "category": "drivetrain",
+  "interval_km": 10000,
+  "interval_months": 48,
+  "wear_indicator": "Зубья заострены и загнуты в одну сторону, цепь сбрасывается на кочках даже с narrow-wide профилем",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка по опыту: звезда переживает 3–4 кассеты",
+  "part_keywords": [
+   "звезда"
+  ],
+  "est_part_cost": 4500,
+  "est_labour_cost": 700
+ },
+ {
+  "id": "bb-service",
+  "task": "Каретка — проверка люфта, замена при износе",
+  "category": "drivetrain",
+  "interval_km": 10000,
+  "interval_months": 36,
+  "wear_indicator": "Шатун качается вбок при покачивании рукой; при вращении слышен хруст или ощущается ступенчатость",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка: проверять при каждом ТО, менять примерно раз в три года. Для керамики T47 на Faraoll ресурс обычно выше",
+  "part_keywords": [
+   "каретка"
+  ],
+  "est_part_cost": 3000,
+  "est_labour_cost": 1200
+ },
+ {
+  "id": "derailleur-tune",
+  "task": "Настройка заднего переключателя, проверка лапки",
+  "category": "drivetrain",
+  "interval_km": 1500,
+  "interval_months": 6,
+  "wear_indicator": "Передачи переключаются с задержкой или через одну; лапка визуально не параллельна плоскости кассеты",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка по регулярности; после падения — сразу, вне интервала",
+  "part_keywords": [],
+  "est_part_cost": 0,
+  "est_labour_cost": 1000
+ },
+ {
+  "id": "gex-battery",
+  "task": "Wheeltop GEX — зарядка узлов и проверка прошивки",
+  "category": "drivetrain",
+  "interval_km": 2000,
+  "interval_months": 3,
+  "wear_indicator": "Индикатор на пистолете мигает красным; переключение начинает пропускать команды",
+  "bikes": [
+   "faraoll-g50",
+   "twitter-gravel-v1"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; точный ресурс заряда зависит от числа переключений, а не от километров",
+  "part_keywords": [],
+  "est_part_cost": 0,
+  "est_labour_cost": 0
+ },
+ {
+  "id": "brake-pads",
+  "task": "Тормозные колодки — замер толщины, замена",
+  "category": "brakes",
+  "interval_km": 2000,
+  "interval_months": 12,
+  "wear_indicator": "Толщина фрикционного слоя (без основы) дошла до 0.5 мм — предел Shimano. Ручка подходит близко к грипсе, появляется металлический призвук",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "manufacturer",
+  "source_note": "Shimano: минимальная толщина фрикционного материала 0.5 мм",
+  "part_keywords": [
+   "колодки"
+  ],
+  "est_part_cost": 1700,
+  "est_labour_cost": 600
+ },
+ {
+  "id": "rotors",
+  "task": "Роторы — замер толщины, проверка биения",
+  "category": "brakes",
+  "interval_km": 6000,
+  "interval_months": 24,
+  "wear_indicator": "Толщина дошла до 1.5 мм при новой 1.8 мм — предел Shimano. Либо ротор восьмерит и задевает колодки на каждом обороте",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "manufacturer",
+  "source_note": "Shimano: новый ротор 1.8 мм, предел износа 1.5 мм",
+  "part_keywords": [
+   "ротор"
+  ],
+  "est_part_cost": 4200,
+  "est_labour_cost": 600
+ },
+ {
+  "id": "brake-bleed",
+  "task": "Прокачка тормозов, замена минерального масла",
+  "category": "brakes",
+  "interval_km": 5000,
+  "interval_months": 12,
+  "wear_indicator": "Ручка проваливается или ход стал «ватным»; масло в бачке потемнело",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка. Shimano задаёт не срок, а состояние — прокачка по ощущению ручки; год взят как разумный потолок",
+  "part_keywords": [],
+  "est_part_cost": 900,
+  "est_labour_cost": 1800
+ },
+ {
+  "id": "hoses",
+  "task": "Гидролинии — осмотр, замена при повреждении",
+  "category": "brakes",
+  "interval_km": 5000,
+  "interval_months": 12,
+  "wear_indicator": "Масляные следы у оливы или калипера; оплётка протёрта в месте входа в раму",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка по регулярности осмотра",
+  "part_keywords": [
+   "гидролинии"
+  ],
+  "est_part_cost": 3500,
+  "est_labour_cost": 1500
+ },
+ {
+  "id": "tyres",
+  "task": "Покрышки — глубина протектора, порезы, замена",
+  "category": "wheels",
+  "interval_km": 4000,
+  "interval_months": 36,
+  "wear_indicator": "Центральные шипы сточены до основания, видны нити корда, боковина в порезах, которые герметик уже не держит",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; сильно зависит от покрытия и давления",
+  "part_keywords": [
+   "резина"
+  ],
+  "est_part_cost": 7800,
+  "est_labour_cost": 600
+ },
+ {
+  "id": "sealant",
+  "task": "Герметик tubeless — обновление",
+  "category": "wheels",
+  "interval_km": 3000,
+  "interval_months": 6,
+  "wear_indicator": "При покачивании колеса не слышно плеска внутри; мелкие проколы перестали затягиваться сами",
+  "bikes": [
+   "faraoll-g50",
+   "twitter-gravel-v1"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; латекс сохнет за 3–6 месяцев, срок зависит от климата и от того, как часто велосипед стоит",
+  "part_keywords": [],
+  "est_part_cost": 1200,
+  "est_labour_cost": 500
+ },
+ {
+  "id": "spokes",
+  "task": "Натяжение спиц и биение обода",
+  "category": "wheels",
+  "interval_km": 3000,
+  "interval_months": 12,
+  "wear_indicator": "Спицы звенят на разной ноте, колесо восьмерит, при езде из зоны втулки слышны щелчки",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка. Первую протяжку делают через 300–500 км после сборки колеса, дальше по этому интервалу",
+  "part_keywords": [],
+  "est_part_cost": 0,
+  "est_labour_cost": 2000
+ },
+ {
+  "id": "hubs",
+  "task": "Втулки и рэтчет — обслуживание, смазка",
+  "category": "wheels",
+  "interval_km": 5000,
+  "interval_months": 12,
+  "wear_indicator": "Ось качается в подшипниках; трещотка звучит глухо или начинает проскакивать под нагрузкой",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; для рэтчета KORE 36 на Faraoll смазка чаще, если ездить в грязь",
+  "part_keywords": [],
+  "est_part_cost": 800,
+  "est_labour_cost": 1800
+ },
+ {
+  "id": "headset",
+  "task": "Рулевая — люфт и состояние подшипников",
+  "category": "wheels",
+  "interval_km": 5000,
+  "interval_months": 12,
+  "wear_indicator": "При зажатом переднем тормозе и качке велосипеда вперёд-назад чувствуется стук; руль поворачивается со ступеньками",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; нижний подшипник умирает первым, он ловит всю воду с колеса",
+  "part_keywords": [
+   "рулевая"
+  ],
+  "est_part_cost": 2500,
+  "est_labour_cost": 1500
+ },
+ {
+  "id": "fork-lowers",
+  "task": "Вилка — обслуживание нижних ног (масло, пыльники)",
+  "category": "suspension",
+  "interval_km": 1000,
+  "interval_months": 6,
+  "wear_indicator": "Под пыльниками сухо, на ногах нет масляного кольца; ход стал липким в начале",
+  "bikes": [
+   "twitter-rider-boost",
+   "speedone-275"
+  ],
+  "source_type": "manufacturer",
+  "source_note": "RockShox: обслуживание нижних ног каждые 50 часов катания",
+  "part_keywords": [],
+  "est_part_cost": 1500,
+  "est_labour_cost": 3500
+ },
+ {
+  "id": "fork-damper",
+  "task": "Вилка — полное ТО демпфера и воздушной пружины",
+  "category": "suspension",
+  "interval_km": 4000,
+  "interval_months": 12,
+  "wear_indicator": "Вилка не держит давление между выездами, появился провал в середине хода, из-под короны сочится масло",
+  "bikes": [
+   "twitter-rider-boost",
+   "speedone-275"
+  ],
+  "source_type": "manufacturer",
+  "source_note": "RockShox: полное обслуживание демпфера каждые 200 часов катания",
+  "part_keywords": [],
+  "est_part_cost": 4000,
+  "est_labour_cost": 6000
+ },
+ {
+  "id": "bar-tape",
+  "task": "Обмотка руля — замена",
+  "category": "consumables",
+  "interval_km": 5000,
+  "interval_months": 18,
+  "wear_indicator": "Обмотка протёрта до основы на хабах, задубела или расходится на изгибе",
+  "bikes": [
+   "faraoll-g50",
+   "twitter-gravel-v1"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; зависит от того, ездите ли в перчатках",
+  "part_keywords": [
+   "обмотка"
+  ],
+  "est_part_cost": 2700,
+  "est_labour_cost": 800
+ },
+ {
+  "id": "bolt-torque",
+  "task": "Протяжка болтов динамометрическим ключом",
+  "category": "consumables",
+  "interval_km": 1500,
+  "interval_months": 3,
+  "wear_indicator": "Появился скрип из зоны выноса или штыря; болт проворачивается от руки шестигранником",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка. Карбон — 5 Н·м, если производитель детали не указал иначе; перетяжка убивает карбон надёжнее, чем недотяжка",
+  "part_keywords": [],
+  "est_part_cost": 0,
+  "est_labour_cost": 800
+ },
+ {
+  "id": "drivetrain-clean",
+  "task": "Мойка и смазка трансмиссии",
+  "category": "consumables",
+  "interval_km": 300,
+  "interval_months": 1,
+  "wear_indicator": "Цепь сухо шуршит на ходу, на роликах налипла чёрная паста",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "twitter-gravel-v1",
+   "speedone-275",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; после каждой мокрой или грязной покатушки — сразу, вне интервала",
+  "part_keywords": [],
+  "est_part_cost": 400,
+  "est_labour_cost": 0
+ },
+ {
+  "id": "pedals",
+  "task": "Педали — люфт, смазка, состояние шипов",
+  "category": "consumables",
+  "interval_km": 5000,
+  "interval_months": 12,
+  "wear_indicator": "Педаль качается на оси; шип выщёлкивается сам или, наоборот, не отпускает ногу",
+  "bikes": [
+   "twitter-rider-boost",
+   "faraoll-g50",
+   "hagen-teen-pro-20"
+  ],
+  "source_type": "estimate",
+  "source_note": "Оценка; для Time ATAC на Faraoll шипы ходят дольше, чем клипсы SPD",
+  "part_keywords": [],
+  "est_part_cost": 1500,
+  "est_labour_cost": 900
+ }
+]

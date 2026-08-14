@@ -1,0 +1,5 @@
+{
+ "_comment": "Seed for the maintenance history. If Safari evicts localStorage and the device is offline, the page repopulates from here. Real records normally live in the synced cloud copy; commit them here when you want an offline-proof baseline.",
+ "odo": {},
+ "events": []
+}
