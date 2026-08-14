@@ -9,7 +9,10 @@ const assert = require("assert");
 
 const html = fs.readFileSync(__dirname + "/src/app.html", "utf8");
 const cut = (from, to) => {
-  const a = html.indexOf(from), b = html.indexOf(to);
+  const a = html.indexOf(from);
+  // search for the closing marker AFTER the opening one — the stylesheet has its
+  // own section comments and some names repeat there
+  const b = html.indexOf(to, a + 1);
   assert.ok(a > 0 && b > a, `markers not found: ${from}`);
   return html.slice(a, b);
 };
@@ -23,12 +26,13 @@ const CATS = { drivetrain:{}, brakes:{}, wheels:{}, suspension:{}, consumables:{
 const BIKE = Object.fromEntries(bikes.map(b => [b.id, b]));
 const RULE = Object.fromEntries(rules.map(r => [r.id, r]));
 
-const doc = { odo:{}, annualKm:{}, events:[], checks:{}, photos:{} };
+const doc = { odo:{}, annualKm:{}, ownership:{}, events:[], checks:{}, photos:{} };
 const DOC = () => doc;
 
 const api = new Function("DOC","BIKE","RULE","CATS","RULES","BIKES",
   src + `; return {yearCost,categorySplit,costPerKm,forecast,purchaseTotal,evCost,
-                   liveEvents,eventsOf,matchComponent,defaultPartCost,dueStatus};`
+                   liveEvents,eventsOf,matchComponent,defaultPartCost,dueStatus,
+                   ownershipOf,isOwned,ownedBikes,soldBikes,netCost,attention};`
 )(DOC, BIKE, RULE, CATS, rules, bikes);
 
 const A = "faraoll-g50", B = "twitter-rider-boost", Y = 2026;
@@ -186,6 +190,54 @@ doc.events[0].deleted = false;
   const deleted = { mtime: 3000, odo:{}, annualKm:{}, photos:{}, checks:{}, migratedAt:null,
     events:[{ id:"a1", mtime:3000, deleted:true, bike:"faraoll-g50", partCost:1648, labourCost:600, date:"2026-08-14" }] };
   eq("tombstone survives merge", mergeDocs(deleted, cloud).events[0].deleted, true);
+}
+
+/* --- ownership: sold bikes keep their history but leave the maintenance world --- */
+{
+  eq("gravel starts sold",      api.ownershipOf("twitter-gravel-v1").state, "sold");
+  eq("faraoll starts owned",    api.ownershipOf(A).state, "owned");
+  eq("owned list excludes sold", api.ownedBikes().some(b => b.id === "twitter-gravel-v1"), false);
+  eq("sold list has it",         api.soldBikes().map(b => b.id), ["twitter-gravel-v1"]);
+  eq("no forecast for a sold bike", api.forecast("twitter-gravel-v1").length, 0);
+  assert.ok(!api.attention().some(a => a.bike.id === "twitter-gravel-v1"),
+    "a sold bike must never appear in the attention list");
+  n++;
+
+  // net cost = everything put in, minus what it sold for
+  doc.ownership["twitter-gravel-v1"] = { state:"sold", soldPrice:70000, soldDate:"2026-07-01" };
+  const spent = api.purchaseTotal("twitter-gravel-v1");
+  eq("net cost subtracts the sale", api.netCost("twitter-gravel-v1"), spent - 70000);
+
+  // selling a bike removes it from maintenance without touching its spend history
+  doc.events.push({ id:"g1", bike:"twitter-gravel-v1", category:"brakes",
+                    date:"2026-03-01", partCost:1000, labourCost:500, odo:0 });
+  eq("sold bike keeps its spend", api.yearCost("twitter-gravel-v1", Y), 1500);
+  eq("net cost includes that spend", api.netCost("twitter-gravel-v1"), spent + 1500 - 70000);
+  eq("still no forecast",         api.forecast("twitter-gravel-v1").length, 0);
+
+  // the synced doc can override the file: a bike can come back
+  doc.ownership["twitter-gravel-v1"].state = "owned";
+  eq("override brings it back", api.isOwned("twitter-gravel-v1"), true);
+  assert.ok(api.forecast("twitter-gravel-v1").length > 0, "an owned bike forecasts again");
+  n++;
+  doc.ownership["twitter-gravel-v1"].state = "sold";
+
+  // an unpriced sale must not silently read as a 0 ₽ gain
+  doc.ownership["speedone-275"] = { state:"sold" };
+  eq("unpriced sale keeps full cost", api.netCost("speedone-275"), api.purchaseTotal("speedone-275"));
+  eq("unpriced sale has null price",  api.ownershipOf("speedone-275").soldPrice, null);
+  delete doc.ownership["speedone-275"];
+}
+
+/* --- ownership survives a merge like every other map --- */
+{
+  const mergeSrc2 = cut("function mergeDocs(", "async function pull(");
+  const md = new Function(mergeSrc2 + "; return mergeDocs;")();
+  const cloud = { mtime:1000, odo:{}, annualKm:{}, photos:{}, events:[], checks:{},
+                  ownership:{ "twitter-gravel-v1":{ state:"sold", soldPrice:70000 } } };
+  const wiped = { mtime:2000, odo:{}, annualKm:{}, photos:{}, events:[], checks:{}, ownership:{} };
+  eq("sale price survives a wiped device",
+     md(wiped, cloud).ownership["twitter-gravel-v1"].soldPrice, 70000);
 }
 
 console.log(`ok — ${n} assertions`);
