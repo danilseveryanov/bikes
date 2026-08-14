@@ -47,24 +47,30 @@ node test.js
 открывается и работает без сети. Облачная копия — один JSON-документ в
 Cloudflare KV за крошечным Worker'ом (`worker/worker.js`, ~40 строк).
 
-Разворачивается один раз:
+**Развёрнуто 14.08.2026.** Адрес хранилища:
+
+```
+https://bikes-sync.severyanov.workers.dev
+```
+
+На каждом устройстве: кнопка «Синхронизация» в шапке сайта → вписать этот адрес
+и ключ. Всё, телефон и компьютер видят одни и те же данные.
+
+Ключ хранится как секрет Worker'а (`SYNC_KEY`) и нигде больше не лежит. Если
+потеряли — задайте новый, данные при этом не пострадают:
+
+```bash
+cd worker && npx wrangler secret put SYNC_KEY
+```
+
+Если понадобится развернуть заново с нуля:
 
 ```bash
 cd worker
-npx wrangler login
-npx wrangler kv namespace create BIKES
-```
-
-Полученный `id` вписать в `wrangler.toml`, затем придумать ключ и задать его:
-
-```bash
+npx wrangler kv namespace create BIKES   # id → wrangler.toml
 npx wrangler secret put SYNC_KEY
 npx wrangler deploy
 ```
-
-`wrangler deploy` напечатает адрес вида `https://bikes-sync.<ваш>.workers.dev`.
-Дальше на каждом устройстве: кнопка «Синхронизация» в шапке сайта → вписать
-адрес и ключ. Всё, телефон и компьютер видят одни и те же данные.
 
 Ключ открывает **только этот документ**. Он не даёт доступа ни к репозиторию, ни
 к аккаунту GitHub, ни к аккаунту Cloudflare. GitHub-токен в публичном фронтенде
