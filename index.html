@@ -64,6 +64,7 @@
   }
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+button,a,summary,.it,.att,.kpi,.bikecard,.glyph{touch-action:manipulation;}
 html,body{margin:0;padding:0;}
 html{-webkit-text-size-adjust:100%;}
 body{
@@ -83,14 +84,21 @@ header{
   padding:calc(var(--safe-t) + 12px) calc(var(--safe-r) + 18px) 12px calc(var(--safe-l) + 18px);
 }
 .hrow{display:flex; align-items:center; gap:12px;}
-h1{margin:0; font-size:26px; font-weight:800; letter-spacing:-.03em; flex:1; min-width:0;
+h1{margin:0; font-size:24px; font-weight:800; letter-spacing:-.03em; flex:1; min-width:0;
    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-#sbtn{
+.hrow{gap:8px;}
+#mbtn{
+  flex:none; min-height:44px; padding:0 12px; border:1px solid var(--line2); background:var(--surface);
+  cursor:pointer; display:flex; align-items:center; gap:7px; color:var(--ink);
+  font-size:13.5px; font-weight:700;
+}
+#mbtn.on{background:var(--accent); border-color:var(--accent); color:#04201d;}
+#mbtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+#mbtn:active,#sbtn{
   flex:none; min-height:44px; padding:0 13px; border:1px solid var(--line2); background:var(--surface);
   cursor:pointer; display:flex; align-items:center; gap:8px; position:relative; color:var(--ink);
   font-size:13.5px; font-weight:700;
 }
-#sbtn:active{transform:scale(.97);}
 #sbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none;}
 #sdot{width:8px; height:8px; border-radius:50%; background:var(--ink3); flex:none;}
 #sdot.on{background:var(--ok);} #sdot.dirty{background:var(--warn);} #sdot.err{background:var(--danger);}
@@ -262,7 +270,8 @@ details[open] summary .arw{transform:rotate(90deg);}
 .dbody{padding:0 16px 16px; }
 
 /* ============================================================ checklist */
-.it{display:flex; gap:13px; padding:14px 16px; cursor:pointer; align-items:flex-start; min-height:48px;}
+.it{display:flex; gap:13px; padding:14px 16px; cursor:pointer; align-items:flex-start; min-height:48px;
+  width:100%; border:0; background:none; text-align:left; font:inherit; color:inherit;}
 .it + .it{border-top:1px solid var(--line);}
 .it .box{
   width:25px;height:25px;border:2px solid var(--line2); flex:none; margin-top:1px;
@@ -391,19 +400,23 @@ details[open] summary .arw{transform:rotate(90deg);}
 .view{opacity:1;}
 .view.swap{animation:swapin .34s var(--spring) both;}
 @keyframes swapin{ from{opacity:0; transform:translateY(9px);} to{opacity:1; transform:none;} }
-.rv{opacity:0; transform:translateY(11px);}
-.rv.in{opacity:1; transform:none; transition:opacity .42s ease, transform .42s var(--spring);}
+.reveal{opacity:0; transform:translateY(11px);}
+.reveal.in{opacity:1; transform:none; transition:opacity .42s ease, transform .42s var(--spring);}
 .fill{transition:width .65s var(--spring);}
 .bikecard{transition:transform .16s var(--spring), border-color .2s;}
 .bikecard:active{transform:scale(.982);}
 .att{transition:background .18s;}
 .att:active{background:var(--surface2);}
+@media (hover:hover){
+  .bikecard:hover,.att:hover,.kpi:hover,.it:hover,summary:hover{background:var(--surface2);}
+}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 @media (prefers-reduced-motion: reduce){
   .cloud,.rider,.wh,.drop,.gull,.boat,.mosq,.sun{animation:none !important;}
   .sun{left:78%; top:26px;}
   .rain{display:none;}
   .view.swap{animation:none;}
-  .rv{opacity:1; transform:none;}
+  .reveal{opacity:1; transform:none;}
   .fill{transition:none;}
   .scene .layer{transform:none !important;}
 }
@@ -478,6 +491,7 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
   nav button:hover{background:var(--surface2);}
   nav svg{width:20px;height:20px;}
   nav .badge{position:static; margin:0 0 0 auto;}
+  .tip{bottom:24px !important;}
   .navfoot{margin-top:auto; padding-top:12px; border-top:1px solid var(--line);}
   .navact{
     width:100%; min-height:46px; display:flex; align-items:center; gap:13px; padding:0 20px;
@@ -487,22 +501,30 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
   .navact:hover{background:var(--surface2); color:var(--ink);}
   .navact svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none;}
   .navstate{padding:8px 20px 0; font-size:11.5px; color:var(--ink3); line-height:1.4;}
-  #sbtn{display:none;}
+  #sbtn,#mbtn{display:none;}
 
-  header{margin-left:232px; padding:20px 32px 16px;}
-  h1{font-size:32px;}
+  header{margin-left:232px; padding:14px 32px 12px;}
+  /* шапка обязана стоять по одной вертикали с контентом, иначе на 1920
+     заголовок уезжает на 222px левее первой карточки */
+  header .hrow, header .sub{max-width:1180px; margin-left:auto; margin-right:auto;}
+  h1{font-size:24px;}
   main{margin-left:232px; max-width:none; padding:24px 32px 48px;}
   .wrap{max-width:1180px; margin:0 auto;}
 
-  .scene{height:340px; margin:-24px calc(50% - 50vw + 116px) 26px; }
+  .scene{height:200px; margin:-24px calc(50% - 50vw + 116px) 22px;}
   .strip{justify-content:center; padding:0 32px;}
-  .dash{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; align-items:start;}
+  .dash{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,240px)); gap:12px;
+    align-items:start; justify-content:start;}
+  .kpi .s{white-space:normal;}
   .kpis{display:contents;}
   .stack{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  .stack > .rv{display:block;}
-  .cols{display:grid; grid-template-columns:1fr 1fr; gap:0 28px; align-items:start;}
+  .stack > .reveal{display:block;}
+  .cols{display:grid; grid-template-columns:1fr; gap:0 28px; align-items:start;}
+  .cols > section{min-width:0;}
   .lbl{margin-top:30px;}
   .btn{width:auto; min-width:220px;}
+  .seg{width:max-content; max-width:100%;}
+  .seg button{flex:0 0 auto; min-width:130px;}
   .btn.wide{width:100%;}
   /* модалка по центру, а не шторка снизу */
   .sheet{align-items:center;}
@@ -510,9 +532,8 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
   .grab{display:none;}
   table{font-size:13.5px;}
 }
-@media (min-width: 1400px){
-  .cols{grid-template-columns:1fr 1fr 1fr;}
-}
+@media (min-width: 1180px){ .cols{grid-template-columns:1fr 1fr;} }
+@media (min-width: 1600px){ .cols.wide{grid-template-columns:1fr 1fr 1fr;} }
 
 /* ============================================================ sheet */
 .sheet{position:fixed; inset:0; z-index:80; background:rgba(0,0,0,.55); display:flex;
@@ -521,7 +542,7 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
 .sheet.on{opacity:1; pointer-events:auto;}
   .sheet > div{
   background:var(--bg); width:100%; max-width:560px; max-height:92vh; overflow-y:auto;
-  border-top:3px solid var(--accent);
+  border-top:3px solid var(--accent); overscroll-behavior:contain;
   padding:8px calc(var(--safe-r) + 18px) calc(var(--safe-b) + 20px) calc(var(--safe-l) + 18px);
   transform:translateY(26px); transition:transform .28s var(--spring);
   -webkit-overflow-scrolling:touch;
@@ -546,6 +567,10 @@ a{color:var(--accent);}
 <header>
   <div class="hrow">
     <h1 id="h1">Гараж</h1>
+    <button id="mbtn" data-money="1" aria-label="Показать или скрыть цены">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M9 8.5h5a2 2 0 010 4h-4a2 2 0 000 4h5"/></svg>
+      <span id="mlabel">Цены</span>
+    </button>
     <button id="sbtn">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
       <span id="slabel">Вход</span>
@@ -565,7 +590,7 @@ a{color:var(--accent);}
   </div>
 </main>
 
-<nav id="nav"></nav>
+<nav id="nav" aria-label="Разделы"></nav>
 <div class="sheet" id="sheet"><div id="sheetbody"></div></div>
 <div class="tip" id="tip"></div>
 
@@ -608,7 +633,6 @@ const rub = n => !SHOWMONEY ? '—'
 function toggleMoney() {
   SHOWMONEY = !SHOWMONEY;
   localStorage.setItem('bikes:money', SHOWMONEY ? '1' : '0');
-  if (!SHOWMONEY && tab === 'money') tab = 'garage';
   render();
 }
 const km  = n => (n==null ? '—' : Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ') + ' км');
@@ -810,6 +834,12 @@ async function sync(silent) {
 function paintSync() {
   const dot = $('sdot'), lbl = $('slabel');
   if (lbl) lbl.textContent = EDITOR ? 'Профиль' : 'Вход';
+  const mb = $('mbtn');
+  if (mb) { mb.classList.toggle('on', SHOWMONEY); $('mlabel').textContent = SHOWMONEY ? 'Цены' : 'Цены'; }
+  // подвал бокового меню рисуется только в renderNav(), поэтому без этой
+  // строки он держал «Режим просмотра» даже во время синхронизации
+  const ns = document.querySelector('.navstate');
+  if (ns) ns.textContent = syncLine();
   if (!EDITOR) dot.className = '';
   else if (syncState === 'busy') dot.className = '';
   else if (syncState === 'err') dot.className = 'err';
@@ -974,9 +1004,9 @@ const TABS = [
 
 function renderNav() {
   const due = attention().filter(a => a.st.state === 'due').length;
-  $('nav').innerHTML = TABS.filter(t => SHOWMONEY || t.id !== 'money').map(t =>
-    `<button data-tab="${t.id}" class="${t.id===tab?'on':''}">
-       <svg viewBox="0 0 24 24"><path d="${t.icon}"/></svg>${esc(t.label)}
+  $('nav').innerHTML = TABS.map(t =>
+    `<button data-tab="${t.id}" class="${t.id===tab?'on':''}"${t.id===tab?' aria-current="page"':''}>
+       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="${t.icon}"/></svg>${esc(t.label)}
        ${t.id==='service'&&due?`<span class="badge">${due}</span>`:''}
      </button>`).join('')
     /* На широком экране действия аккаунта живут в самом меню, а не за иконкой
@@ -1135,7 +1165,7 @@ function viewGarage() {
   /* the dashboard: three numbers that answer "what have I got, what does it
      owe me, what do I still need to buy" — each one opens where it came from */
   h += `<div class="dash">
-  <div class="kpis rv">
+  <div class="kpis">
     <button class="kpi" data-tab="garage"><span class="k">В парке</span>
       <span class="v num">${owned.length}</span>
       <span class="s">${sold.length?sold.length+' продан':'все на ходу'}</span></button>
@@ -1146,7 +1176,7 @@ function viewGarage() {
       <span class="v num">${shop.length}</span>
       <span class="s">${shop.length?(SHOWMONEY?rub(shopSum):'позиций'):'всё есть'}</span></button>
   </div>
-  ${SHOWMONEY?`<div class="kpi rv" style="cursor:default">
+  ${SHOWMONEY?`<div class="kpi reveal" style="cursor:default">
     <span class="k">Потрачено всего</span>
     <span class="v num" data-count="${spendOwned + yearCost(null, YEAR)}">${rub(spendOwned + yearCost(null, YEAR))}</span>
     <span class="s">закупка и обслуживание · подробнее в «Деньгах»</span>
@@ -1174,19 +1204,21 @@ function viewGarage() {
       <div class="t">${hasHistory ? 'Всё в норме' : 'Сайт ещё не знает ваш парк'}</div>
       <div class="s">${hasHistory
         ? 'Ни одна работа по регламенту не подошла к сроку. Даже дождь, кажется, перестал.'
-        : 'Укажите пробег в карточке велосипеда и запишите первое обслуживание — после этого здесь появится, что и когда пора менять.'}</div>
+        : EDITOR
+          ? 'Укажите пробег в карточке велосипеда и запишите первое обслуживание — после этого здесь появится, что и когда пора менять.'
+          : `В парке ${ownedBikes().length} велосипеда. Записей об обслуживании пока нет — как появятся, здесь будет видно, что подходит к замене.`}</div>
     </div></div>`;
   }
 
   /* fleet */
   h += `<div class="lbl">В парке <span class="n">${owned.length}</span></div><div class="stack">`;
-  h += owned.map(b => `<span class="rv">${bikeCard(b)}</span>`).join('');
+  h += owned.map(b => `<span class="reveal">${bikeCard(b)}</span>`).join('');
   h += `</div>`;
 
   if (sold.length) {
     const net = sold.reduce((s,b)=>s+netCost(b.id), 0);
     h += `<div class="lbl">Продано <span class="n">${sold.length}</span></div>
-      <div class="stack">${sold.map(b => `<span class="rv">${bikeCard(b)}</span>`).join('')}</div>
+      <div class="stack">${sold.map(b => `<span class="reveal">${bikeCard(b)}</span>`).join('')}</div>
       ${SHOWMONEY?`<div class="tiny" style="margin-top:10px">Итог по проданным: ${rub(net)} — во столько обошлось владение, уже за вычетом выручки.</div>`:''}`;
   }
   $('v-garage').innerHTML = h;
@@ -1202,7 +1234,7 @@ function bikeCard(b) {
   return `<button class="bikecard${own.state==='sold'?' sold':''}" data-bike="${b.id}">
     <span class="bar" style="background:${HUE(b.id)}"></span>
     <span class="bikebody">
-      <span class="ph">${photo?`<img src="${esc(photo)}" alt="">`:(EMOJI[b.type]||'🚲')}</span>
+      <span class="ph">${photo?`<img src="${esc(photo)}" alt="" width="54" height="54" loading="lazy">`:(EMOJI[b.type]||'🚲')}</span>
       <span style="flex:1;min-width:0">
         <span class="bname">${esc(b.name)}</span>
         <span class="bmeta">${esc(b.type)} · ${esc(b.owner)}</span>
@@ -1233,7 +1265,7 @@ function viewBikeDetail(id) {
     <div class="pad">
       <div style="display:flex;gap:14px;align-items:center">
         <label class="ph" style="width:66px;height:66px;font-size:27px;cursor:pointer;margin:0">
-          ${photo?`<img src="${esc(photo)}" alt="">`:(EMOJI[b.type]||'🚲')}
+          ${photo?`<img src="${esc(photo)}" alt="" width="54" height="54" loading="lazy">`:(EMOJI[b.type]||'🚲')}
           ${EDITOR?`<input type="file" accept="image/*" data-photo="${id}" style="display:none">`:''}
         </label>
         <div style="flex:1;min-width:0">
@@ -1247,10 +1279,10 @@ function viewBikeDetail(id) {
 
   /* ownership */
   h += `<div class="lbl">Владение</div><div class="card pad">
-    <div class="seg" style="margin-bottom:${own.state==='sold'?'14px':'0'}">
+    ${EDITOR ? `<div class="seg" style="margin-bottom:${own.state==='sold'?'14px':'0'}">
       <button data-own="${id}|owned" class="${own.state==='owned'?'on':''}">В парке</button>
       <button data-own="${id}|sold"  class="${own.state==='sold'?'on':''}">Продан</button>
-    </div>
+    </div>` : `<span class="chip ${own.state==='sold'?'':'ok'}">${own.state==='sold'?'Продан':'В парке'}</span>`}
     ${own.state==='sold' ? `
       <div class="grid2">
         <div><label for="sd-${id}">Дата продажи</label>
@@ -1265,13 +1297,16 @@ function viewBikeDetail(id) {
       <div class="tiny" style="margin-top:5px">Вложено ${rub(spend + eventsOf(id).reduce((s,e)=>s+evCost(e),0))}${own.soldPrice?', выручено '+rub(own.soldPrice):', выручка не указана'}.</div>
       <div class="tiny" style="margin-top:8px">Проданный велосипед не попадает в регламент ТО и в прогноз, но его затраты остаются в истории.</div>
     ` : `
-      <div class="grid2" style="margin-top:14px">
+      ${EDITOR ? `<div class="grid2" style="margin-top:14px">
         <div><label for="odo-${id}">Пробег, км</label>
-          <input id="odo-${id}" type="number" inputmode="numeric" value="${DOC().odo[id]??''}" data-odo="${id}" ${EDITOR?"":"readonly"} placeholder="—"></div>
+          <input id="odo-${id}" type="number" inputmode="numeric" value="${DOC().odo[id]??''}" data-odo="${id}" placeholder="—"></div>
         <div><label for="ann-${id}">Пробег за год, км</label>
-          <input id="ann-${id}" type="number" inputmode="numeric" value="${DOC().annualKm[id]??''}" data-annual="${id}" ${EDITOR?"":"readonly"} placeholder="—"></div>
+          <input id="ann-${id}" type="number" inputmode="numeric" value="${DOC().annualKm[id]??''}" data-annual="${id}" placeholder="—"></div>
       </div>
-      <div class="tiny" style="margin-top:9px">Пробег нужен, чтобы считать «пора менять» и стоимость километра. Годовой — только для прогноза.</div>
+      <div class="tiny" style="margin-top:9px">Пробег нужен, чтобы считать «пора менять» и стоимость километра. Годовой — только для прогноза.</div>`
+      : `<div class="row" style="padding:14px 0 0;border-top:1px solid var(--line);margin-top:14px">
+          <span class="rl"><span class="rt">Пробег</span></span>
+          <span class="rv num">${DOC().odo[id]?km(DOC().odo[id]):'не указан'}</span></div>`}
     `}
   </div>`;
 
@@ -1384,8 +1419,10 @@ function viewService() {
   /* full regimen, grouped, collapsed by default */
   const byCat = {};
   for (const r of RULES) (byCat[r.category] || (byCat[r.category] = [])).push(r);
+  h += `<div class="cols wide">`;
   for (const [cat, rules] of Object.entries(byCat)) {
-    h += `<div class="lbl">${esc(CATS[cat].label)} <span class="n">${rules.length}</span></div><div class="card">`;
+    // section держит подпись и карточку вместе, иначе колонка разорвёт их
+    h += `<section><div class="lbl">${esc(CATS[cat].label)} <span class="n">${rules.length}</span></div><div class="card">`;
     h += rules.map(r => {
       const states = r.bikes.filter(isOwned).map(bid => ({ bid, st: dueStatus(bid, r) }));
       const worst = states.some(s=>s.st.state==='due') ? 'due' : states.some(s=>s.st.state==='soon') ? 'soon' : null;
@@ -1408,13 +1445,23 @@ function viewService() {
         ${EDITOR?`<div style="margin-top:14px"><button class="btn sm" data-addevent="" data-rule="${r.id}" style="width:100%">Записать эту работу</button></div>`:''}
       </div></details>`;
     }).join('');
-    h += `</div>`;
+    h += `</div></section>`;
   }
+  h += `</div>`;
   $('v-service').innerHTML = h;
 }
 
 /* ---------------------------------------------------------- money */
 function viewMoney() {
+  if (!SHOWMONEY) {
+    $('v-money').innerHTML = `<div class="card"><div class="calm">
+      <div class="ic">🙈</div>
+      <div class="t">Цены скрыты</div>
+      <div class="s">Включён режим без цен: суммы, закупка и обслуживание не показываются.</div>
+      <div style="margin-top:16px"><button class="btn pri" data-money="1">Показать цены</button></div>
+    </div></div>`;
+    return;
+  }
   const sel = moneyBike === 'all' ? null : moneyBike;
   let h = `<div class="seg">
     <button data-mbike="all" class="${moneyBike==='all'?'on':''}">Все</button>
@@ -1424,10 +1471,21 @@ function viewMoney() {
   const total = yearCost(sel, YEAR);
   const evs = eventsOf(sel, YEAR);
 
+  /* Сначала всё, что вложено, потом уже текущий год: раньше вкладка вела
+     нулём за год, пока рядом в гараже стояли сотни тысяч закупки. */
+  const buyAll = (sel ? [BIKE[sel]] : BIKES).reduce((a,b)=>a+purchaseTotal(b.id), 0);
+  const svcAll = eventsOf(sel).reduce((a,e)=>a+evCost(e), 0);
   h += `<div class="card pad">
-    <div class="tiny">Обслуживание за ${YEAR}</div>
-    <div class="hero num" style="margin-top:4px">${rub(total)}</div>
-    <div class="tiny" style="margin-top:5px">${evs.length} ${evs.length===1?'запись':evs.length<5?'записи':'записей'}${sel?'':' по всем велосипедам'}</div>
+    <div class="tiny">Вложено всего</div>
+    <div class="hero num" style="margin-top:4px">${rub(buyAll + svcAll)}</div>
+    <div class="tiny" style="margin-top:5px">закупка компонентов и всё обслуживание${sel?'':' по всему парку'}</div>
+  </div>
+  <div class="card">
+    <div class="row"><span class="rl"><span class="rt">Закупка компонентов</span></span><span class="rv num">${rub(buyAll)}</span></div>
+    <div class="row"><span class="rl"><span class="rt">Обслуживание за всё время</span></span><span class="rv num">${rub(svcAll)}</span></div>
+    <div class="row"><span class="rl"><span class="rt">Обслуживание за ${YEAR}</span>
+      <span class="rs">${evs.length} ${evs.length===1?'запись':evs.length<5?'записи':'записей'}</span></span>
+      <span class="rv num">${rub(total)}</span></div>
   </div>`;
 
   if (!evs.length) {
@@ -1726,17 +1784,20 @@ function viewBuild() {
     `</div></details></div>`;
   }
 
+  h += `<div class="cols">`;
   groups.forEach((g, gi) => {
     const dn = g.items.filter(it=>checks[stableId(g.g,it.n)]).length;
     const isOpen = localStorage.getItem('c:'+buildKey+':'+gi) !== '1';
-    h += `<div class="lbl">${esc(g.g)} <span class="n">${dn}/${g.items.length}</span></div>
+    h += `<section><div class="lbl">${esc(g.g)} <span class="n">${dn}/${g.items.length}</span></div>
       <div class="card"><details data-gi="${gi}"${isOpen?' open':''}>
-      <summary><span class="arw">▶</span><span style="flex:1;font-size:14px;color:var(--ink2)">${dn===g.items.length?'всё отмечено':'показать пункты'}</span></summary>
+      <summary><span class="arw">▶</span><span style="flex:1;font-size:14px;color:var(--ink2)">${dn}/${g.items.length}${dn===g.items.length?' · всё отмечено':''}</span></summary>
       <div>` +
       g.items.map(it => {
         const id = stableId(g.g, it.n);
-        return `<div class="it${checks[id]?' done':''}" data-check="${esc(id)}">
-          <span class="box"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg></span>
+        return `<${EDITOR?'button type="button"':'div'} class="it${checks[id]?' done':''}"${EDITOR?` data-check="${esc(id)}" aria-pressed="${checks[id]?'true':'false'}"`:' style="cursor:default"'}>
+          ${EDITOR
+            ? `<span class="box"><svg viewBox="0 0 24 24"><polyline points="4,12 10,18 20,6"/></svg></span>`
+            : `<span class="box" style="border-color:transparent;background:${checks[id] ? 'var(--accent)' : 'var(--surface2)'}"></span>`}
           <span style="flex:1;min-width:0">
             <span class="nm" style="display:block">${esc(it.n)}${it.x?'<span class="chip warn" style="margin-left:7px">проверить</span>':''}</span>
             ${it.d?`<span class="dt" style="display:block">${esc(it.d)}</span>`:''}
@@ -1744,8 +1805,9 @@ function viewBuild() {
           </span>
           ${(it.p&&SHOWMONEY)?`<span class="pr">${rub(it.p)}${it.pn?`<small>${esc(it.pn)}</small>`:''}</span>`:''}
         </div>`;
-      }).join('') + `</div></details></div>`;
+      }).join('') + `</div></details></div></section>`;
   });
+  h += `</div>`;
   $('v-build').innerHTML = h;
 }
 
@@ -1810,6 +1872,26 @@ function openEventSheet(bikeId, ruleId) {
     if (odo && (!DOC().odo[b] || odo > DOC().odo[b])) DOC().odo[b] = odo;
     persist(); closeSheet(); render(); sync(true);
   };
+  $('sheet').classList.add('on');
+}
+
+/* Гостю показываем саму работу: что это, по какому признаку менять и откуда
+   взят интервал. Это самое интересное в приложении для постороннего. */
+function openRuleSheet(ruleId) {
+  const r = RULE[ruleId]; if (!r) return;
+  $('sheetbody').innerHTML = `<div class="grab"></div>
+    <h3>${esc(r.task)}</h3>
+    <p class="tiny">Каждые ${km(r.interval_km)} или ${r.interval_months} мес — что наступит раньше.</p>
+    <div class="card pad" style="margin-top:14px">
+      <div class="muted"><b>Признак износа.</b> ${esc(r.wear_indicator)}</div>
+    </div>
+    <div class="tiny" style="margin-top:12px">
+      <span class="chip ${r.source_type==='manufacturer'?'ok':''}">${r.source_type==='manufacturer'?'спецификация производителя':'оценка'}</span>
+      <span style="display:block;margin-top:6px">${esc(r.source_note)}</span>
+    </div>
+    <div class="tiny" style="margin-top:12px">Относится к: ${r.bikes.filter(isOwned).map(b=>esc(BIKE[b].name)).join(' · ')}</div>
+    <div style="margin-top:18px"><button class="btn" id="r-close">Закрыть</button></div>`;
+  $('r-close').onclick = closeSheet;
   $('sheet').classList.add('on');
 }
 
@@ -1912,7 +1994,23 @@ function toast(msg) {
 }
 
 /* ============================================================ render */
-function render() {
+/* Раздел живёт в адресе: ссылку на «Выбор велосипеда» можно кинуть, и она
+   откроется там же, а «Назад» возвращает по разделам, а не уводит с сайта. */
+function routeTo() {
+  const want = (tab === 'garage' && openBike) ? 'garage/' + openBike : tab;
+  if (location.hash.slice(1) !== want) history.pushState({ tab, openBike }, '', '#' + want);
+}
+
+function routeFrom() {
+  const [t, b] = decodeURIComponent(location.hash.slice(1)).split('/');
+  if (TABS.some(x => x.id === t)) tab = t;
+  openBike = (tab === 'garage' && b && BIKE[b]) ? b : null;
+}
+
+window.addEventListener('popstate', () => { routeFrom(); render(true); });
+
+function render(fromHistory) {
+  if (!fromHistory) routeTo();
   renderNav();
   const t = TABS.find(x => x.id === tab);
   const inDetail = openBike && tab === 'garage';
@@ -1947,6 +2045,7 @@ document.addEventListener('click', e => {
   if (t.dataset.fmode) { framesMode = t.dataset.fmode; render(); window.scrollTo(0,0); return; }
   if (t.dataset.smode) { serviceMode = t.dataset.smode; render(); window.scrollTo(0,0); return; }
   if (t.dataset.bkey)  { buildKey = t.dataset.bkey; render(); return; }
+  if (t.dataset.att && !EDITOR) { openRuleSheet(t.dataset.att.split('|')[1]); return; }
   if (t.dataset.att || t.hasAttribute('data-addevent')) {
     if (!EDITOR) return openSyncSheet();
     if (t.dataset.att) { const [b,r] = t.dataset.att.split('|'); openEventSheet(b, r); }
@@ -1965,6 +2064,7 @@ document.addEventListener('click', e => {
   if (t.dataset.delevent) {
     if (!EDITOR) return openSyncSheet();
     const ev = DOC().events.find(x => x.id === t.dataset.delevent);
+    if (ev && !confirm(`Удалить запись «${ev.part || 'обслуживание'}» от ${ev.date}?`)) return;
     if (ev) { ev.deleted = true; ev.mtime = Date.now(); persist(); render(); sync(true); }
     return;
   }
@@ -2020,6 +2120,7 @@ document.addEventListener('change', e => {
 });
 
 $('sbtn').onclick = openSyncSheet;
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 
 /* ============================================================ motion
    Everything here is decoration: if any of it fails, or the reader asked the OS
@@ -2043,7 +2144,7 @@ window.addEventListener('scroll', () => {
 /* reveal on entry, staggered by position in the list */
 let observer = null;
 function watchReveals() {
-  if (REDUCED) { document.querySelectorAll('.rv').forEach(el => el.classList.add('in')); return; }
+  if (REDUCED) { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in')); return; }
   if (!observer) observer = new IntersectionObserver(entries => {
     entries.forEach((en, i) => {
       if (!en.isIntersecting) return;
@@ -2051,7 +2152,7 @@ function watchReveals() {
       observer.unobserve(en.target);
     });
   }, { rootMargin:'0px 0px -8% 0px' });
-  document.querySelectorAll('.rv:not(.in)').forEach(el => observer.observe(el));
+  document.querySelectorAll('.reveal:not(.in)').forEach(el => observer.observe(el));
 }
 
 /* count up to the real number — the label is written before the animation runs,
@@ -2091,6 +2192,7 @@ function afterRender(swapped) {
 }
 
 /* ============================================================ boot */
+routeFrom();                        // раздел из адреса до первой отрисовки
 const migrated = migrateChecks();   // R1 — before anything touches content
 applyRenames();                     // перенос галочек с переименованных пунктов
 applySeed();                        // R4 — repopulate after storage eviction
