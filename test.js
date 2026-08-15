@@ -240,4 +240,49 @@ doc.events[0].deleted = false;
      md(wiped, cloud).ownership["twitter-gravel-v1"].soldPrice, 70000);
 }
 
+/* --- переименование пункта не теряет поставленную галочку ---
+   Устойчивый id — slug(группа)/slug(пункт), поэтому правка текста отвязывает
+   галочку. Перенос обязан идти ДО правки текста и быть идемпотентным. */
+{
+  const renSrc = cut("const RENAMES = {", "/* R4 —");
+  const K = "speedone-275-checklist-v1";
+  const OLD = "куплено-под-этот-проект/рама-speedone-destroyer-27-5";
+  const NEW = "куплено-под-этот-проект/рама-speedone-floater-27-5";
+
+  const mk = checks => {
+    const d = { checks };
+    const fn = new Function("DOC", "persist", renSrc + "; return applyRenames;")(() => d, () => {});
+    return { run: fn, doc: d };
+  };
+
+  // галочка стояла на старом названии — должна оказаться на новом
+  let t = mk({ [K]: { [OLD]: 1 } });
+  eq("перенос сработал", t.run(), 1);
+  eq("галочка на новом id", t.doc.checks[K][NEW], 1);
+  eq("старый ключ цел (откат)", t.doc.checks[K][OLD], 1);
+
+  // повторный запуск ничего не делает
+  eq("идемпотентно", t.run(), 0);
+
+  // снятая галочка (0) переносится именно как снятая, а не как отметка
+  t = mk({ [K]: { [OLD]: 0 } });
+  t.run();
+  eq("ноль переносится нулём", t.doc.checks[K][NEW], 0);
+
+  // если на новом уже что-то есть, старое его не затирает
+  t = mk({ [K]: { [OLD]: 1, [NEW]: 0 } });
+  eq("новое значение не перетирается", t.run(), 0);
+  eq("новое значение сохранено", t.doc.checks[K][NEW], 0);
+
+  // пустой документ переносить нечего
+  eq("без чек-листа — тихо", mk({}).run(), 0);
+
+  // новый id действительно совпадает с тем, что теперь в данных
+  const slug = s => String(s).toLowerCase().replace(/[^a-zа-яё0-9]+/gi,"-").replace(/^-|-$/g,"").slice(0,48);
+  const cl = JSON.parse(fs.readFileSync(__dirname + "/data/checklists.json", "utf8"));
+  const found = cl[K].some(g => g.items.some(i => slug(g.g) + "/" + slug(i.n) === NEW));
+  assert.ok(found, "новый id должен существовать в данных чек-листа");
+  n++;
+}
+
 console.log(`ok — ${n} assertions`);

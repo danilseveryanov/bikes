@@ -640,6 +640,31 @@ function migrateChecks() {
   return n;
 }
 
+/* Переименования пунктов чек-листа.
+   Устойчивый id — это slug(группа)/slug(пункт), поэтому правка текста пункта
+   отвязывает поставленную на нём галочку. Каждое переименование записывается
+   сюда и переносится при загрузке: сначала переносим, потом уже правим текст.
+   Идемпотентно — новый ключ не перезаписывается, старый не удаляется. */
+const RENAMES = {
+  'speedone-275-checklist-v1': {
+    // рама называется Floater, а не Destroyer (уточнено 15.08.2026)
+    'куплено-под-этот-проект/рама-speedone-destroyer-27-5':
+    'куплено-под-этот-проект/рама-speedone-floater-27-5'
+  }
+};
+
+function applyRenames() {
+  let n = 0;
+  for (const [key, map] of Object.entries(RENAMES)) {
+    const checks = DOC().checks[key];
+    if (!checks) continue;
+    for (const [from, to] of Object.entries(map))
+      if (checks[from] != null && checks[to] == null) { checks[to] = checks[from]; n++; }
+  }
+  if (n) persist(true);
+  return n;
+}
+
 /* R4 — if storage was evicted and we are offline, the committed seed refills history */
 function applySeed() {
   const seed = DATA.log || {};
@@ -1955,6 +1980,7 @@ function afterRender(swapped) {
 
 /* ============================================================ boot */
 const migrated = migrateChecks();   // R1 — before anything touches content
+applyRenames();                     // перенос галочек с переименованных пунктов
 applySeed();                        // R4 — repopulate after storage eviction
 render();
 if (migrated) toast('Перенесено отмеченных пунктов: ' + migrated);
