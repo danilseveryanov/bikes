@@ -86,14 +86,13 @@ header{
 h1{margin:0; font-size:26px; font-weight:800; letter-spacing:-.03em; flex:1; min-width:0;
    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 #sbtn{
-  flex:none; width:44px; height:44px; margin-right:-8px; border:0; background:none;
-  cursor:pointer; display:flex; align-items:center; justify-content:center; position:relative;
+  flex:none; min-height:44px; padding:0 13px; border:1px solid var(--line2); background:var(--surface);
+  cursor:pointer; display:flex; align-items:center; gap:8px; position:relative; color:var(--ink);
+  font-size:13.5px; font-weight:700;
 }
-#sbtn svg{width:21px;height:21px;fill:none;stroke:var(--ink2);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
-#sdot{
-  position:absolute; top:7px; right:7px; width:9px; height:9px; border-radius:50%;
-  background:var(--ink3); border:2px solid var(--bg);
-}
+#sbtn:active{transform:scale(.97);}
+#sbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+#sdot{width:8px; height:8px; border-radius:50%; background:var(--ink3); flex:none;}
 #sdot.on{background:var(--ok);} #sdot.dirty{background:var(--warn);} #sdot.err{background:var(--danger);}
 .sub{margin:2px 0 0; font-size:13.5px; color:var(--ink2);}
 
@@ -176,6 +175,8 @@ nav button{
   font-size:10px; font-weight:600; padding:2px; position:relative;
 }
 nav button.on{color:var(--accent);}
+.navfoot{display:none;}
+@media (min-width:900px){ .navfoot{display:block;} }
 nav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
 nav .badge{
   position:absolute; top:2px; right:50%; margin-right:-20px; min-width:17px; height:17px;
@@ -422,6 +423,17 @@ details[open] summary .arw{transform:rotate(90deg);}
 .kpi .s{display:block; font-size:11px; color:var(--ink3); margin-top:3px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
+.rank{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+  background:var(--ink);color:var(--bg);font-size:11px;font-weight:800;margin-right:7px;flex:none;}
+.dots{display:block;letter-spacing:1px;font-size:9px;color:var(--accent);line-height:1;margin-top:2px;}
+.strbar{height:8px;margin-top:14px;
+  background:linear-gradient(90deg,var(--danger),var(--warn),var(--ok));}
+ul.pm{margin:12px 0 0;padding:0;list-style:none;}
+ul.pm li{position:relative;padding-left:20px;margin-bottom:7px;font-size:13.5px;line-height:1.5;color:var(--ink2);}
+ul.pm li::before{position:absolute;left:0;top:0;font-weight:800;}
+ul.pm li.p::before{content:'+';color:var(--ok);}
+ul.pm li.m::before{content:'–';color:var(--danger);}
+
 /* ============================================================ переключатель */
 .sw-row{display:flex; align-items:center; gap:14px; background:var(--surface);
   padding:14px 16px; margin-top:10px; cursor:pointer; width:100%; border:0; text-align:left;
@@ -453,7 +465,7 @@ details[open] summary .arw{transform:rotate(90deg);}
     gap:0; align-items:stretch; overflow-y:auto;
   }
   nav::before{
-    content:'Гараж'; display:block; padding:22px 20px 16px;
+    content:'Велопарк'; display:block; padding:22px 20px 16px;
     font-size:20px; font-weight:800; letter-spacing:-.03em; color:var(--ink);
     border-bottom:1px solid var(--line);
   }
@@ -466,6 +478,16 @@ details[open] summary .arw{transform:rotate(90deg);}
   nav button:hover{background:var(--surface2);}
   nav svg{width:20px;height:20px;}
   nav .badge{position:static; margin:0 0 0 auto;}
+  .navfoot{margin-top:auto; padding-top:12px; border-top:1px solid var(--line);}
+  .navact{
+    width:100%; min-height:46px; display:flex; align-items:center; gap:13px; padding:0 20px;
+    border:0; background:none; color:var(--ink2); font-size:13.5px; font-weight:600; cursor:pointer;
+    text-align:left;
+  }
+  .navact:hover{background:var(--surface2); color:var(--ink);}
+  .navact svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+  .navstate{padding:8px 20px 0; font-size:11.5px; color:var(--ink3); line-height:1.4;}
+  #sbtn{display:none;}
 
   header{margin-left:232px; padding:20px 32px 16px;}
   h1{font-size:32px;}
@@ -524,8 +546,9 @@ a{color:var(--accent);}
 <header>
   <div class="hrow">
     <h1 id="h1">Гараж</h1>
-    <button id="sbtn" aria-label="Синхронизация">
-      <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 01-9 9 9 9 0 01-7.5-4M3 12a9 9 0 019-9 9 9 0 017.5 4"/><path d="M21 3v4h-4M3 21v-4h4"/></svg>
+    <button id="sbtn">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+      <span id="slabel">Вход</span>
       <span id="sdot"></span>
     </button>
   </div>
@@ -552,6 +575,7 @@ a{color:var(--accent);}
 /* ============================================================ data */
 const DATA = JSON.parse(document.getElementById('DATA').textContent);
 const BIKES = DATA.bikes, RULES = DATA.maintenance, FRAMES = DATA.frames, CHECKLISTS = DATA.checklists;
+const CHOICE = DATA.choice;
 const BIKE = Object.fromEntries(BIKES.map(b => [b.id, b]));
 const RULE = Object.fromEntries(RULES.map(r => [r.id, r]));
 const CATS = {
@@ -784,7 +808,8 @@ async function sync(silent) {
 }
 
 function paintSync() {
-  const dot = $('sdot');
+  const dot = $('sdot'), lbl = $('slabel');
+  if (lbl) lbl.textContent = EDITOR ? 'Профиль' : 'Вход';
   if (!EDITOR) dot.className = '';
   else if (syncState === 'busy') dot.className = '';
   else if (syncState === 'err') dot.className = 'err';
@@ -937,13 +962,13 @@ function barRows(rows) {
 
 /* ============================================================ views */
 let tab = 'garage', openBike = null, buildKey = Object.keys(CHECKLISTS)[0];
-let moneyBike = 'all', framesMode = 'ranked', serviceMode = 'due';
+let moneyBike = 'all', framesMode = 'short', serviceMode = 'due';
 
 const TABS = [
   {id:'garage',  label:'Гараж',  icon:'M4 18h16M6 18V9.5L12 5l6 4.5V18', title:'Гараж'},
   {id:'service', label:'ТО',     icon:'M12 8v4.2l2.8 1.8M21 12a9 9 0 11-18 0 9 9 0 0118 0z', title:'Обслуживание'},
   {id:'money',   label:'Деньги', icon:'M4 19V9M9.3 19V5M14.7 19v-6M20 19v-9', title:'Затраты'},
-  {id:'frames',  label:'Рамы',   icon:'M6 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM18 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM6 14.3l4.2-6h4.6l3.2 6', title:'Рамы 2027'},
+  {id:'frames',  label:'Выбор',  icon:'M6 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM18 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM6 14.3l4.2-6h4.6l3.2 6', title:'Выбор велосипеда 26/27'},
   {id:'build',   label:'Сборка', icon:'M5 7.5h14M5 12h14M5 16.5h9', title:'Чек-листы'}
 ];
 
@@ -953,7 +978,20 @@ function renderNav() {
     `<button data-tab="${t.id}" class="${t.id===tab?'on':''}">
        <svg viewBox="0 0 24 24"><path d="${t.icon}"/></svg>${esc(t.label)}
        ${t.id==='service'&&due?`<span class="badge">${due}</span>`:''}
-     </button>`).join('');
+     </button>`).join('')
+    /* На широком экране действия аккаунта живут в самом меню, а не за иконкой
+       в углу: иначе вход и переключатель цен просто не находятся. */
+    + `<div class="navfoot">
+         <button class="navact" data-sheet="1">
+           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+           <span>${EDITOR ? 'Профиль' : 'Войти'}</span>
+         </button>
+         <button class="navact" data-money="1">
+           <svg viewBox="0 0 24 24"><path d="M12 5v14M9 8.5h5a2 2 0 010 4h-4a2 2 0 000 4h5"/></svg>
+           <span>${SHOWMONEY ? 'Скрыть цены' : 'Показать цены'}</span>
+         </button>
+         <div class="navstate">${esc(syncLine())}</div>
+       </div>`;
 }
 
 /* ---------------------------------------------------------- scene
@@ -1487,26 +1525,98 @@ function ownershipSummary(sel) {
 }
 
 /* ---------------------------------------------------------- frames */
+function strClass(c){ return c === 'e' ? 'var(--ok)' : c === 'r' ? 'var(--danger)' : 'var(--warn)'; }
+
+function viewChoice() {
+  const C = CHOICE;
+  let h = `<div class="card pad">
+    <div style="font-size:20px;font-weight:800;letter-spacing:-.025em;line-height:1.25">${esc(C.title)}</div>
+    <div class="muted" style="margin-top:6px">${esc(C.subtitle)}</div>
+    <div class="tiny" style="margin-top:8px">${esc(C.meta)}</div>
+  </div>
+  <div class="warnbox" style="margin-top:12px">
+    <b>${esc(C.conflict.lead)}.</b> ${esc(C.conflict.text)}<br><br>${esc(C.conflict.text2)}
+  </div>
+
+  <div class="lbl">Параметры посадки</div>
+  <div class="dash">${C.fit.map(f=>`<div class="kpi" style="cursor:default">
+    <span class="k">${esc(f.k)}</span><span class="v num">${esc(f.v)}</span></div>`).join('')}</div>
+  <div class="tiny" style="margin-top:9px">${esc(C.fitNote)}</div>
+
+  <div class="lbl">Геометрия в твоём размере</div>
+  <div class="tiny" style="margin:-4px 0 9px">${esc(C.geoNote)}</div>
+  <div class="card scroll"><table>
+    <thead><tr><th>Модель</th><th class="n">Размер</th><th class="n">Stack</th><th class="n">Reach</th>
+      <th class="n">STR</th><th class="n">Рулевая</th><th class="n">Перья</th><th class="n">База</th>
+      <th class="n">BB</th><th class="n">Standover</th><th>По ощущениям</th></tr></thead>
+    <tbody>${C.geo.map(g=>`<tr${g.dim?' style="opacity:.55"':''}>
+      <td class="wrap"><b>${g.rank?`<span class="rank">${g.rank}</span>`:''}${esc(g.model)}</b>${g.note?`<span class="tiny"> (${esc(g.note)})</span>`:''}</td>
+      <td class="n">${esc(g.size)}</td><td class="n">${g.stack}</td><td class="n">${g.reach}</td>
+      <td class="n" style="font-weight:800;color:${strClass(g.cls)}">${String(g.str).replace('.',',')}</td>
+      <td class="n">${esc(g.head)}</td><td class="n">${esc(g.stays)}</td><td class="n">${esc(g.wb)}</td>
+      <td class="n"${g.bbBest?' style="font-weight:800"':''}>${esc(g.bb)}</td><td class="n">${esc(g.standover)}</td>
+      <td class="wrap">${esc(g.feel)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="strbar"></div>
+  <div class="spread tiny" style="margin-top:5px"><span>← рейс 1,41</span><span>универсал 1,48</span><span>endurance 1,56 →</span></div>
+
+  <div class="lbl">Требования, цена и пафос</div>
+  <div class="tiny" style="margin:-4px 0 9px">${esc(C.pathosNote)}</div>
+  <div class="card scroll"><table>
+    <thead><tr><th>Модель</th><th>Белый с завода</th><th class="n">Клиренс</th><th>Бардачок</th>
+      <th class="n">STR</th><th class="n">Вес</th><th class="n">Цена</th><th class="n">Пафос</th><th>За что</th></tr></thead>
+    <tbody>${C.req.map(r=>`<tr${r.dim?' style="opacity:.55"':''}>
+      <td class="wrap"><b>${esc(r.model)}</b></td>
+      <td style="color:${r.whiteOk?'var(--ok)':'var(--danger)'};font-weight:700">${esc(r.white)}</td>
+      <td class="n">${esc(r.clr)}</td><td>${esc(r.box)}</td>
+      <td class="n"${r.str?` style="font-weight:800;color:${strClass(r.cls)}"`:''}>${r.str?String(r.str).replace('.',','):'—'}</td>
+      <td class="n"${r.weightBest?' style="font-weight:800"':''}>${esc(r.weight)}</td>
+      <td class="n">${SHOWMONEY?esc(r.price):'—'}</td>
+      <td class="n"><b>${r.pathos}</b><span class="dots">${'●'.repeat(r.pathos)}<span style="opacity:.25">${'●'.repeat(10-r.pathos)}</span></span></td>
+      <td class="wrap">${esc(r.why)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="tiny" style="margin-top:9px">${esc(C.reqNote)}</div>
+
+  <div class="lbl">Три сценария</div>
+  <div class="stack">${C.scenarios.map(sc=>`<div class="card pad"${sc.kind==='win'?' style="border-top:4px solid var(--accent)"':''}>
+    <span class="chip ${sc.kind==='win'?'ok':sc.kind==='val'?'accent':''}">${esc(sc.tag)}</span>
+    <div style="font-size:17px;font-weight:800;letter-spacing:-.02em;margin-top:9px">${esc(sc.title)}</div>
+    <div class="tiny" style="margin-top:4px">${SHOWMONEY?esc(sc.meta):esc(sc.meta.split(' · ').slice(1).join(' · '))}</div>
+    <ul class="pm">${sc.plus.map(x=>`<li class="p">${esc(x)}</li>`).join('')}
+      ${sc.minus.map(x=>`<li class="m">${esc(x)}</li>`).join('')}</ul>
+  </div>`).join('')}</div>
+
+  <div class="lbl">Что важно знать про фит</div>
+  <div class="card">${C.fitNotes.map(f=>`<div class="row"><span class="rl">
+    <span class="rt"><b>${esc(f.b)}</b> ${esc(f.t)}</span></span></div>`).join('')}</div>
+
+  <div class="lbl">Вердикт</div>
+  <div class="card pad" style="border-top:4px solid var(--accent)">
+    ${C.verdict.map(v=>`<p class="muted" style="margin:0 0 12px">${v}</p>`).join('')}
+  </div>
+  <div class="tiny" style="margin-top:14px">${esc(C.sources)}</div>
+  <div class="tiny" style="margin-top:8px">${esc(C.disclaimer)}</div>`;
+  return h;
+}
+
 function viewFrames() {
   const ranked = FRAMES.filter(f => f.total != null).sort((a,b)=>b.total-a.total);
   const excluded = FRAMES.filter(f => f.total == null);
   const cohorts = {};
   for (const f of ranked) (cohorts[f.price_basis || 'frame'] || (cohorts[f.price_basis||'frame'] = [])).push(f);
 
-  let h = `<div class="card pad">
-    <div class="tiny">Рам в таблице</div>
-    <div class="hero num" style="margin-top:4px">${FRAMES.length}</div>
-    <div class="tiny" style="margin-top:5px">${ranked.length} в рейтинге · ${excluded.length} исключены из-за TBD</div>
-  </div>
-  <div class="warnbox" style="margin-top:12px">
-    <b>Балл — мой расчёт, а не оценка автора таблицы.</b><br>
-    В исходном файле есть легенда с категориями top / ok / nah, но автор не проставил их ни в одной строке — эти заливки встречаются только в самой легенде. Его настоящее мнение — в комментариях, они показаны у каждой рамы.
-  </div>
-  <div class="seg" style="margin-top:16px">
-    <button data-fmode="ranked" class="${framesMode==='ranked'?'on':''}">Рейтинг</button>
+  let h = `<div class="seg">
+    <button data-fmode="short" class="${framesMode==='short'?'on':''}">Шорт-лист</button>
+    <button data-fmode="ranked" class="${framesMode==='ranked'?'on':''}">База · рейтинг</button>
     <button data-fmode="excluded" class="${framesMode==='excluded'?'on':''}">Исключено · ${excluded.length}</button>
     <button data-fmode="all" class="${framesMode==='all'?'on':''}">Все · ${FRAMES.length}</button>
   </div>`;
+
+  if (framesMode === 'short') { $('v-frames').innerHTML = h + viewChoice(); return; }
+
+  h += `<div class="warnbox" style="margin-bottom:14px">
+    <b>Балл — мой расчёт, а не оценка автора таблицы.</b><br>
+    В исходном файле есть легенда с категориями top / ok / nah, но автор не проставил их ни в одной строке — эти заливки встречаются только в самой легенде. Его настоящее мнение — в комментариях, они показаны у каждой рамы.
+  </div>
+  <div class="tiny" style="margin-bottom:14px">База из ${FRAMES.length} рам: ${ranked.length} в рейтинге, ${excluded.length} исключены из-за TBD.</div>`;
 
   if (framesMode === 'ranked') {
     const best = ranked[0];
@@ -1812,7 +1922,7 @@ function render() {
     : tab === 'garage' ? `${ownedBikes().length} в парке${soldBikes().length?' · '+soldBikes().length+' продан':''}`
     : tab === 'service' ? (att.length ? `${att.length} к работе` : RULES.length + ' пунктов регламента')
     : tab === 'money' ? YEAR + ' год'
-    : tab === 'frames' ? FRAMES.length + ' рам'
+    : tab === 'frames' ? (framesMode === 'short' ? 'шорт-лист под рост 180' : FRAMES.length + ' рам в базе')
     : 'Faraoll G50 и Speedone';
   document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
   $('v-' + tab).classList.add('on');
@@ -1825,9 +1935,11 @@ function render() {
 let lastScreen = '';
 
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own]');
+  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money]');
   if (!t) { if (e.target === $('sheet')) closeSheet(); return; }
 
+  if (t.dataset.sheet) { openSyncSheet(); return; }
+  if (t.dataset.money) { toggleMoney(); return; }
   if (t.dataset.tab)   { tab = t.dataset.tab; openBike = null; render(); window.scrollTo(0,0); return; }
   if (t.dataset.bike)  { openBike = t.dataset.bike; tab = 'garage'; render(); window.scrollTo(0,0); return; }
   if (t.dataset.back)  { openBike = null; render(); return; }

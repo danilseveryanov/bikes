@@ -18,6 +18,7 @@ payload = {
     "frames":      json.loads((DATA / "frames.json").read_text("utf-8")),
     "checklists":  json.loads((DATA / "checklists.json").read_text("utf-8")),
     "log":         json.loads((DATA / "log.json").read_text("utf-8")),
+    "choice":      json.loads((DATA / "choice2627.json").read_text("utf-8")),
 }
 
 blob = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
