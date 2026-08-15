@@ -13,126 +13,144 @@
     "group": "Велосипед-донор",
     "part": "Twitter Rider Boost 27,5″ 17\"",
     "spec": "Базовый велосипед под апгрейд",
-    "purchasePrice": 43245.16
+    "purchasePrice": 43245.16,
+    "id": "twitter-rider-boost/велосипед-донор/twitter-rider-boost-27-5-17"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Трансмиссия XT",
     "part": "Кассета",
     "spec": "Shimano DEORE XT CS-M8200",
-    "purchasePrice": 6823
+    "purchasePrice": 6823,
+    "id": "twitter-rider-boost/трансмиссия-xt/кассета"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Трансмиссия XT",
     "part": "Цепь",
     "spec": "Shimano XTR M9100",
-    "purchasePrice": 3029
+    "purchasePrice": 3029,
+    "id": "twitter-rider-boost/трансмиссия-xt/цепь"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Трансмиссия XT",
     "part": "Шатуны",
     "spec": "Shimano XT M8100, 165 мм",
-    "purchasePrice": 10202.37
+    "purchasePrice": 10202.37,
+    "id": "twitter-rider-boost/трансмиссия-xt/шатуны"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Трансмиссия XT",
     "part": "Каретка",
     "spec": "Shimano MT801",
-    "purchasePrice": 1250
+    "purchasePrice": 1250,
+    "id": "twitter-rider-boost/трансмиссия-xt/каретка"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Трансмиссия XT",
     "part": "Манетка",
     "spec": "Shimano Deore XT SL-M8100-ir",
-    "purchasePrice": 4032
+    "purchasePrice": 4032,
+    "id": "twitter-rider-boost/трансмиссия-xt/манетка"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Трансмиссия XT",
     "part": "Переключатель задний",
     "spec": "Shimano DEORE XT RD-M8100",
-    "purchasePrice": 4576
+    "purchasePrice": 4576,
+    "id": "twitter-rider-boost/трансмиссия-xt/переключатель-задний"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Тормоза",
     "part": "Тормоза комплект",
     "spec": "Shimano XT M8120, 4 поршня",
-    "purchasePrice": 15320
+    "purchasePrice": 15320,
+    "id": "twitter-rider-boost/тормоза/тормоза-комплект"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Тормоза",
     "part": "Роторы",
     "spec": "SHIMANO XT SM-RT86",
-    "purchasePrice": 4224
+    "purchasePrice": 4224,
+    "id": "twitter-rider-boost/тормоза/роторы"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Колёса, резина, вилка",
     "part": "Колёса",
     "spec": "KORE 36T, карбон",
-    "purchasePrice": 16091
+    "purchasePrice": 16091,
+    "id": "twitter-rider-boost/колёса-резина-вилка/колёса"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Колёса, резина, вилка",
     "part": "Резина ×2",
     "spec": "Maxxis Ikon 27.5×2.20 EXO/TR Tanwall",
-    "purchasePrice": 7876
+    "purchasePrice": 7876,
+    "id": "twitter-rider-boost/колёса-резина-вилка/резина-2"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Колёса, резина, вилка",
     "part": "Камеры",
     "spec": "RideNow race mtb",
-    "purchasePrice": 3000
+    "purchasePrice": 3000,
+    "id": "twitter-rider-boost/колёса-резина-вилка/камеры"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Колёса, резина, вилка",
     "part": "Вилка",
     "spec": "RockShox Reba 27,5",
-    "purchasePrice": 28889
+    "purchasePrice": 28889,
+    "id": "twitter-rider-boost/колёса-резина-вилка/вилка"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Кокпит и посадка",
     "part": "Руль",
     "spec": "Toseek Carbon 720",
-    "purchasePrice": 2281
+    "purchasePrice": 2281,
+    "id": "twitter-rider-boost/кокпит-и-посадка/руль"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Кокпит и посадка",
     "part": "Грипсы",
     "spec": "ODI",
-    "purchasePrice": 340
+    "purchasePrice": 340,
+    "id": "twitter-rider-boost/кокпит-и-посадка/грипсы"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Кокпит и посадка",
     "part": "Седло",
     "spec": "Selle Royal Vivo Relaxed",
-    "purchasePrice": 6370
+    "purchasePrice": 6370,
+    "id": "twitter-rider-boost/кокпит-и-посадка/седло"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Кокпит и посадка",
     "part": "Подседельный штырь",
     "spec": "31.6×350 мм",
-    "purchasePrice": 2000
+    "purchasePrice": 2000,
+    "id": "twitter-rider-boost/кокпит-и-посадка/подседельный-штырь"
    },
    {
     "bike": "twitter-rider-boost",
     "group": "Кокпит и посадка",
     "part": "Педали",
     "spec": "HT PA12",
-    "purchasePrice": 2913
+    "purchasePrice": 2913,
+    "id": "twitter-rider-boost/кокпит-и-посадка/педали"
    }
   ],
   "ownership": "owned",
@@ -152,105 +170,120 @@
     "group": "Велосипед-донор",
     "part": "HAGEN Teen Pro 20 Carbon",
     "spec": "Базовый велосипед",
-    "purchasePrice": 60000
+    "purchasePrice": 60000,
+    "id": "hagen-teen-pro-20/велосипед-донор/hagen-teen-pro-20-carbon"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Трансмиссия",
     "part": "Шатуны + каретка + звезда 32",
     "spec": "Goldix 127 мм",
-    "purchasePrice": 3239
+    "purchasePrice": 3239,
+    "id": "hagen-teen-pro-20/трансмиссия/шатуны-каретка-звезда-32"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Трансмиссия",
     "part": "Цепь",
     "spec": "KMC X9",
-    "purchasePrice": 1786
+    "purchasePrice": 1786,
+    "id": "hagen-teen-pro-20/трансмиссия/цепь"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Трансмиссия",
     "part": "Педали",
     "spec": "Rockbros + KIHAN Titan",
-    "purchasePrice": 5087
+    "purchasePrice": 5087,
+    "id": "hagen-teen-pro-20/трансмиссия/педали"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Тормоза",
     "part": "Тормоза комплект",
     "spec": "Shimano Deore M6100",
-    "purchasePrice": 7539
+    "purchasePrice": 7539,
+    "id": "hagen-teen-pro-20/тормоза/тормоза-комплект"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Тормоза",
     "part": "Роторы",
     "spec": "Shimano SM RT-76",
-    "purchasePrice": 3975
+    "purchasePrice": 3975,
+    "id": "hagen-teen-pro-20/тормоза/роторы"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Колёса и резина",
     "part": "Резина ×2",
     "spec": "Schwalbe LITTLE JOE Active Line 20×2.00",
-    "purchasePrice": 4400
+    "purchasePrice": 4400,
+    "id": "hagen-teen-pro-20/колёса-и-резина/резина-2"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Кокпит и посадка",
     "part": "Руль",
     "spec": "TOSEEK ZF-ONE карбон, 31.8 мм",
-    "purchasePrice": 1684
+    "purchasePrice": 1684,
+    "id": "hagen-teen-pro-20/кокпит-и-посадка/руль"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Кокпит и посадка",
     "part": "Подседельный штырь",
     "spec": "TOSEEK Black Matte Carbon, вынос 0 мм",
-    "purchasePrice": 1354
+    "purchasePrice": 1354,
+    "id": "hagen-teen-pro-20/кокпит-и-посадка/подседельный-штырь"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Кокпит и посадка",
     "part": "Седло",
     "spec": "Rockbros B20",
-    "purchasePrice": 1089
+    "purchasePrice": 1089,
+    "id": "hagen-teen-pro-20/кокпит-и-посадка/седло"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Электроника и свет",
     "part": "Велокомпьютер",
     "spec": "Magene C506se",
-    "purchasePrice": 4390
+    "purchasePrice": 4390,
+    "id": "hagen-teen-pro-20/электроника-и-свет/велокомпьютер"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Электроника и свет",
     "part": "Вынос велокомпьютера",
     "spec": "Rockbros 29210012001",
-    "purchasePrice": 818
+    "purchasePrice": 818,
+    "id": "hagen-teen-pro-20/электроника-и-свет/вынос-велокомпьютера"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Электроника и свет",
     "part": "Датчики",
     "spec": "Magene S3+",
-    "purchasePrice": 3202
+    "purchasePrice": 3202,
+    "id": "hagen-teen-pro-20/электроника-и-свет/датчики"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Электроника и свет",
     "part": "Фонарь передний",
     "spec": "Rockbros 800",
-    "purchasePrice": 1500
+    "purchasePrice": 1500,
+    "id": "hagen-teen-pro-20/электроника-и-свет/фонарь-передний"
    },
    {
     "bike": "hagen-teen-pro-20",
     "group": "Электроника и свет",
     "part": "Фонарь задний",
     "spec": "Rockbros Q5",
-    "purchasePrice": 1000
+    "purchasePrice": 1000,
+    "id": "hagen-teen-pro-20/электроника-и-свет/фонарь-задний"
    }
   ],
   "ownership": "owned",
@@ -270,175 +303,200 @@
     "group": "Рама, вилка, рулевая",
     "part": "Фреймсет Faraoll G50",
     "spec": "Рама + вилка + подседельный хомут ELITA ONE",
-    "purchasePrice": 40369
+    "purchasePrice": 40369,
+    "id": "faraoll-g50/рама-вилка-рулевая/фреймсет-faraoll-g50"
    },
    {
     "bike": "faraoll-g50",
     "group": "Рама, вилка, рулевая",
     "part": "Лапка переключателя",
     "spec": "93mm GeX",
-    "purchasePrice": 1933
+    "purchasePrice": 1933,
+    "id": "faraoll-g50/рама-вилка-рулевая/лапка-переключателя"
    },
    {
     "bike": "faraoll-g50",
     "group": "Кокпит",
     "part": "Руль",
     "spec": "SL7",
-    "purchasePrice": 9873
+    "purchasePrice": 9873,
+    "id": "faraoll-g50/кокпит/руль"
    },
    {
     "bike": "faraoll-g50",
     "group": "Кокпит",
     "part": "Седло + крепление",
     "spec": "Specialized Power Expert with Mirror",
-    "purchasePrice": 16881
+    "purchasePrice": 16881,
+    "id": "faraoll-g50/кокпит/седло-крепление"
    },
    {
     "bike": "faraoll-g50",
     "group": "Кокпит",
     "part": "Обмотка руля",
     "spec": "Cane Creek Flanders Tape Suede 3mm Smart Gel Black",
-    "purchasePrice": 2700
+    "purchasePrice": 2700,
+    "id": "faraoll-g50/кокпит/обмотка-руля"
    },
    {
     "bike": "faraoll-g50",
     "group": "Кокпит",
     "part": "Вынос велокомпьютера",
     "spec": "XODCK",
-    "purchasePrice": 946
+    "purchasePrice": 946,
+    "id": "faraoll-g50/кокпит/вынос-велокомпьютера"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Пистолеты (шифтеры) — пара",
     "spec": "Wheeltop GEX Carbon 7800",
-    "purchasePrice": 28728
+    "purchasePrice": 28728,
+    "id": "faraoll-g50/групсет-и-трансмиссия/пистолеты-шифтеры-пара"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Шатуны + передняя звезда",
     "spec": "Shimano GRX FC-RX820",
-    "purchasePrice": 10704
+    "purchasePrice": 10704,
+    "id": "faraoll-g50/групсет-и-трансмиссия/шатуны-передняя-звезда"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Каретка",
     "spec": "TOKEN T47 ceramic For SH",
-    "purchasePrice": 10606
+    "purchasePrice": 10606,
+    "id": "faraoll-g50/групсет-и-трансмиссия/каретка"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Кассета",
     "spec": "Shimano XT CS-M8200 10-51",
-    "purchasePrice": 8232
+    "purchasePrice": 8232,
+    "id": "faraoll-g50/групсет-и-трансмиссия/кассета"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Цепь",
     "spec": "Shimano XTR CN-M9100",
-    "purchasePrice": 3662
+    "purchasePrice": 3662,
+    "id": "faraoll-g50/групсет-и-трансмиссия/цепь"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Ролики (звёзды) переключателя",
     "spec": "RD M9100/9120",
-    "purchasePrice": 2171
+    "purchasePrice": 2171,
+    "id": "faraoll-g50/групсет-и-трансмиссия/ролики-звёзды-переключателя"
    },
    {
     "bike": "faraoll-g50",
     "group": "Групсет и трансмиссия",
     "part": "Педали",
     "spec": "Time Speciale ATAC 10",
-    "purchasePrice": 9900
+    "purchasePrice": 9900,
+    "id": "faraoll-g50/групсет-и-трансмиссия/педали"
    },
    {
     "bike": "faraoll-g50",
     "group": "Тормоза",
     "part": "Роторы ×2",
     "spec": "Shimano RT-CL800 (Center Lock)",
-    "purchasePrice": 5313
+    "purchasePrice": 5313,
+    "id": "faraoll-g50/тормоза/роторы-2"
    },
    {
     "bike": "faraoll-g50",
     "group": "Тормоза",
     "part": "Тормозные колодки",
     "spec": "L05A-RF",
-    "purchasePrice": 1648
+    "purchasePrice": 1648,
+    "id": "faraoll-g50/тормоза/тормозные-колодки"
    },
    {
     "bike": "faraoll-g50",
     "group": "Тормоза",
     "part": "Гидролинии + шумоизоляция",
     "spec": "Shimano SM-BH90-SS 1700 + 1000",
-    "purchasePrice": 3499
+    "purchasePrice": 3499,
+    "id": "faraoll-g50/тормоза/гидролинии-шумоизоляция"
    },
    {
     "bike": "faraoll-g50",
     "group": "Колёса и резина",
     "part": "Колёса",
     "spec": "KORE 35mm, карбон, 24 спицы, рэтчет 36",
-    "purchasePrice": 19458.56
+    "purchasePrice": 19458.56,
+    "id": "faraoll-g50/колёса-и-резина/колёса"
    },
    {
     "bike": "faraoll-g50",
     "group": "Колёса и резина",
     "part": "Резина ×2",
     "spec": "Tufo Gravel Thundero HD 700x40C",
-    "purchasePrice": 7800
+    "purchasePrice": 7800,
+    "id": "faraoll-g50/колёса-и-резина/резина-2"
    },
    {
     "bike": "faraoll-g50",
     "group": "Колёса и резина",
     "part": "Ниппеля tubeless + ободная лента",
     "spec": "Ridenow + ZTTO",
-    "purchasePrice": 1968
+    "purchasePrice": 1968,
+    "id": "faraoll-g50/колёса-и-резина/ниппеля-tubeless-ободная-лента"
    },
    {
     "bike": "faraoll-g50",
     "group": "Электроника",
     "part": "Датчик каденса + скорости",
     "spec": "iGPSPORT CAD70 / SPD70",
-    "purchasePrice": 4088
+    "purchasePrice": 4088,
+    "id": "faraoll-g50/электроника/датчик-каденса-скорости"
    },
    {
     "bike": "faraoll-g50",
     "group": "Электроника",
     "part": "Фонарь передний + крепление",
     "spec": "iGPSPORT VS1800S",
-    "purchasePrice": 5766
+    "purchasePrice": 5766,
+    "id": "faraoll-g50/электроника/фонарь-передний-крепление"
    },
    {
     "bike": "faraoll-g50",
     "group": "Электроника",
     "part": "Фонарь задний + крепление",
     "spec": "Coospo TR70",
-    "purchasePrice": 5447
+    "purchasePrice": 5447,
+    "id": "faraoll-g50/электроника/фонарь-задний-крепление"
    },
    {
     "bike": "faraoll-g50",
     "group": "Электроника",
     "part": "Велокомпьютер",
     "spec": "iGPSPORT BiNavi",
-    "purchasePrice": 13689
+    "purchasePrice": 13689,
+    "id": "faraoll-g50/электроника/велокомпьютер"
    },
    {
     "bike": "faraoll-g50",
     "group": "Фляги и аксессуары",
     "part": "Фляги + базы",
     "spec": "Fidlock Twist",
-    "purchasePrice": 7000
+    "purchasePrice": 7000,
+    "id": "faraoll-g50/фляги-и-аксессуары/фляги-базы"
    },
    {
     "bike": "faraoll-g50",
     "group": "Ремнабор (едет с велосипедом)",
     "part": "Баллоны CO2 + инфлятор",
     "spec": null,
-    "purchasePrice": 11858
+    "purchasePrice": 11858,
+    "id": "faraoll-g50/ремнабор-едет-с-велосипедом/баллоны-co2-инфлятор"
    }
   ],
   "ownership": "owned",

@@ -63,10 +63,15 @@
     --hdr:#f6f6f7;
   }
 }
+:root{ --mono: ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Roboto Mono","Cascadia Mono",monospace; }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,a,summary,.it,.att,.kpi,.bikecard,.glyph{touch-action:manipulation;}
 html,body{margin:0;padding:0;}
 html{-webkit-text-size-adjust:100%;}
+/* Две гарнитуры на две роли. Моноширинная — не приём, а язык предмета:
+   приложение состоит из артикулов (CS-M8200), пределов износа (1.5 мм),
+   интервалов и дат. В моноширинном они выравниваются по разрядам и читаются
+   как спецификация, а не как проза. */
 body{
   background:var(--bg); color:var(--ink);
   font:400 16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
@@ -75,16 +80,22 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 button,input,select,textarea{font:inherit;color:inherit;}
-.num{font-variant-numeric:tabular-nums;}
+.num,.mono{font-family:var(--mono); font-variant-numeric:tabular-nums; letter-spacing:-.02em;}
+.lbl{font-family:var(--mono);}
+th{font-family:var(--mono);}
+.chip{font-family:var(--mono); letter-spacing:-.01em;}
+.kpi .k{font-family:var(--mono);}
+.glyph .tagname{font-family:var(--mono);}
+.tiny .chip{letter-spacing:-.01em;}
 
 /* ============================================================ header */
 header{
   position:sticky; top:0; z-index:50; background:var(--hdr);
-  border-bottom:2px solid var(--ink);
+  border-bottom:1px solid var(--line2);
   padding:calc(var(--safe-t) + 12px) calc(var(--safe-r) + 18px) 12px calc(var(--safe-l) + 18px);
 }
 .hrow{display:flex; align-items:center; gap:12px;}
-h1{margin:0; font-size:24px; font-weight:800; letter-spacing:-.03em; flex:1; min-width:0;
+h1{margin:0; font-size:24px; font-weight:750; letter-spacing:-.035em; flex:1; min-width:0; text-wrap:balance;
    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .hrow{gap:8px;}
 #mbtn{
@@ -107,20 +118,22 @@ h1{margin:0; font-size:24px; font-weight:800; letter-spacing:-.03em; flex:1; min
 /* ============================================================ layout */
 main{padding:18px calc(var(--safe-r) + 18px) 28px calc(var(--safe-l) + 18px); max-width:820px; margin:0 auto;}
 .view{display:none;} .view.on{display:block;}
+/* Подпись раздела — штамп на сервисной карте: моноширинный, разрядка,
+   тонкая черта. Раньше это была толстая цветная полоса, спорившая со сценой. */
 .lbl{
-  font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--ink); margin:26px 0 8px; display:flex; align-items:center; gap:8px;
-  border-left:5px solid var(--accent); padding-left:9px; line-height:1.5;
+  font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink2); margin:28px 0 10px; display:flex; align-items:center; gap:9px;
+  border-left:2px solid var(--line2); padding-left:10px; line-height:1.6;
 }
 .lbl:first-child{margin-top:0;}
-.lbl .n{ background:var(--ink); color:var(--bg); padding:1px 7px; font-size:11px; letter-spacing:0; }
+.lbl .n{ background:var(--surface2); color:var(--ink); padding:1px 7px; font-size:11px; letter-spacing:0; }
 .card{background:var(--surface); overflow:hidden;}
 .card + .card{margin-top:10px;}
 .pad{padding:16px;}
 .muted{color:var(--ink2); font-size:14px; line-height:1.5;}
 .tiny{color:var(--ink3); font-size:12.5px; line-height:1.45;}
 .spread{display:flex; align-items:baseline; justify-content:space-between; gap:12px;}
-.hero{font-size:38px; font-weight:800; letter-spacing:-.035em; line-height:1.05;}
+.hero{font-family:var(--mono); font-size:34px; font-weight:700; letter-spacing:-.045em; line-height:1.05;}
 .stack{display:flex; flex-direction:column; gap:10px;}
 
 /* ============================================================ chips */
@@ -174,7 +187,7 @@ textarea{min-height:78px; resize:vertical;}
 /* ============================================================ tabbar */
 nav{
   position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; background:var(--hdr);
-  border-top:2px solid var(--ink);
+  border-top:1px solid var(--line2);
   padding:5px calc(var(--safe-r) + 4px) calc(var(--safe-b) + 5px) calc(var(--safe-l) + 4px);
 }
 nav button{
@@ -237,6 +250,7 @@ nav .badge{
 .row .rl{flex:1; min-width:0;}
 .row .rt{font-size:14.5px; line-height:1.3;}
 .row .rs{font-size:12.5px; color:var(--ink2); margin-top:2px;}
+.att .t2{font-family:var(--mono); letter-spacing:-.01em;}
 .row .rv{font-size:14.5px; font-weight:600; text-align:right; white-space:nowrap; flex:none;}
 .scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;}
 table{border-collapse:collapse; width:100%; font-size:13px;}
@@ -249,6 +263,8 @@ td.wrap{white-space:normal; min-width:190px;}
   text-transform:uppercase; letter-spacing:.07em; border-bottom:0;}
 .spec tr.tot td{background:var(--ink); color:var(--bg); font-weight:800; border-bottom:0;}
 .spec td{vertical-align:top;}
+.spec tr.ed{cursor:pointer;}
+@media (hover:hover){ .spec tr.ed:hover td{background:var(--surface2);} }
 
 /* ============================================================ charts */
 .track{height:10px; background:var(--surface2); overflow:hidden; margin-top:7px;}
@@ -432,7 +448,8 @@ details[open] summary .arw{transform:rotate(90deg);}
 /* block boxes: as inline spans these run together on one line */
 .kpi .k{display:block; font-size:10.5px; font-weight:700; letter-spacing:.06em;
   text-transform:uppercase; color:var(--ink3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.kpi .v{display:block; font-size:22px; font-weight:800; letter-spacing:-.03em; margin-top:5px; line-height:1.1;}
+.kpi .v{display:block; font-family:var(--mono); font-size:22px; font-weight:700;
+  letter-spacing:-.04em; margin-top:5px; line-height:1.1;}
 .kpi .s{display:block; font-size:11px; color:var(--ink3); margin-top:3px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
@@ -474,7 +491,7 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
   body{padding-bottom:0;}
   nav{
     top:0; bottom:0; right:auto; width:232px; flex-direction:column;
-    border-top:0; border-right:2px solid var(--ink); padding:0 0 16px;
+    border-top:0; border-right:1px solid var(--line2); padding:0 0 16px;
     gap:0; align-items:stretch; overflow-y:auto;
   }
   nav::before{
@@ -650,7 +667,8 @@ const LS = 'bikes:v1';
    ничего не настраивая. Токен появляется только после входа по паролю. */
 const API = 'https://bikes-sync.severyanov.workers.dev';
 const TOK_KEY = 'bikes:token';
-const blankDoc = () => ({ v:1, mtime:0, odo:{}, annualKm:{}, ownership:{}, events:[], checks:{}, photos:{}, migratedAt:null });
+const blankDoc = () => ({ v:1, mtime:0, odo:{}, annualKm:{}, ownership:{}, parts:{},
+                          events:[], checks:{}, photos:{}, migratedAt:null });
 
 let local = { rev:0, doc:blankDoc(), dirty:false, lastSync:null };
 try {
@@ -749,6 +767,12 @@ function mergeDocs(mine, theirs) {
   // would let it blank out the odometer for every bike in the cloud.
   for (const k of ['odo', 'annualKm', 'photos', 'ownership'])
     out[k] = Object.assign({}, older[k] || {}, newer[k] || {});
+
+  // правки состава сливаются по каждому велосипеду отдельно, иначе правка
+  // одного затирала бы правки другого
+  out.parts = {};
+  for (const id of new Set([...Object.keys(older.parts||{}), ...Object.keys(newer.parts||{})]))
+    out.parts[id] = Object.assign({}, (older.parts||{})[id], (newer.parts||{})[id]);
 
   out.checks = {};
   for (const key of new Set([...Object.keys(older.checks||{}), ...Object.keys(newer.checks||{})]))
@@ -898,10 +922,27 @@ function costPerKm(bikeId, year) {
   return yearCost(bikeId, year) / odo;
 }
 
+/* Состав живёт в двух слоях: неизменяемый сид в bikes.json и правки владельца
+   в синхронизируемом документе. Ключ — стабильный id детали, а не её название,
+   поэтому переименование не рвёт привязку. */
+function componentsOf(bikeId) {
+  const over = (DOC().parts || {})[bikeId] || {};
+  const out = [];
+  for (const c of (BIKE[bikeId] && BIKE[bikeId].components) || []) {
+    const o = over[c.id];
+    if (o && o.deleted) continue;
+    out.push(o ? Object.assign({}, c, o) : c);
+  }
+  for (const [id, o] of Object.entries(over))
+    if (o && o.added && !o.deleted) out.push(Object.assign({ id }, o));
+  return out;
+}
+
 function purchaseTotal(bikeId){
   const b = BIKE[bikeId];
-  const items = (b.components||[]).reduce((s,c)=>s+(Number(c.purchasePrice)||0), 0);
-  // bikes bought whole have no itemised list, only a total
+  const list = componentsOf(bikeId);
+  const items = list.reduce((s,c)=>s+(Number(c.purchasePrice)||0), 0);
+  // велосипед, купленный целиком, не расписан по позициям — у него только сумма
   return items || Number(b.totalSpend) || 0;
 }
 
@@ -929,8 +970,9 @@ function forecast(bikeId) {
 
 function matchComponent(bikeId, rule) {
   const b = BIKE[bikeId]; if (!b || !rule.part_keywords || !rule.part_keywords.length) return null;
+  const list = componentsOf(bikeId);
   for (const kw of rule.part_keywords) {
-    const hit = (b.components||[]).find(c => (c.part||'').toLowerCase().includes(kw.toLowerCase()));
+    const hit = list.find(c => (c.part||'').toLowerCase().includes(kw.toLowerCase()));
     if (hit && hit.purchasePrice) return hit;
   }
   return null;
@@ -996,10 +1038,10 @@ let moneyBike = 'all', framesMode = 'short', serviceMode = 'due';
 
 const TABS = [
   {id:'garage',  label:'Гараж',  icon:'M4 18h16M6 18V9.5L12 5l6 4.5V18', title:'Гараж'},
-  {id:'service', label:'ТО',     icon:'M12 8v4.2l2.8 1.8M21 12a9 9 0 11-18 0 9 9 0 0118 0z', title:'Обслуживание'},
-  {id:'money',   label:'Деньги', icon:'M4 19V9M9.3 19V5M14.7 19v-6M20 19v-9', title:'Затраты'},
-  {id:'frames',  label:'Выбор',  icon:'M6 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM18 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM6 14.3l4.2-6h4.6l3.2 6', title:'Выбор велосипеда 26/27'},
-  {id:'build',   label:'Сборка', icon:'M5 7.5h14M5 12h14M5 16.5h9', title:'Чек-листы'}
+  {id:'service', label:'ТО',     icon:'M12 8v4.2l2.8 1.8M21 12a9 9 0 11-18 0 9 9 0 0118 0z', title:'ТО'},
+  {id:'money',   label:'Деньги', icon:'M4 19V9M9.3 19V5M14.7 19v-6M20 19v-9', title:'Деньги'},
+  {id:'build',   label:'Сборка', icon:'M5 7.5h14M5 12h14M5 16.5h9', title:'Сборка'},
+  {id:'frames',  label:'Выбор',  icon:'M6 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM18 17.5a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4zM6 14.3l4.2-6h4.6l3.2 6', title:'Выбор на 2027'}
 ];
 
 function renderNav() {
@@ -1254,7 +1296,7 @@ function bikeCard(b) {
 function viewBikeDetail(id) {
   const b = BIKE[id], own = ownershipOf(id);
   const groups = {};
-  for (const c of (b.components||[])) (groups[c.group] || (groups[c.group] = [])).push(c);
+  for (const c of componentsOf(id)) (groups[c.group] || (groups[c.group] = [])).push(c);
   const spend = purchaseTotal(id);
   const photo = DOC().photos[id];
   const cpk = costPerKm(id, YEAR);
@@ -1335,9 +1377,27 @@ function viewBikeDetail(id) {
     }
   }
 
+  /* велосипед в сборке — покажем, сколько собрано, и уведём в его чек-лист */
+  if (b.status === 'в сборке') {
+    const key = Object.keys(CHECKLISTS).find(k => k.startsWith(id.replace(/-v?\d*$/, '')) || k.includes(id.split('-')[0]));
+    if (key) {
+      const gs = CHECKLISTS[key], ch = DOC().checks[key] || {};
+      const total = gs.reduce((n,g)=>n+g.items.length,0);
+      const done  = gs.reduce((n,g)=>n+g.items.filter(it=>ch[stableId(g.g,it.n)]).length,0);
+      const pct = Math.round(done/total*100);
+      h += `<div class="lbl">Сборка</div>
+      <button class="card pad" data-bkey="${key}" data-tab="build" style="width:100%;text-align:left;border:0;cursor:pointer">
+        <div class="spread"><span class="muted">Отмечено по чек-листу</span>
+          <span class="num" style="font-weight:700">${done} / ${total}</span></div>
+        <div class="track" style="margin-top:10px"><div class="fill" style="width:${Math.max(2,pct)}%;background:var(--accent)"></div></div>
+        <div class="tiny" style="margin-top:8px">Открыть чек-лист ›</div>
+      </button>`;
+    }
+  }
+
   /* спеки: одна таблица — что стоит и сколько стоило, без раскрывашек */
   if (Object.keys(groups).length) {
-    const n = (b.components||[]).length;
+    const n = componentsOf(id).length;
     h += `<div class="lbl">Текущие спеки <span class="n">${n}</span></div>
     <div class="card scroll"><table class="spec">
       <thead><tr><th>Что стоит</th>${SHOWMONEY?'<th class="n">Цена</th>':''}</tr></thead>
@@ -1345,12 +1405,14 @@ function viewBikeDetail(id) {
     for (const [g, items] of Object.entries(groups)) {
       const sum = items.reduce((s,c)=>s+(Number(c.purchasePrice)||0),0);
       h += `<tr class="gr"><td>${esc(g)}</td>${SHOWMONEY?`<td class="n">${rub(sum)}</td>`:''}</tr>`;
-      h += items.map(c => `<tr>
-        <td class="wrap"><b>${esc(c.part)}</b>${c.spec?`<span style="display:block;color:var(--ink2)">${esc(c.spec)}</span>`:''}</td>
+      h += items.map(c => `<tr${EDITOR?` class="ed" data-part="${esc(id)}|${esc(c.id)}"`:''}>
+        <td class="wrap"><b>${esc(c.part)}</b>${c.spec?`<span class="mono" style="display:block;color:var(--ink2);font-size:12.5px">${esc(c.spec)}</span>`:''}</td>
         ${SHOWMONEY?`<td class="n">${c.purchasePrice?rub(c.purchasePrice):'—'}</td>`:''}</tr>`).join('');
     }
     h += `${SHOWMONEY?`<tr class="tot"><td>Итого закупка</td><td class="n">${rub(spend)}</td></tr>`:''}
-      </tbody></table></div>`;
+      </tbody></table></div>
+      ${EDITOR?`<div class="tiny" style="margin-top:9px">Нажмите на деталь, чтобы заменить её или поправить цену.</div>
+      <div style="margin-top:10px"><button class="btn" data-part="${esc(id)}|new">Добавить деталь</button></div>`:''}`;
   } else {
     h += `<div class="lbl">Текущие спеки</div>
       <div class="card"><div class="empty">Состав не расписан по позициям${b.totalSpend?` — известна только общая сумма ${rub(b.totalSpend)}`:''}</div></div>`;
@@ -1895,6 +1957,85 @@ function openRuleSheet(ruleId) {
   $('sheet').classList.add('on');
 }
 
+/* Замена детали — это два действия сразу: в спеках появляется новая деталь,
+   а в журнале обслуживания запись с ценой. Делать их порознь пришлось бы
+   дважды вводить одно и то же. */
+function openPartSheet(bikeId, partId) {
+  const isNew = partId === 'new';
+  const c = isNew ? { part:'', spec:'', purchasePrice:'', group:'' } :
+            componentsOf(bikeId).find(x => x.id === partId);
+  if (!c) return;
+  const groups = [...new Set(componentsOf(bikeId).map(x => x.group))];
+  $('sheetbody').innerHTML = `<div class="grab"></div>
+    <h3>${isNew ? 'Новая деталь' : esc(c.part)}</h3>
+    <p class="tiny">${isNew ? 'Появится в спеках и в закупке.'
+      : 'Правка меняет спеки. Замена ещё и запишет работу в журнал.'}</p>
+    <label for="p-group">Узел</label>
+    <input id="p-group" list="p-groups" value="${esc(c.group||'')}" placeholder="например, Тормоза">
+    <datalist id="p-groups">${groups.map(g=>`<option value="${esc(g)}">`).join('')}</datalist>
+    <label for="p-part">Деталь</label>
+    <input id="p-part" value="${esc(c.part||'')}" placeholder="Кассета">
+    <label for="p-spec">Характеристика</label>
+    <input id="p-spec" value="${esc(c.spec||'')}" placeholder="Shimano XT CS-M8200 10-51">
+    <label for="p-price">Цена, ₽</label>
+    <input id="p-price" type="number" inputmode="decimal" value="${c.purchasePrice??''}">
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn ghost" id="p-cancel">Отмена</button>
+      <button class="btn pri" id="p-save">${isNew?'Добавить':'Сохранить'}</button>
+    </div>
+    ${isNew?'':`
+      <div class="lbl" style="margin-top:26px">Замена</div>
+      <p class="tiny">Впишите выше новую деталь и цену, а здесь — когда и где меняли. Старая заменится, а в журнал уйдёт запись.</p>
+      <div class="grid2">
+        <div><label for="p-date">Дата</label><input id="p-date" type="date" value="${today()}"></div>
+        <div><label for="p-labour">Работа, ₽</label><input id="p-labour" type="number" inputmode="decimal" placeholder="0"></div>
+      </div>
+      <label for="p-place">Где меняли</label><input id="p-place" placeholder="дома / мастерская">
+      <div style="margin-top:14px"><button class="btn" id="p-replace">Заменить и записать</button></div>
+      <div style="margin-top:22px"><button class="btn ghost" id="p-del">Снять деталь</button></div>`}`;
+
+  const read = () => ({
+    group: $('p-group').value.trim() || 'Прочее',
+    part:  $('p-part').value.trim(),
+    spec:  $('p-spec').value.trim(),
+    purchasePrice: $('p-price').value === '' ? null : Number($('p-price').value)
+  });
+  const write = patch => {
+    const parts = DOC().parts || (DOC().parts = {});
+    const forBike = parts[bikeId] || (parts[bikeId] = {});
+    const key = isNew ? 'p' + uid() : partId;
+    forBike[key] = Object.assign({}, forBike[key], patch, isNew ? { added:true } : null);
+    persist(); closeSheet(); render(); sync(true);
+  };
+
+  $('p-cancel').onclick = closeSheet;
+  $('p-save').onclick = () => {
+    const v = read();
+    if (!v.part) { toast('Впишите название детали'); return; }
+    write(v); toast(isNew ? 'Деталь добавлена' : 'Сохранено');
+  };
+  if (!isNew) {
+    $('p-del').onclick = () => {
+      if (!confirm(`Снять «${c.part}» с велосипеда? В затратах она останется.`)) return;
+      write({ deleted:true }); toast('Деталь снята');
+    };
+    $('p-replace').onclick = () => {
+      const v = read();
+      if (!v.part) { toast('Впишите название новой детали'); return; }
+      DOC().events.push({
+        id: uid(), mtime: Date.now(), bike: bikeId, rule: null, category: 'consumables',
+        date: $('p-date').value || today(), odo: DOC().odo[bikeId] ?? null,
+        part: v.part + (v.spec ? ' — ' + v.spec : ''),
+        partCost: Number(v.purchasePrice) || 0,
+        labourCost: Number($('p-labour').value) || 0,
+        place: $('p-place').value.trim(), note: 'Замена: ' + c.part
+      });
+      write(v); toast('Заменено и записано');
+    };
+  }
+  $('sheet').classList.add('on');
+}
+
 function openSyncSheet() {
   $('sheetbody').innerHTML = `<div class="grab"></div>
     <h3>${EDITOR ? 'Вы вошли' : 'Вход'}</h3>
@@ -2020,8 +2161,8 @@ function render(fromHistory) {
     : tab === 'garage' ? `${ownedBikes().length} в парке${soldBikes().length?' · '+soldBikes().length+' продан':''}`
     : tab === 'service' ? (att.length ? `${att.length} к работе` : RULES.length + ' пунктов регламента')
     : tab === 'money' ? YEAR + ' год'
-    : tab === 'frames' ? (framesMode === 'short' ? 'шорт-лист под рост 180' : FRAMES.length + ' рам в базе')
-    : 'Faraoll G50 и Speedone';
+    : tab === 'frames' ? (framesMode === 'short' ? 'гравел под рост 180 · шорт-лист' : FRAMES.length + ' рам в базе')
+    : 'Faraoll G50 и Speedone Floater';
   document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
   $('v-' + tab).classList.add('on');
   ({garage:viewGarage, service:viewService, money:viewMoney, frames:viewFrames, build:viewBuild})[tab]();
@@ -2033,9 +2174,14 @@ function render(fromHistory) {
 let lastScreen = '';
 
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money]');
+  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money],[data-part]');
   if (!t) { if (e.target === $('sheet')) closeSheet(); return; }
 
+  if (t.dataset.part) {
+    if (!EDITOR) return openSyncSheet();
+    const [bid, pid] = t.dataset.part.split('|');
+    openPartSheet(bid, pid); return;
+  }
   if (t.dataset.sheet) { openSyncSheet(); return; }
   if (t.dataset.money) { toggleMoney(); return; }
   if (t.dataset.tab)   { tab = t.dataset.tab; openBike = null; render(); window.scrollTo(0,0); return; }

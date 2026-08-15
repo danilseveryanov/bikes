@@ -26,13 +26,13 @@ const CATS = { drivetrain:{}, brakes:{}, wheels:{}, suspension:{}, consumables:{
 const BIKE = Object.fromEntries(bikes.map(b => [b.id, b]));
 const RULE = Object.fromEntries(rules.map(r => [r.id, r]));
 
-const doc = { odo:{}, annualKm:{}, ownership:{}, events:[], checks:{}, photos:{} };
+const doc = { odo:{}, annualKm:{}, ownership:{}, parts:{}, events:[], checks:{}, photos:{} };
 const DOC = () => doc;
 
 const api = new Function("DOC","BIKE","RULE","CATS","RULES","BIKES",
   src + `; return {yearCost,categorySplit,costPerKm,forecast,purchaseTotal,evCost,
                    liveEvents,eventsOf,matchComponent,defaultPartCost,dueStatus,
-                   ownershipOf,isOwned,ownedBikes,soldBikes,netCost,attention};`
+                   ownershipOf,isOwned,ownedBikes,soldBikes,netCost,attention,componentsOf};`
 )(DOC, BIKE, RULE, CATS, rules, bikes);
 
 const A = "faraoll-g50", B = "twitter-rider-boost", Y = 2026;
@@ -283,6 +283,60 @@ doc.events[0].deleted = false;
   const found = cl[K].some(g => g.items.some(i => slug(g.g) + "/" + slug(i.n) === NEW));
   assert.ok(found, "новый id должен существовать в данных чек-листа");
   n++;
+}
+
+/* --- состав редактируется, но сид остаётся неизменным ---
+   Правки лежат отдельным слоем и привязаны к id детали, а не к её названию. */
+{
+  const A2 = "faraoll-g50";
+  const seed = BIKE[A2].components;
+  const chain = seed.find(c => c.part === "Цепь");
+  assert.ok(chain && chain.id, "у детали должен быть стабильный id"); n++;
+  eq("все id уникальны",
+     new Set(bikes.flatMap(b => (b.components||[]).map(c => c.id))).size,
+     bikes.reduce((a,b) => a + (b.components||[]).length, 0));
+
+  const base = api.componentsOf(A2).length;
+  const basePrice = api.purchaseTotal(A2);
+
+  // правка цены и характеристики
+  doc.parts[A2] = { [chain.id]: { spec:"XTR CN-M9100 новая", purchasePrice: 4200 } };
+  const edited = api.componentsOf(A2).find(c => c.id === chain.id);
+  eq("характеристика заменилась", edited.spec, "XTR CN-M9100 новая");
+  eq("название сохранилось", edited.part, "Цепь");
+  eq("закупка пересчиталась", api.purchaseTotal(A2), basePrice - chain.purchasePrice + 4200);
+  eq("сид не тронут", BIKE[A2].components.find(c => c.id === chain.id).purchasePrice, chain.purchasePrice);
+
+  // правило подхватывает новую цену детали
+  const rule = rules.find(r => r.id === "chain-wear");
+  eq("цена замены берётся из правки", api.defaultPartCost(A2, rule), 4200);
+
+  // снятие
+  doc.parts[A2][chain.id] = { deleted: true };
+  eq("снятая деталь пропала", api.componentsOf(A2).length, base - 1);
+  eq("закупка без неё", api.purchaseTotal(A2), basePrice - chain.purchasePrice);
+  eq("правило падает на оценку", api.defaultPartCost(A2, rule), rule.est_part_cost);
+
+  // добавление
+  doc.parts[A2] = { "pNEW": { added:true, group:"Кокпит", part:"Грипсы", spec:"ESI", purchasePrice: 1900 } };
+  eq("добавленная деталь на месте", api.componentsOf(A2).length, base + 1);
+  eq("закупка с ней", api.purchaseTotal(A2), basePrice + 1900);
+  doc.parts = {};
+  eq("без правок всё как в файле", api.purchaseTotal(A2), basePrice);
+}
+
+/* --- правки состава переживают слияние устройств --- */
+{
+  const md = new Function(cut("function mergeDocs(", "async function pull(") + "; return mergeDocs;")();
+  const cloud = { mtime:1000, odo:{}, annualKm:{}, photos:{}, ownership:{}, events:[], checks:{},
+                  parts:{ "faraoll-g50": { x1:{ purchasePrice: 4200 } } } };
+  const other = { mtime:2000, odo:{}, annualKm:{}, photos:{}, ownership:{}, events:[], checks:{},
+                  parts:{ "twitter-rider-boost": { y1:{ purchasePrice: 999 } } } };
+  const m = md(other, cloud);
+  eq("правка одного велосипеда цела", m.parts["faraoll-g50"].x1.purchasePrice, 4200);
+  eq("правка другого тоже", m.parts["twitter-rider-boost"].y1.purchasePrice, 999);
+  const wiped = { mtime:3000, odo:{}, annualKm:{}, photos:{}, ownership:{}, events:[], checks:{}, parts:{} };
+  eq("стёртое устройство не сносит правки", md(wiped, cloud).parts["faraoll-g50"].x1.purchasePrice, 4200);
 }
 
 console.log(`ok — ${n} assertions`);
