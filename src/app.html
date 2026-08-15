@@ -40,8 +40,10 @@
   --r-card:0px; --r-in:0px; --r-ctl:0px;
   --spring:cubic-bezier(.34,1.4,.64,1);
 }
+/* Светлая тема применяется, когда её просит система И пользователь не выбрал
+   тёмную вручную. Ручной выбор ниже перебивает системный в обе стороны. */
 @media (prefers-color-scheme: light){
-  :root{
+  :root:not([data-theme="dark"]){
     color-scheme: light;
     --bg:#f6f6f7;
     --surface:#ffffff;
@@ -64,6 +66,23 @@
   }
 }
 :root{ --mono: ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Roboto Mono","Cascadia Mono",monospace; }
+/* Ручной выбор: перебивает системный и в светлую, и в тёмную сторону. */
+:root[data-theme="light"]{
+  color-scheme: light;
+  --bg:#f6f6f7; --surface:#ffffff; --surface2:#f1f1f3; --line:#e5e5e9; --line2:#d3d3da;
+  --ink:#141417; --ink2:#5f5f6b; --ink3:#8e8e9a;
+  --accent:#0d9488; --accent-dim:rgba(13,148,136,.1);
+  --danger:#dc2626; --danger-dim:rgba(220,38,38,.09);
+  --warn:#b45309; --warn-dim:rgba(180,83,9,.1);
+  --ok:#15803d; --ok-dim:rgba(21,128,61,.1);
+  --b1:#2a78d6; --b2:#eb6834; --b3:#1baf7a; --b4:#eda100; --b5:#e87ba4;
+  --hdr:#f6f6f7; --sil:#5b7fa6; --pine:#4a7a63; --neva:#a7cbe4;
+}
+:root[data-theme="light"] .scene{background:linear-gradient(#7fb4e2 0%,#a8d0ea 42%,#d9ecf8 70%,#c2dff0 100%);}
+:root[data-theme="light"] .sun{background:#fff3c4; box-shadow:0 0 44px 18px rgba(255,243,196,.8);}
+:root[data-theme="light"] .cloud{background:rgba(255,255,255,.85);}
+:root[data-theme="light"] .road{background:linear-gradient(#7c8fa3 0%,#68798c 100%);}
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,a,summary,.it,.att,.kpi,.bikecard,.glyph{touch-action:manipulation;}
 html,body{margin:0;padding:0;}
@@ -309,12 +328,12 @@ details[open] summary .arw{transform:rotate(90deg);}
    it. Layers drift at different speeds on scroll, which is what makes it read
    as depth rather than as a picture. */
 .scene{
-  position:relative; height:268px; margin:-18px calc(var(--safe-l) * -1 - 18px) 20px calc(var(--safe-r) * -1 - 18px);
+  position:relative; height:280px; margin:-18px calc(var(--safe-l) * -1 - 18px) 20px calc(var(--safe-r) * -1 - 18px);
   overflow:hidden; background:linear-gradient(#0c1a2f 0%, #182d49 40%, #2f5279 68%, #20395c 100%);
   border-bottom:1px solid var(--line);
 }
 @media (prefers-color-scheme: light){
-  .scene{background:linear-gradient(#7fb4e2 0%, #a8d0ea 42%, #d9ecf8 70%, #c2dff0 100%);}
+  :root:not([data-theme="dark"]) .scene{background:linear-gradient(#7fb4e2 0%, #a8d0ea 42%, #d9ecf8 70%, #c2dff0 100%);}
 }
 .scene .layer{position:absolute; left:0; right:0; will-change:transform;}
 .sunpath{position:absolute; top:0; left:0; width:100%; height:150px; pointer-events:none;}
@@ -331,18 +350,19 @@ details[open] summary .arw{transform:rotate(90deg);}
   75% { top:40px; }
   100%{ left:103%; top:104px; }
 }
-@media (prefers-color-scheme: light){ .sun{background:#fff3c4; box-shadow:0 0 44px 18px rgba(255,243,196,.8);} }
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .sun{background:#fff3c4; box-shadow:0 0 44px 18px rgba(255,243,196,.8);} }
 .cloud{position:absolute; background:rgba(255,255,255,.13); border-radius:100px; height:13px;}
 .cloud::before,.cloud::after{content:''; position:absolute; background:inherit; border-radius:50%;}
 .cloud::before{width:19px;height:19px;top:-8px;left:12px;}
 .cloud::after{width:13px;height:13px;top:-5px;left:33px;}
-@media (prefers-color-scheme: light){ .cloud{background:rgba(255,255,255,.85);} }
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .cloud{background:rgba(255,255,255,.85);} }
 @keyframes drift{ from{transform:translateX(-90px);} to{transform:translateX(460px);} }
-.ridge{position:absolute; bottom:60px; left:0; width:100%; height:120px; display:block;}
-:root{ --sil:#0b1727; --pine:#0d2033; --neva:#16304d; }
-@media (prefers-color-scheme: light){ :root{ --sil:#5b7fa6; --pine:#4a7a63; --neva:#a7cbe4; } }
+.ridge{position:absolute; bottom:126px; left:0; width:100%; height:104px; display:block; opacity:.96;}
+@media (min-width:900px){ .ridge{bottom:126px; height:118px;} }
+:root{ --sil:#0b1727; --pine:#0d2033; --neva:#1d3f66; }
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){ --sil:#5b7fa6; --pine:#4a7a63; --neva:#a7cbe4; } }
 /* морось — в Петербурге это состояние по умолчанию */
-.rain{top:0; height:150px; pointer-events:none;}
+.rain{top:0; height:170px; pointer-events:none;}
 .drop{
   position:absolute; top:-14px; width:1px; height:13px;
   background:linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.75));
@@ -354,17 +374,17 @@ details[open] summary .arw{transform:rotate(90deg);}
   0%{transform:translate(-40px,0);} 45%{transform:translate(220px,-14px);}
   70%{transform:translate(330px,6px);} 100%{transform:translate(480px,-8px);}
 }
-.neva{bottom:92px; height:24px; background:var(--neva);}
+.neva{bottom:88px; height:42px; background:var(--neva); box-shadow:inset 0 2px 0 rgba(255,255,255,.10);}
 .neva::after{
   content:''; position:absolute; inset:auto 0 0 0; height:10px;
   background:repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 9px, transparent 9px 22px);
 }
-.bridge{position:absolute; right:12px; bottom:0; opacity:.95;}
+.bridge{position:absolute; left:50%; transform:translateX(-50%); bottom:0; width:min(58%,260px); height:42px;}
 .boat{position:absolute; bottom:2px; left:0; animation:sail 46s linear infinite;}
 @keyframes sail{ from{transform:translateX(-40px);} to{transform:translateX(470px);} }
-.pines{position:absolute; bottom:54px; left:0; width:100%; height:38px;}
+.pines{position:absolute; bottom:54px; left:0; width:100%; height:36px;}
 .mosq{
-  position:absolute; left:14%; bottom:98px; font-size:14px; opacity:.9;
+  position:absolute; left:9%; bottom:96px; font-size:14px; opacity:.9;
   animation:buzz 6s ease-in-out infinite; transform-origin:center;
 }
 @keyframes buzz{
@@ -377,7 +397,7 @@ details[open] summary .arw{transform:rotate(90deg);}
   position:absolute; bottom:0; left:0; right:0; height:54px;
   background:linear-gradient(#2f4a6b 0%, #263d59 100%); border-top:2px solid rgba(255,255,255,.14);
 }
-@media (prefers-color-scheme: light){ .road{background:linear-gradient(#7c8fa3 0%,#68798c 100%);} }
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .road{background:linear-gradient(#7c8fa3 0%,#68798c 100%);} }
 .road::after{
   content:''; position:absolute; top:26px; left:0; right:0; height:2px;
   background:repeating-linear-gradient(90deg, rgba(255,255,255,.32) 0 14px, transparent 14px 30px);
@@ -400,7 +420,7 @@ details[open] summary .arw{transform:rotate(90deg);}
   background:rgba(0,0,0,.45); padding:3px 8px; white-space:nowrap;
   max-width:112px; overflow:hidden; text-overflow:ellipsis;
 }
-@media (prefers-color-scheme: light){ .glyph .tagname{background:rgba(0,0,0,.42);} }
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .glyph .tagname{background:rgba(0,0,0,.42);} }
 .glyph.gone svg{opacity:.4; filter:grayscale(.7);}
 .glyph.gone .tagname{opacity:.6;}
 .glyph .alert{
@@ -411,6 +431,14 @@ details[open] summary .arw{transform:rotate(90deg);}
 .rider{position:absolute; bottom:22px; left:0; opacity:.55;}
 @keyframes spin{ to{transform:rotate(360deg);} }
 .wh{transform-box:fill-box; transform-origin:center; }
+
+.chizhik{
+  position:absolute; right:5%; bottom:52px; width:44px; height:44px; border:0; background:none;
+  cursor:pointer; padding:0; display:flex; align-items:flex-end; justify-content:center;
+  opacity:.9; transition:transform .2s var(--spring);
+}
+.chizhik:active{transform:translateY(-6px) scale(1.1);}
+@media (hover:hover){ .chizhik:hover{transform:translateY(-3px);} }
 
 /* ============================================================ motion */
 .view{opacity:1;}
@@ -528,7 +556,7 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
   main{margin-left:232px; max-width:none; padding:24px 32px 48px;}
   .wrap{max-width:1180px; margin:0 auto;}
 
-  .scene{height:200px; margin:-24px calc(50% - 50vw + 116px) 22px;}
+  .scene{height:260px; margin:-24px calc(50% - 50vw + 116px) 22px;}
   .strip{justify-content:center; padding:0 32px;}
   .dash{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,240px)); gap:12px;
     align-items:start; justify-content:start;}
@@ -584,10 +612,6 @@ a{color:var(--accent);}
 <header>
   <div class="hrow">
     <h1 id="h1">Гараж</h1>
-    <button id="mbtn" data-money="1" aria-label="Показать или скрыть цены">
-      <svg viewBox="0 0 24 24"><path d="M12 5v14M9 8.5h5a2 2 0 010 4h-4a2 2 0 000 4h5"/></svg>
-      <span id="mlabel">Цены</span>
-    </button>
     <button id="sbtn">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
       <span id="slabel">Вход</span>
@@ -645,6 +669,19 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':
 /* Цены скрыты по умолчанию. Всё денежное в интерфейсе форматируется здесь,
    поэтому переключается одним флагом и ни одна цифра не проскакивает мимо. */
 let SHOWMONEY = localStorage.getItem('bikes:money') === '1';
+
+/* Тема: 'auto' идёт за системой, 'light' и 'dark' — ручной выбор. */
+let THEME = localStorage.getItem('bikes:theme') || 'auto';
+function applyTheme() {
+  if (THEME === 'auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', THEME);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', getComputedStyle(document.body).backgroundColor || '#0a0a0c');
+}
+function setTheme(t) {
+  THEME = t; localStorage.setItem('bikes:theme', t);
+  applyTheme(); render();
+}
 const rub = n => !SHOWMONEY ? '—'
   : (n==null ? '—' : Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ') + ' ₽');
 function toggleMoney() {
@@ -858,8 +895,6 @@ async function sync(silent) {
 function paintSync() {
   const dot = $('sdot'), lbl = $('slabel');
   if (lbl) lbl.textContent = EDITOR ? 'Профиль' : 'Вход';
-  const mb = $('mbtn');
-  if (mb) { mb.classList.toggle('on', SHOWMONEY); $('mlabel').textContent = SHOWMONEY ? 'Цены' : 'Цены'; }
   // подвал бокового меню рисуется только в renderNav(), поэтому без этой
   // строки он держал «Режим просмотра» даже во время синхронизации
   const ns = document.querySelector('.navstate');
@@ -1058,10 +1093,6 @@ function renderNav() {
            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
            <span>${EDITOR ? 'Профиль' : 'Войти'}</span>
          </button>
-         <button class="navact" data-money="1">
-           <svg viewBox="0 0 24 24"><path d="M12 5v14M9 8.5h5a2 2 0 010 4h-4a2 2 0 000 4h5"/></svg>
-           <span>${SHOWMONEY ? 'Скрыть цены' : 'Показать цены'}</span>
-         </button>
          <div class="navstate">${esc(syncLine())}</div>
        </div>`;
 }
@@ -1101,34 +1132,72 @@ function bikeGlyph(b, w) {
   </svg>`;
 }
 
-/* Скайлайн: Петропавловка, Исаакий, Ростральная, Адмиралтейство с корабликом,
-   Лахта-центр. Один силуэт — рисуется плоско, читается сразу. */
-const SKYLINE = [
-  'M4 120V96h30v24z M40 120V88h22v32z',                                    // дома слева
-  'M64 120V94h20v26z M70 94V72h8v22z M74 10l5 62h-10z M73.4 10h1.2V2h-1.2z', // Петропавловка
-  'M96 120V98h26v22z',
-  'M126 120V92h44v28z M134 92V74h28v18z M134 74a14 14 0 0 1 28 0z M147 60h2v-9h-2z', // Исаакий
-  'M176 120V84h7v36z M174 84h11v-4h-11z M179.5 72l4 8h-8z',                 // Ростральная
-  'M190 120V84h7v36z M188 84h11v-4h-11z M193.5 72l4 8h-8z',                 // вторая
-  'M206 120V96h34v24z',
-  'M246 120V90h24v30z M252 90V70h12v20z M258 24l5 46h-10z M257 24h2v-9h-2z '
-    + 'M259 15c4-1 7-3 9-5v6c-2 2-5 3-9 3z',                                // Адмиралтейство с корабликом
-  'M280 120V98h30v22z M314 120V92h18v28z',
-  'M340 120V44l8-30 8 30v76z M347 14h2V6h-2z',                              // Лахта-центр
-  'M362 120V100h34v20z'
+/* Силуэт города рисуется из именованных построек, а не одной строкой: у каждой
+   свои пропорции, и они не должны плыть. Раскладок две — на телефоне пять
+   доминант крупно, на компьютере те же плюс фоновая застройка, чтобы силуэт
+   не пришлось растягивать вдесятеро. Базовая линия y=100. */
+const LM = {
+  // Петропавловский собор: игла с ангелом — самый узнаваемый профиль города
+  peterpaul: x => `M${x-11} 100V78h22v22z M${x-6} 78V62h12v16z M${x} 7l5 55h-10z `
+                + `M${x-0.7} 8V2h1.4V8z M${x-2.2} 2.6a2.2 2.2 0 014.4 0 2.2 2.2 0 01-4.4 0z`,
+  // Исаакиевский собор: барабан, купол, четыре звонницы
+  isaac: x => `M${x-26} 100V76h52v24z M${x-22} 76V63h7v13z M${x+15} 76V63h7v13z `
+            + `M${x-15} 76V58h30v18z M${x-15} 58a15 15 0 0130 0z `
+            + `M${x-2.5} 44h5v-4h-5z M${x-0.6} 40v-6h1.2v6z`,
+  // Ростральная колонна с факелом
+  rostral: x => `M${x-3.5} 100V60h7v40z M${x-5.5} 60v-4h11v4z M${x} 45l4.5 11h-9z`,
+  // Адмиралтейство: шпиль с корабликом
+  admiralty: x => `M${x-14} 100V74h28v26z M${x-7} 74V54h14v20z M${x} 15l4 39h-8z `
+                + `M${x-0.6} 15V9h1.2v6z M${x+0.6} 9c3-.6 5.4-2 7-3.6v4.4c-1.6 1.6-4 3-7 3.6z`,
+  // Лахта-центр: сужающаяся закрученная башня, самая высокая точка
+  lakhta: x => `M${x-8} 100L${x-2.6} 15 ${x} 5 ${x+2.6} 15 ${x+8} 100z`,
+  block: (x, w, h) => `M${x-w/2} 100V${100-h}h${w}v${h}z`,
+  // жилая застройка с двускатным профилем — фон, не доминанта
+  house: (x, w, h) => `M${x-w/2} 100V${100-h}l${w/2} -5 ${w/2} 5v${h}z`
+};
+
+const SKY_NARROW = [
+  LM.block(18, 34, 20), LM.house(52, 30, 24),
+  LM.peterpaul(88),
+  LM.block(112, 26, 18),
+  LM.isaac(160),
+  LM.rostral(200), LM.rostral(214),
+  LM.block(236, 30, 20),
+  LM.admiralty(268),
+  LM.house(300, 32, 22), LM.block(330, 26, 17),
+  LM.lakhta(364),
+  LM.block(390, 24, 15)
+].join(' ');
+
+const SKY_WIDE = [
+  LM.block(24, 44, 19), LM.house(74, 40, 25), LM.block(120, 34, 17),
+  LM.peterpaul(178),
+  LM.block(214, 34, 20), LM.house(256, 38, 23),
+  LM.isaac(330),
+  LM.block(392, 36, 18),
+  LM.rostral(436), LM.rostral(452),
+  LM.house(490, 40, 24), LM.block(534, 32, 19),
+  LM.admiralty(596),
+  LM.block(646, 36, 21), LM.house(692, 42, 25), LM.block(740, 34, 18),
+  LM.lakhta(812),
+  LM.house(858, 38, 22), LM.block(902, 34, 19), LM.block(950, 40, 16)
 ].join(' ');
 
 function heroScene() {
   const list = [...ownedBikes(), ...soldBikes()];
-  const clouds = [[14,'.5',86,'-6s'],[38,'.36',108,'-37s'],[24,'.3',64,'-66s'],[54,'.24',92,'-91s']];
+  const wide = window.matchMedia('(min-width:900px)').matches;
+  const sky = wide ? SKY_WIDE : SKY_NARROW;
+  const skyW = wide ? 1000 : 400;
+  const clouds = [[12,'.5',86,'-6s'],[34,'.36',108,'-37s'],[22,'.3',64,'-66s'],[50,'.24',92,'-91s']];
   const drops = Array.from({length: 22}, (_, i) =>
     `<i class="drop" style="left:${(i*4.7+2)%100}%;animation-duration:${(.7+(i%5)*.16).toFixed(2)}s;
       animation-delay:-${(i*0.19).toFixed(2)}s;opacity:${(.1+(i%4)*.05).toFixed(2)}"></i>`).join('');
+
   return `<div class="scene" id="scene">
     <div class="sunpath layer" data-depth="0.05">
       <div class="sun" title="Солнце. Да, в Петербурге. Ходит редко, но ходит."></div>
     </div>
-    <div class="layer" data-depth="0.12" style="top:0;height:110px">
+    <div class="layer" data-depth="0.12" style="top:0;height:96px">
       ${clouds.map(([top,op,w,delay])=>`<i class="cloud" style="top:${top}px;width:${w}px;opacity:${op};
         animation:drift ${64+w}s linear infinite ${delay}"></i>`).join('')}
     </div>
@@ -1138,23 +1207,25 @@ function heroScene() {
       <path d="M2 10q7-9 13 0 6-9 13 0" fill="none" stroke="#e9eef5" stroke-width="2" stroke-linecap="round"/>
     </svg>
 
-    <svg class="ridge layer" data-depth="0.2" viewBox="0 0 400 120" preserveAspectRatio="none"
-         style="opacity:.96;bottom:114px;height:100px">
-      <path d="${SKYLINE}" fill="var(--sil)"/>
+    <!-- город: пропорции держатся, силуэт не растягивается -->
+    <svg class="ridge layer" data-depth="0.2" viewBox="0 0 ${skyW} 100"
+         preserveAspectRatio="none" aria-hidden="true">
+      <path d="${sky}" fill="var(--sil)"/>
     </svg>
 
-    <!-- Нева: разведённый мост и кораблик под ним -->
+    <!-- Нева: разведённый Дворцовый мост по центру, под ним идёт кораблик -->
     <div class="neva layer" data-depth="0.3">
-      <svg class="bridge" viewBox="0 0 120 26" width="112" height="24" aria-hidden="true">
-        <path d="M0 24h32l12-17v17h2V5" fill="none" stroke="var(--sil)" stroke-width="3.4" stroke-linejoin="round"/>
-        <path d="M120 24H88L76 7v17h-2V5" fill="none" stroke="var(--sil)" stroke-width="3.4" stroke-linejoin="round"/>
+      <svg class="bridge" viewBox="0 0 200 44" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+        <path d="M0 42h34l30-34" fill="none" stroke="var(--sil)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M200 42h-34l-30-34" fill="none" stroke="var(--sil)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M30 42V30M170 42V30" stroke="var(--sil)" stroke-width="3"/>
       </svg>
       <svg class="boat" viewBox="0 0 40 20" width="30" height="15" aria-hidden="true">
         <path d="M2 15h34l-4 5H6z M18 14V3h12l-8 5h-4" fill="var(--sil)"/>
       </svg>
     </div>
 
-    <!-- Ленобласть: сосны -->
+    <!-- Ленобласть подступает к городу -->
     <svg class="pines layer" data-depth="0.42" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
       ${Array.from({length: 26}, (_, i) => {
         const x = i * 16 + (i % 3) * 4, hgt = 30 + (i * 7 % 22);
@@ -1174,7 +1245,20 @@ function heroScene() {
         </button>`;
       }).join('')}
     </div>
+
     <span class="mosq" title="Комар. Ленобласть, июнь.">🦟</span>
+
+    <!-- Чижик-Пыжик на парапете. Маленький, как и настоящий. -->
+    <button class="chizhik" data-chizhik="1" aria-label="Чижик-Пыжик">
+      <svg viewBox="0 0 22 20" width="18" height="16" aria-hidden="true">
+        <ellipse cx="11" cy="11" rx="6.5" ry="5" fill="#e8c15a"/>
+        <circle cx="16" cy="7.5" r="3.4" fill="#e8c15a"/>
+        <path d="M19 7.2l3.4 1-3.4 1z" fill="#d08a2a"/>
+        <circle cx="17" cy="6.8" r=".9" fill="#2a2118"/>
+        <path d="M7 10.5q4 3 8 .6" stroke="#c9a33f" stroke-width="1.2" fill="none"/>
+        <path d="M9 16v3M13 16v3" stroke="#d08a2a" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>`;
 }
 
@@ -1519,8 +1603,8 @@ function viewMoney() {
     $('v-money').innerHTML = `<div class="card"><div class="calm">
       <div class="ic">🙈</div>
       <div class="t">Цены скрыты</div>
-      <div class="s">Включён режим без цен: суммы, закупка и обслуживание не показываются.</div>
-      <div style="margin-top:16px"><button class="btn pri" data-money="1">Показать цены</button></div>
+      <div class="s">Суммы, закупка и обслуживание сейчас скрыты.<br>
+        Выключается там же, где включился — на набережной сидит птица.</div>
     </div></div>`;
     return;
   }
@@ -2036,6 +2120,38 @@ function openPartSheet(bikeId, partId) {
   $('sheet').classList.add('on');
 }
 
+/* Чижик-Пыжик: настоящий памятник на Фонтанке размером с ладонь, который
+   ищут и не сразу находят. Подходящее место, чтобы спрятать переключатель. */
+function openChizhik() {
+  $('sheetbody').innerHTML = `<div class="grab"></div>
+    <div style="display:flex;gap:14px;align-items:center">
+      <span style="font-size:34px;line-height:1">🐦</span>
+      <div><h3 style="margin:0">Жена mode</h3>
+        <p class="tiny" style="margin:4px 0 0">Чижик-Пыжик, как известно, ничего не рассказывает.</p></div>
+    </div>
+    <button class="sw-row ${SHOWMONEY?'':'on'}" id="s-money" style="margin-top:18px">
+      <span class="t"><b>${SHOWMONEY ? 'Выключен' : 'Включён'}</b>
+        <span id="s-money-h">${SHOWMONEY
+          ? 'цены видно — все суммы и вкладка «Деньги» на месте'
+          : 'цен не видно — суммы и вкладка «Деньги» спрятаны'}</span></span>
+      <span class="sw-track"><span class="sw-knob">${SHOWMONEY?'💸':'🙈'}</span></span>
+    </button>
+    <p class="tiny" style="margin-top:10px">Включён по умолчанию. Настройка своя на каждом устройстве и никуда не уезжает.</p>
+    <div style="margin-top:18px"><button class="btn" id="ch-close">Закрыть</button></div>`;
+  $('ch-close').onclick = closeSheet;
+  $('s-money').onclick = () => {
+    toggleMoney();
+    const row = $('s-money');
+    row.classList.toggle('on', !SHOWMONEY);
+    row.querySelector('.sw-knob').textContent = SHOWMONEY ? '💸' : '🙈';
+    row.querySelector('b').textContent = SHOWMONEY ? 'Выключен' : 'Включён';
+    $('s-money-h').textContent = SHOWMONEY
+      ? 'цены видно — все суммы и вкладка «Деньги» на месте'
+      : 'цен не видно — суммы и вкладка «Деньги» спрятаны';
+  };
+  $('sheet').classList.add('on');
+}
+
 function openSyncSheet() {
   $('sheetbody').innerHTML = `<div class="grab"></div>
     <h3>${EDITOR ? 'Вы вошли' : 'Вход'}</h3>
@@ -2055,14 +2171,12 @@ function openSyncSheet() {
         <button class="btn ghost" id="s-cancel">Отмена</button>
         <button class="btn pri" id="s-login">Войти</button>
       </div>`}
-    <div class="lbl" style="margin-top:26px">Режимы</div>
-    <button class="sw-row ${SHOWMONEY?'':'on'}" id="s-money">
-      <span class="t"><b>Жена mode</b><span id="s-money-h">${SHOWMONEY
-        ? 'выключен — видно, во сколько всё обошлось'
-        : 'включён — цены и вкладка «Деньги» спрятаны'}</span></span>
-      <span class="sw-track"><span class="sw-knob">${SHOWMONEY?'💸':'🙈'}</span></span>
-    </button>
-    <p class="tiny" style="margin-top:8px">По умолчанию включён. Настройка своя на каждом устройстве и никуда не синхронизируется.</p>
+    <div class="lbl" style="margin-top:26px">Тема</div>
+    <div class="seg" id="s-theme">
+      <button data-theme="auto"  class="${THEME==='auto'?'on':''}">Как в системе</button>
+      <button data-theme="light" class="${THEME==='light'?'on':''}">Светлая</button>
+      <button data-theme="dark"  class="${THEME==='dark'?'on':''}">Тёмная</button>
+    </div>
 
     <div class="lbl" style="margin-top:26px">Резервная копия файлом</div>
     <p class="tiny">Выгружает всё в файл — на телефоне уходит через «Поделиться» в Файлы или iCloud.</p>
@@ -2072,15 +2186,6 @@ function openSyncSheet() {
       <input type="file" id="s-file" accept="application/json" style="display:none">`:''}
     </div>`;
   $('s-cancel').onclick = closeSheet;
-  $('s-money').onclick = () => {
-    toggleMoney();                       // render() перерисует всё под шторкой
-    const row = $('s-money');
-    row.classList.toggle('on', !SHOWMONEY);
-    row.querySelector('.sw-knob').textContent = SHOWMONEY ? '💸' : '🙈';
-    $('s-money-h').textContent = SHOWMONEY
-      ? 'выключен — видно, во сколько всё обошлось'
-      : 'включён — цены и вкладка «Деньги» спрятаны';
-  };
   if (EDITOR) $('s-logout').onclick = () => { closeSheet(); logout(); toast('Вы вышли'); };
   else {
     const go = async () => {
@@ -2174,9 +2279,11 @@ function render(fromHistory) {
 let lastScreen = '';
 
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money],[data-part]');
+  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money],[data-part],[data-chizhik],[data-theme]');
   if (!t) { if (e.target === $('sheet')) closeSheet(); return; }
 
+  if (t.dataset.chizhik) { openChizhik(); return; }
+  if (t.dataset.theme)   { setTheme(t.dataset.theme); openSyncSheet(); return; }
   if (t.dataset.part) {
     if (!EDITOR) return openSyncSheet();
     const [bid, pid] = t.dataset.part.split('|');
@@ -2339,6 +2446,7 @@ function afterRender(swapped) {
 
 /* ============================================================ boot */
 routeFrom();                        // раздел из адреса до первой отрисовки
+applyTheme();
 const migrated = migrateChecks();   // R1 — before anything touches content
 applyRenames();                     // перенос галочек с переименованных пунктов
 applySeed();                        // R4 — repopulate after storage eviction
