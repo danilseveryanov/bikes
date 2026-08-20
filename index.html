@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0c">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Q2Si69hLym531hR6TQylhnwNQh8GgW9kg0yrPxxuIrE='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://bikes-sync.severyanov.workers.dev; base-uri 'none'; form-action 'none'">
 <meta name="description" content="Парк велосипедов: состав, регламент ТО, затраты, обзор гравийных рам 2027 и чек-листы сборки">
 <title>Гараж — велосипеды, ТО и затраты</title>
 <style>
@@ -710,10 +711,60 @@ const blankDoc = () => ({ v:1, mtime:0, odo:{}, annualKm:{}, ownership:{}, parts
 let local = { rev:0, doc:blankDoc(), dirty:false, lastSync:null };
 try {
   const raw = localStorage.getItem(LS);
-  if (raw) { const p = JSON.parse(raw); local = Object.assign(local, p); local.doc = Object.assign(blankDoc(), p.doc); }
+  if (raw) { const p = JSON.parse(raw); local = Object.assign(local, p); local.doc = sanitizeDoc(p.doc); }
 } catch(e) { /* corrupt cache — start blank, the cloud copy and seed refill it */ }
 
 const DOC = () => local.doc;
+
+/* Документ приходит из облака и из файла резервной копии. Файл пользователь
+   может получить откуда угодно, поэтому это недоверенный ввод: числа делаем
+   числами, строки — строками, а фото пускаем только как картинку в data:.
+   Экранирование при выводе остаётся первой линией; это вторая. */
+function sanitizeDoc(d) {
+  const str = v => typeof v === 'string' ? v.slice(0, 2000) : (v == null ? null : String(v).slice(0, 2000));
+  const num = v => { const n = Number(v); return Number.isFinite(n) ? n : null; };
+  const out = blankDoc();
+  out.mtime = num(d && d.mtime) || 0;
+  out.migratedAt = str(d && d.migratedAt);
+  for (const k of ['odo', 'annualKm'])
+    for (const [id, v] of Object.entries((d && d[k]) || {})) {
+      const n = num(v); if (n != null) out[k][id] = n;
+    }
+  for (const [id, o] of Object.entries((d && d.ownership) || {}))
+    if (o && typeof o === 'object') out.ownership[id] = {
+      state: o.state === 'sold' ? 'sold' : 'owned',
+      soldDate: str(o.soldDate), soldPrice: num(o.soldPrice)
+    };
+  for (const [id, v] of Object.entries((d && d.photos) || {}))
+    if (typeof v === 'string' && /^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]*$/.test(v))
+      out.photos[id] = v;
+  for (const [bid, map] of Object.entries((d && d.parts) || {})) {
+    if (!map || typeof map !== 'object') continue;
+    out.parts[bid] = {};
+    for (const [pid, o] of Object.entries(map))
+      if (o && typeof o === 'object') out.parts[bid][pid] = {
+        group: str(o.group), part: str(o.part), spec: str(o.spec),
+        purchasePrice: num(o.purchasePrice),
+        added: !!o.added, deleted: !!o.deleted
+      };
+  }
+  for (const [key, map] of Object.entries((d && d.checks) || {})) {
+    if (!map || typeof map !== 'object') continue;
+    out.checks[key] = {};
+    for (const [k, v] of Object.entries(map)) out.checks[key][k] = v ? 1 : 0;
+  }
+  for (const e of (d && d.events) || []) {
+    if (!e || typeof e !== 'object' || !e.id) continue;
+    out.events.push({
+      id: String(e.id).slice(0, 64), mtime: num(e.mtime) || 0,
+      bike: str(e.bike), rule: str(e.rule), category: str(e.category),
+      date: str(e.date), odo: num(e.odo),
+      part: str(e.part), partCost: num(e.partCost) || 0, labourCost: num(e.labourCost) || 0,
+      place: str(e.place), note: str(e.note), deleted: !!e.deleted
+    });
+  }
+  return out;
+}
 
 function persist(markDirty) {
   if (markDirty !== false) { local.dirty = true; local.doc.mtime = Date.now(); }
@@ -866,14 +917,14 @@ async function sync(silent) {
   try {
     const remote = await pull();
     if (remote.rev !== local.rev || local.dirty) {
-      local.doc = remote.doc ? mergeDocs(local.doc, remote.doc) : local.doc;
+      local.doc = remote.doc ? mergeDocs(local.doc, sanitizeDoc(remote.doc)) : local.doc;
       local.rev = remote.rev;
     }
     if (EDITOR && (local.dirty || (remote.doc && JSON.stringify(remote.doc) !== JSON.stringify(local.doc)))) {
       let res = await push(local.rev, local.doc);
       if (res === null) {
         const again = await pull();
-        local.doc = mergeDocs(local.doc, again.doc || blankDoc());
+        local.doc = mergeDocs(local.doc, again.doc ? sanitizeDoc(again.doc) : blankDoc());
         local.rev = again.rev;
         res = await push(local.rev, local.doc);
         if (res === null) throw new Error('Конфликт записи, попробуйте ещё раз');
@@ -1412,9 +1463,9 @@ function viewBikeDetail(id) {
     ${own.state==='sold' ? `
       <div class="grid2">
         <div><label for="sd-${id}">Дата продажи</label>
-          <input id="sd-${id}" type="date" value="${own.soldDate||''}" data-solddate="${id}" ${EDITOR?"":"readonly"}></div>
+          <input id="sd-${id}" type="date" value="${esc(own.soldDate||'')}" data-solddate="${id}" ${EDITOR?"":"readonly"}></div>
         <div><label for="sp-${id}">Продан за, ₽</label>
-          <input id="sp-${id}" type="number" inputmode="numeric" value="${own.soldPrice??''}" data-soldprice="${id}" ${EDITOR?"":"readonly"} placeholder="—"></div>
+          <input id="sp-${id}" type="number" inputmode="numeric" value="${esc(own.soldPrice??'')}" data-soldprice="${id}" ${EDITOR?"":"readonly"} placeholder="—"></div>
       </div>
       <div class="spread" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
         <span class="muted">Итог владения</span>
@@ -1425,9 +1476,9 @@ function viewBikeDetail(id) {
     ` : `
       ${EDITOR ? `<div class="grid2" style="margin-top:14px">
         <div><label for="odo-${id}">Пробег, км</label>
-          <input id="odo-${id}" type="number" inputmode="numeric" value="${DOC().odo[id]??''}" data-odo="${id}" placeholder="—"></div>
+          <input id="odo-${id}" type="number" inputmode="numeric" value="${esc(DOC().odo[id]??'')}" data-odo="${id}" placeholder="—"></div>
         <div><label for="ann-${id}">Пробег за год, км</label>
-          <input id="ann-${id}" type="number" inputmode="numeric" value="${DOC().annualKm[id]??''}" data-annual="${id}" placeholder="—"></div>
+          <input id="ann-${id}" type="number" inputmode="numeric" value="${esc(DOC().annualKm[id]??'')}" data-annual="${id}" placeholder="—"></div>
       </div>
       <div class="tiny" style="margin-top:9px">Пробег нужен, чтобы считать «пора менять» и стоимость километра. Годовой — только для прогноза.</div>`
       : `<div class="row" style="padding:14px 0 0;border-top:1px solid var(--line);margin-top:14px">
@@ -1721,7 +1772,7 @@ function ownershipSummary(sel) {
     const inv = purchaseTotal(b.id) + eventsOf(b.id).reduce((s,e)=>s+evCost(e),0);
     return `<div class="row"><span class="dotc" style="background:${HUE(b.id)}"></span>
       <span class="rl"><span class="rt">${esc(b.name)}</span>
-      <span class="rs">вложено ${rub(inv)}${own.soldPrice?' · продан за '+rub(own.soldPrice):' · цена продажи не указана'}${own.soldDate?' · '+own.soldDate:''}</span></span>
+      <span class="rs">вложено ${rub(inv)}${own.soldPrice?' · продан за '+rub(own.soldPrice):' · цена продажи не указана'}${own.soldDate?' · '+esc(own.soldDate):''}</span></span>
       <span class="rv num">${rub(netCost(b.id))}</span></div>`;
   }).join('');
   h += `</div><div class="tiny" style="margin-top:9px">Итог — сколько велосипед стоил за всё время: вложено минус выручено. Цену продажи впишите в его карточке.</div>`;
@@ -2062,7 +2113,7 @@ function openPartSheet(bikeId, partId) {
     <label for="p-spec">Характеристика</label>
     <input id="p-spec" value="${esc(c.spec||'')}" placeholder="Shimano XT CS-M8200 10-51">
     <label for="p-price">Цена, ₽</label>
-    <input id="p-price" type="number" inputmode="decimal" value="${c.purchasePrice??''}">
+    <input id="p-price" type="number" inputmode="decimal" value="${esc(c.purchasePrice??'')}">
     <div style="display:flex;gap:10px;margin-top:20px">
       <button class="btn ghost" id="p-cancel">Отмена</button>
       <button class="btn pri" id="p-save">${isNew?'Добавить':'Сохранить'}</button>
@@ -2216,7 +2267,7 @@ function openSyncSheet() {
     const rd = new FileReader();
     rd.onload = () => {
       try {
-        local.doc = mergeDocs(local.doc, Object.assign(blankDoc(), JSON.parse(rd.result)));
+        local.doc = mergeDocs(local.doc, sanitizeDoc(JSON.parse(rd.result)));
         persist(); closeSheet(); render(); sync(true); toast('Загружено');
       } catch(err) { toast('Файл не читается'); }
     };

@@ -339,4 +339,68 @@ doc.events[0].deleted = false;
   eq("стёртое устройство не сносит правки", md(wiped, cloud).parts["faraoll-g50"].x1.purchasePrice, 4200);
 }
 
+/* --- недоверенный документ не должен протаскивать разметку ---
+   Найдено при проверке на взлом: дата продажи и числовые поля вставлялись в
+   HTML без экранирования, а файл резервной копии — это ввод откуда угодно.
+   Через него исполнялся код и уводился токен сессии. */
+{
+  const sanSrc = cut("function sanitizeDoc(", "/* R1 —");
+  const blankSrc = cut("const blankDoc = ()", "let local =");
+  const sanitize = new Function(blankSrc + sanSrc + "; return sanitizeDoc;")();
+
+  const XSS = `<img src=x onerror="alert(1)">`;
+  const dirty = {
+    mtime: "не-число",
+    odo: { a: XSS, b: "12", c: 30 },
+    annualKm: { a: {} },
+    ownership: { a: { state: XSS, soldDate: XSS, soldPrice: XSS } },
+    photos: { a: `x" onerror="alert(1)`, b: "javascript:alert(1)",
+              c: "data:image/png;base64,AAAA", d: "data:text/html,<script>" },
+    parts: { bike1: { p1: { part: XSS, purchasePrice: XSS, added: "да", deleted: 0 } } },
+    checks: { k: { i1: XSS, i2: 0 } },
+    events: [{ id: "e1", odo: XSS, partCost: XSS, labourCost: "700", deleted: "нет" },
+             { nope: 1 }],
+    lishnee: "должно отвалиться"
+  };
+  const c = sanitize(dirty);
+
+  eq("мусорный mtime обнулён",        c.mtime, 0);
+  eq("нечисловой пробег отброшен",    c.odo.a, undefined);
+  eq("числовая строка стала числом",  c.odo.b, 12);
+  eq("число сохранилось",             c.odo.c, 30);
+  eq("нечисловой годовой отброшен",   c.annualKm.a, undefined);
+  eq("состояние владения нормализовано", c.ownership.a.state, "owned");
+  eq("цена продажи не строка",        c.ownership.a.soldPrice, null);
+  eq("дата осталась строкой",         typeof c.ownership.a.soldDate, "string");
+  eq("фото с инъекцией отброшено",    c.photos.a, undefined);
+  eq("javascript: отброшен",          c.photos.b, undefined);
+  eq("нормальный data:image принят",  c.photos.c, "data:image/png;base64,AAAA");
+  eq("data:text/html отброшен",       c.photos.d, undefined);
+  eq("цена детали не строка",         c.parts.bike1.p1.purchasePrice, null);
+  eq("added приведён к булеву",       c.parts.bike1.p1.added, true);
+  eq("deleted приведён к булеву",     c.parts.bike1.p1.deleted, false);
+  eq("галочка приведена к 1/0",       c.checks.k.i1, 1);
+  eq("снятая галочка это 0",          c.checks.k.i2, 0);
+  eq("событие без id отброшено",      c.events.length, 1);
+  eq("пробег события не строка",      c.events[0].odo, null);
+  eq("цена события обнулена",         c.events[0].partCost, 0);
+  eq("строка-число в цене работы",    c.events[0].labourCost, 700);
+  eq("посторонние поля не пролезли",  c.lishnee, undefined);
+
+  // строки не режем в HTML — их экранирует вывод, но длину ограничиваем
+  const long = sanitize({ events: [{ id:"e", part: "x".repeat(5000) }] });
+  assert.ok(long.events[0].part.length <= 2000, "слишком длинная строка должна обрезаться"); n++;
+}
+
+/* --- ни одно значение из документа не вставляется в разметку без esc() --- */
+{
+  const app = fs.readFileSync(__dirname + "/src/app.html", "utf8");
+  // rub() и km() приводят значение к числу, поэтому разметку через них
+  // не протащить; confirm() — не HTML. Остальное обязано идти через esc().
+  const risky = app.split("\n").filter(l =>
+    /\$\{(own\.soldDate|own\.soldPrice|e\.place|e\.note|e\.part|c\.spec|c\.part|c\.group)/.test(l)
+    && !/esc\(/.test(l) && !/confirm\(/.test(l) && !/rub\(|km\(/.test(l));
+  assert.deepStrictEqual(risky, [], "найдена вставка без экранирования:\n" + risky.join("\n")); n++;
+}
+
 console.log(`ok — ${n} assertions`);
