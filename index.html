@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0c">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Q2Si69hLym531hR6TQylhnwNQh8GgW9kg0yrPxxuIrE='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://bikes-sync.severyanov.workers.dev; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-PO67JGcTFd3F6DNtXoYbAT/c3nioYCgO6cSUSNTWOBg='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src https://bikes-sync.severyanov.workers.dev; base-uri 'none'; form-action 'none'">
 <meta name="description" content="Парк велосипедов: состав, регламент ТО, затраты, обзор гравийных рам 2027 и чек-листы сборки">
 <title>Гараж — велосипеды, ТО и затраты</title>
 <style>
@@ -315,7 +315,9 @@ details[open] summary .arw{transform:rotate(90deg);}
 }
 .it .box svg{width:15px;height:15px;stroke:#04201d;stroke-width:3.2;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;}
 .it.done .box{background:var(--accent); border-color:var(--accent);}
-.it.done .box svg{opacity:1;}
+/* галочка не появляется, а рисуется — росчерком, как ручкой */
+.it.done .box svg{opacity:1; stroke-dasharray:26; stroke-dashoffset:0; animation:tick .32s cubic-bezier(.65,0,.35,1);}
+@keyframes tick{ from{stroke-dashoffset:26;} to{stroke-dashoffset:0;} }
 .it.done .nm{text-decoration:line-through; color:var(--ink3);}
 .it .nm{font-size:15px; line-height:1.3; font-weight:500;}
 .it .dt{font-size:13px; color:var(--ink2); margin-top:3px;}
@@ -415,6 +417,12 @@ details[open] summary .arw{transform:rotate(90deg);}
   min-height:48px; transition:transform .22s var(--spring);
 }
 .glyph:active{transform:translateY(-4px) scale(1.04);}
+/* на наведении велосипед трогается с места: колёса раскручиваются */
+@media (hover:hover){
+  .glyph:hover{transform:translateY(-3px);}
+  .glyph:hover .wh{animation-duration:.9s;}
+}
+.wh{animation-duration:5.5s;}
 .glyph svg{display:block; overflow:visible;}
 .glyph .tagname{
   font-size:10.5px; font-weight:800; letter-spacing:.02em; color:#fff;
@@ -441,15 +449,50 @@ details[open] summary .arw{transform:rotate(90deg);}
 .chizhik:active{transform:translateY(-6px) scale(1.1);}
 @media (hover:hover){ .chizhik:hover{transform:translateY(-3px);} }
 
+/* ============================================================ переходы
+   Кадр уезжает влево, новый приходит справа — как листают. При открытии
+   карточки направление обратное, потому что это движение «внутрь». */
+::view-transition-old(root),
+::view-transition-new(root){ animation-duration:.34s; animation-timing-function:cubic-bezier(.32,.72,0,1); }
+::view-transition-old(root){ animation-name:vt-out; }
+::view-transition-new(root){ animation-name:vt-in; }
+@keyframes vt-out{ to{ opacity:0; transform:translateX(-14px) scale(.995); } }
+@keyframes vt-in{ from{ opacity:0; transform:translateX(16px) scale(.995); } }
+:root[data-vt="in"] ::view-transition-old(root){ animation-name:vt-out-deep; }
+:root[data-vt="in"] ::view-transition-new(root){ animation-name:vt-in-deep; }
+@keyframes vt-out-deep{ to{ opacity:0; transform:scale(1.02); } }
+@keyframes vt-in-deep{ from{ opacity:0; transform:scale(.97); } }
+/* общий элемент летит по своей дуге, не растворяясь */
+::view-transition-group(*){ animation-duration:.42s; animation-timing-function:cubic-bezier(.34,1.12,.42,1); }
+
 /* ============================================================ motion */
 .view{opacity:1;}
 .view.swap{animation:swapin .34s var(--spring) both;}
 @keyframes swapin{ from{opacity:0; transform:translateY(9px);} to{opacity:1; transform:none;} }
+
+/* Загрузка страницы — один поставленный проход сверху вниз, а не пять
+   независимых эффектов, разбегающихся кто куда. */
+@keyframes boot{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
+.booting header{animation:boot .5s cubic-bezier(.32,.72,0,1) both;}
+.booting .scene{animation:boot .6s cubic-bezier(.32,.72,0,1) .06s both;}
+.booting main{animation:boot .55s cubic-bezier(.32,.72,0,1) .14s both;}
+.booting nav{animation:boot .5s cubic-bezier(.32,.72,0,1) .22s both;}
+/* город проявляется отдельно и позже — он тут главный */
+@keyframes skyrise{ from{opacity:0; transform:translateY(18px);} to{opacity:.96; transform:none;} }
+.booting .ridge{animation:skyrise .9s cubic-bezier(.22,.8,.2,1) .18s both;}
+.booting .glyph{animation:boot .5s var(--spring) both;}
+.booting .glyph:nth-child(1){animation-delay:.30s}
+.booting .glyph:nth-child(2){animation-delay:.36s}
+.booting .glyph:nth-child(3){animation-delay:.42s}
+.booting .glyph:nth-child(4){animation-delay:.48s}
+.booting .glyph:nth-child(5){animation-delay:.54s}
 .reveal{opacity:0; transform:translateY(11px);}
 .reveal.in{opacity:1; transform:none; transition:opacity .42s ease, transform .42s var(--spring);}
 .fill{transition:width .65s var(--spring);}
-.bikecard{transition:transform .16s var(--spring), border-color .2s;}
+.bikecard{transition:transform .16s var(--spring), background .2s;}
 .bikecard:active{transform:scale(.982);}
+.bikecard .bar{transition:width .22s var(--spring);}
+@media (hover:hover){ .bikecard:hover .bar{width:12px;} }
 .att{transition:background .18s;}
 .att:active{background:var(--surface2);}
 @media (hover:hover){
@@ -458,6 +501,10 @@ details[open] summary .arw{transform:rotate(90deg);}
 :focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 @media (prefers-reduced-motion: reduce){
   .cloud,.rider,.wh,.drop,.gull,.boat,.mosq,.sun{animation:none !important;}
+  .booting header,.booting .scene,.booting main,.booting nav,
+  .booting .ridge,.booting .glyph{animation:none !important;}
+  .it.done .box svg{animation:none;}
+  ::view-transition-old(root),::view-transition-new(root){animation:none !important;}
   .sun{left:78%; top:26px;}
   .rain{display:none;}
   .view.swap{animation:none;}
@@ -1409,9 +1456,9 @@ function bikeCard(b) {
   const dueN = own.state === 'owned'
     ? RULES.filter(r => r.bikes.includes(b.id) && dueStatus(b.id, r).state === 'due').length : 0;
   return `<button class="bikecard${own.state==='sold'?' sold':''}" data-bike="${b.id}">
-    <span class="bar" style="background:${HUE(b.id)}"></span>
+    <span class="bar" style="background:${HUE(b.id)};view-transition-name:bar-${b.id}"></span>
     <span class="bikebody">
-      <span class="ph">${photo?`<img src="${esc(photo)}" alt="" width="54" height="54" loading="lazy">`:(EMOJI[b.type]||'🚲')}</span>
+      <span class="ph" style="view-transition-name:ph-${b.id}">${photo?`<img src="${esc(photo)}" alt="" width="54" height="54" loading="lazy">`:(EMOJI[b.type]||'🚲')}</span>
       <span style="flex:1;min-width:0">
         <span class="bname">${esc(b.name)}</span>
         <span class="bmeta">${esc(b.type)} · ${esc(b.owner)}</span>
@@ -1438,10 +1485,10 @@ function viewBikeDetail(id) {
 
   let h = `<button class="btn ghost sm" data-back="1" style="margin-bottom:14px">‹ Все велосипеды</button>
   <div class="card">
-    <div style="height:3px;background:${HUE(id)}"></div>
+    <div style="height:3px;background:${HUE(id)};view-transition-name:bar-${id}"></div>
     <div class="pad">
       <div style="display:flex;gap:14px;align-items:center">
-        <label class="ph" style="width:66px;height:66px;font-size:27px;cursor:pointer;margin:0">
+        <label class="ph" style="width:66px;height:66px;font-size:27px;cursor:pointer;margin:0;view-transition-name:ph-${id}">
           ${photo?`<img src="${esc(photo)}" alt="" width="54" height="54" loading="lazy">`:(EMOJI[b.type]||'🚲')}
           ${EDITOR?`<input type="file" accept="image/*" data-photo="${id}" style="display:none">`:''}
         </label>
@@ -2304,7 +2351,24 @@ function routeFrom() {
   openBike = (tab === 'garage' && b && BIKE[b]) ? b : null;
 }
 
-window.addEventListener('popstate', () => { routeFrom(); render(true); });
+window.addEventListener('popstate', () => { routeFrom(); navigate(true); });
+
+/* Переход между экранами — не перерисовка, а смена кадра. Браузер снимает
+   старый и новый вид и сам их сводит; общий элемент (фото велосипеда)
+   перелетает из карточки на страницу. Если API нет или человек попросил
+   меньше движения — просто рисуем, поведение то же. */
+let vtRunning = false;
+function navigate(fromHistory) {
+  if (REDUCED || !document.startViewTransition || vtRunning) return render(fromHistory);
+  document.documentElement.dataset.vt = openBike ? 'in' : 'out';
+  vtRunning = true;
+  const vt = document.startViewTransition(() => render(fromHistory));
+  // переход прерывается, если поверх него пришла синхронизация: это нормально,
+  // кадр просто досрисуется без анимации — но обещание надо погасить
+  vt.ready.catch(() => {});
+  vt.updateCallbackDone.catch(() => {});
+  vt.finished.catch(() => {}).then(() => { vtRunning = false; });
+}
 
 function render(fromHistory) {
   if (!fromHistory) routeTo();
@@ -2342,12 +2406,12 @@ document.addEventListener('click', e => {
   }
   if (t.dataset.sheet) { openSyncSheet(); return; }
   if (t.dataset.money) { toggleMoney(); return; }
-  if (t.dataset.tab)   { tab = t.dataset.tab; openBike = null; render(); window.scrollTo(0,0); return; }
-  if (t.dataset.bike)  { openBike = t.dataset.bike; tab = 'garage'; render(); window.scrollTo(0,0); return; }
-  if (t.dataset.back)  { openBike = null; render(); return; }
+  if (t.dataset.tab)   { tab = t.dataset.tab; openBike = null; navigate(); window.scrollTo(0,0); return; }
+  if (t.dataset.bike)  { openBike = t.dataset.bike; tab = 'garage'; navigate(); window.scrollTo(0,0); return; }
+  if (t.dataset.back)  { openBike = null; navigate(); return; }
   if (t.dataset.mbike) { moneyBike = t.dataset.mbike; render(); return; }
-  if (t.dataset.fmode) { framesMode = t.dataset.fmode; render(); window.scrollTo(0,0); return; }
-  if (t.dataset.smode) { serviceMode = t.dataset.smode; render(); window.scrollTo(0,0); return; }
+  if (t.dataset.fmode) { framesMode = t.dataset.fmode; navigate(); window.scrollTo(0,0); return; }
+  if (t.dataset.smode) { serviceMode = t.dataset.smode; navigate(); window.scrollTo(0,0); return; }
   if (t.dataset.bkey)  { buildKey = t.dataset.bkey; render(); return; }
   if (t.dataset.att && !EDITOR) { openRuleSheet(t.dataset.att.split('|')[1]); return; }
   if (t.dataset.att || t.hasAttribute('data-addevent')) {
@@ -2498,6 +2562,10 @@ function afterRender(swapped) {
 /* ============================================================ boot */
 routeFrom();                        // раздел из адреса до первой отрисовки
 applyTheme();
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.documentElement.classList.add('booting');
+  setTimeout(() => document.documentElement.classList.remove('booting'), 1400);
+}
 const migrated = migrateChecks();   // R1 — before anything touches content
 applyRenames();                     // перенос галочек с переименованных пунктов
 applySeed();                        // R4 — repopulate after storage eviction
