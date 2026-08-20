@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Гараж — три направления</title>
+<style>
+:root{
+  --page:#101014; --page2:#17171c; --edge:#26262e; --ink:#f2f2f5; --ink2:#9b9ba6; --ink3:#6a6a76;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Roboto Mono",monospace;
+  --b1:#3987e5; --b2:#d95926; --b3:#199e70; --b4:#c98500; --b5:#d55181;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--page);color:var(--ink);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+  padding:28px 24px 80px;-webkit-font-smoothing:antialiased}
+
+/* ── шапка канвы ── */
+.top{max-width:1400px;margin:0 auto 26px}
+.top h1{font-size:26px;font-weight:800;letter-spacing:-.03em}
+.top p{color:var(--ink2);font-size:14px;margin-top:6px;max-width:70ch}
+.knobs{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.knob{background:var(--page2);border:1px solid var(--edge);color:var(--ink);
+  padding:9px 14px;font:600 13px/1 var(--mono);cursor:pointer}
+.knob[aria-pressed="true"]{background:var(--ink);color:var(--page);border-color:var(--ink)}
+
+/* ── раскладка артбордов ── */
+.canvas{display:flex;gap:26px;max-width:1400px;margin:0 auto;align-items:flex-start;
+  overflow-x:auto;padding-bottom:12px}
+.art{flex:0 0 auto;width:430px}
+.art > figcaption{margin-bottom:12px}
+.art .tag{font:700 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.art .nm{font-size:17px;font-weight:700;letter-spacing:-.02em;margin-top:7px}
+.art .desc{font-size:13px;color:var(--ink2);margin-top:5px;line-height:1.45;min-height:56px}
+.frame{width:430px;height:932px;overflow:hidden;position:relative;border:1px solid var(--edge)}
+.scroller{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden}
+.scroller::-webkit-scrollbar{width:0}
+
+/* режим цен */
+body[data-money="off"] .money{visibility:hidden}
+
+/* ══════════════════════════════════════════ A · МАСТЕРСКАЯ ══ */
+.a{--bg:#0a0a0c;--sf:#141417;--sf2:#1c1c21;--ln:#26262c;--tx:#f4f4f6;--tx2:#9e9ea8;--tx3:#6a6a74;--ac:#2dd4bf;--dg:#fb7185;
+  background:var(--bg);color:var(--tx);min-height:100%;font-size:16px;padding-bottom:70px}
+.a .hd{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:14px 18px 12px}
+.a .hd h2{font-size:24px;font-weight:750;letter-spacing:-.035em}
+.a .hd .sub{font-size:13.5px;color:var(--tx2);margin-top:2px}
+.a .scene{height:190px;position:relative;overflow:hidden;
+  background:linear-gradient(#0c1a2f 0%,#182d49 40%,#2f5279 72%,#20395c 100%)}
+.a .strip{position:absolute;bottom:8px;left:0;right:0;display:flex;gap:6px;padding:0 14px;align-items:flex-end}
+.a .road{position:absolute;bottom:0;left:0;right:0;height:44px;background:linear-gradient(#2f4a6b,#263d59);border-top:2px solid rgba(255,255,255,.14)}
+.a .lbl{font:700 11px/1.6 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--tx2);
+  border-left:2px solid #34343d;padding-left:10px;margin:24px 18px 10px;display:flex;gap:9px;align-items:center}
+.a .lbl b{background:var(--sf2);color:var(--tx);padding:1px 7px;font-size:11px;letter-spacing:0;font-weight:700}
+.a .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;padding:0 18px;margin-top:16px}
+.a .kpi{background:var(--sf);border-top:4px solid var(--ac);padding:13px 12px}
+.a .kpi .k{font:700 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--tx3)}
+.a .kpi .v{font:700 22px/1.1 var(--mono);letter-spacing:-.04em;margin-top:6px;display:block}
+.a .kpi .s{font-size:11px;color:var(--tx3);margin-top:4px;display:block}
+.a .card{background:var(--sf)}
+.a .att{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.a .att .dot{width:7px;height:7px;border-radius:50%;background:var(--b2);flex:none}
+.a .att .t1{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a .att .t2{font:12.5px/1.4 var(--mono);color:var(--tx2);margin-top:3px}
+.a .chip{font:700 11.5px/1 var(--mono);padding:4px 8px;background:var(--dg);color:#20060c;flex:none}
+.a .bike{display:flex;background:var(--sf);margin-bottom:10px}
+.a .bar{width:8px;flex:none}
+.a .bbody{flex:1;min-width:0;padding:15px 16px;display:flex;gap:13px;align-items:center}
+.a .ph{width:54px;height:54px;background:var(--sf2);flex:none;display:flex;align-items:center;justify-content:center;font-size:23px}
+.a .bn{font-size:16.5px;font-weight:700;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a .bm{font-size:13px;color:var(--tx2);margin-top:3px}
+.a .bs{font:12.5px/1 var(--mono);color:var(--tx3);margin-top:7px;display:flex;gap:8px}
+.a .nav{position:absolute;left:0;right:0;bottom:0;display:flex;background:var(--bg);border-top:1px solid #34343d;padding:5px 4px 8px}
+.a .nav i{flex:1;text-align:center;font:600 10px/1 var(--mono);color:var(--tx3);padding:9px 0;font-style:normal}
+.a .nav i.on{color:var(--ac)}
+.a .nav i span{display:block;font-size:17px;margin-bottom:5px;font-style:normal}
+
+/* ══════════════════════════════════════════ B · НАБЕРЕЖНАЯ ══ */
+.b{--bg:#070a10;--sf:rgba(255,255,255,.045);--tx:#eef2f8;--tx2:#93a1b5;--ac:#7fd4c1;
+  background:var(--bg);color:var(--tx);min-height:100%;position:relative}
+.b .sky{position:absolute;top:0;left:0;right:0;height:520px;
+  background:linear-gradient(#060a12 0%,#0d1a2e 34%,#1b3a5c 62%,#2b5a80 82%,#16283d 100%)}
+.b .moon{position:absolute;top:78px;right:52px;width:54px;height:54px;border-radius:50%;
+  background:#f4e9c8;box-shadow:0 0 60px 22px rgba(244,233,200,.16)}
+.b .sil{position:absolute;top:236px;left:0;right:0;height:120px}
+.b .water{position:absolute;top:356px;left:0;right:0;height:150px;background:linear-gradient(#12304d,#0a1a2c)}
+.b .water i{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.07);font-style:normal}
+.b .bhero{position:absolute;top:392px;left:0;right:0;display:flex;justify-content:center;gap:2px}
+.b .title{position:relative;padding:74px 24px 0;text-align:center}
+.b .title h2{font:800 40px/1.02 -apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:-.045em}
+.b .title p{font:12.5px/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--tx2);margin-top:12px}
+.b .sheet{position:relative;margin-top:330px;background:rgba(9,13,20,.86);
+  -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
+  border-top:1px solid rgba(255,255,255,.1);border-radius:26px 26px 0 0;padding:10px 20px 90px;min-height:520px}
+.b .grab{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.22);margin:0 auto 20px}
+.b .urgent{background:linear-gradient(100deg,rgba(217,89,38,.2),rgba(217,89,38,.05));
+  border:1px solid rgba(217,89,38,.38);border-radius:16px;padding:16px 18px}
+.b .urgent .k{font:700 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#e6a184}
+.b .urgent .t{font-size:16px;font-weight:650;margin-top:9px;line-height:1.3}
+.b .urgent .s{font:12.5px/1.5 var(--mono);color:var(--tx2);margin-top:6px}
+.b .row3{display:flex;gap:20px;margin:26px 2px 0}
+.b .row3 div{flex:1}
+.b .row3 .k{font:11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--tx2)}
+.b .row3 .v{font:300 30px/1 -apple-system,sans-serif;letter-spacing:-.03em;margin-top:9px}
+.b .sect{font:11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);margin:34px 2px 14px}
+.b .brow{display:flex;align-items:center;gap:15px;padding:15px 2px;border-bottom:1px solid rgba(255,255,255,.07)}
+.b .swatch{width:3px;height:38px;flex:none;border-radius:2px}
+.b .bn{font-size:16px;font-weight:600;letter-spacing:-.015em}
+.b .bm{font:12px/1.4 var(--mono);color:var(--tx2);margin-top:3px}
+.b .go{margin-left:auto;color:var(--tx2);font-size:19px}
+.b .nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:9px;padding:14px}
+.b .nav i{font-style:normal;font:600 11px/1 var(--mono);color:var(--tx2);padding:11px 15px;
+  background:rgba(255,255,255,.06);border-radius:22px}
+.b .nav i.on{background:var(--ac);color:#06231d}
+
+/* ══════════════════════════════════════════ C · СЕРВИСНАЯ КНИЖКА ══ */
+.c{--pa:#12110f;--pa2:#1a1917;--rule:#2b2926;--tx:#efece5;--tx2:#98928a;--ac:#c8a951;--dg:#c25c4a;
+  background:var(--pa);color:var(--tx);min-height:100%;
+  background-image:repeating-linear-gradient(transparent 0 33px,rgba(255,255,255,.028) 33px 34px)}
+.c .top{display:flex;align-items:flex-start;gap:14px;padding:20px 18px 16px;border-bottom:2px solid var(--rule)}
+.c .stamp{width:62px;height:62px;border:2px solid var(--ac);flex:none;position:relative;
+  display:flex;align-items:center;justify-content:center;transform:rotate(-4deg)}
+.c .stamp svg{width:44px;height:32px}
+.c .top h2{font:800 21px/1.1 var(--mono);letter-spacing:-.03em}
+.c .top .meta{font:11.5px/1.6 var(--mono);color:var(--tx2);margin-top:7px;letter-spacing:.04em}
+.c .band{display:flex;border-bottom:2px solid var(--rule)}
+.c .band div{flex:1;padding:13px 14px;border-right:1px solid var(--rule)}
+.c .band div:last-child{border-right:0}
+.c .band .k{font:11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--tx2)}
+.c .band .v{font:700 24px/1 var(--mono);margin-top:8px;letter-spacing:-.03em}
+.c .sec{font:700 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ac);
+  padding:22px 18px 10px;display:flex;align-items:center;gap:11px}
+.c .sec::after{content:"";flex:1;height:1px;background:var(--rule)}
+.c .warn{margin:0 18px;border-left:3px solid var(--dg);padding:12px 14px;background:rgba(194,92,74,.09)}
+.c .warn .t{font-size:15px;font-weight:650;line-height:1.3}
+.c .warn .s{font:12px/1.5 var(--mono);color:var(--tx2);margin-top:6px}
+.c .entry{display:flex;gap:14px;padding:16px 18px;border-bottom:1px solid var(--rule);align-items:baseline}
+.c .no{font:700 13px/1 var(--mono);color:var(--ac);flex:none;width:26px;letter-spacing:.02em}
+.c .en{font-size:16px;font-weight:650;letter-spacing:-.015em}
+.c .em{font:12px/1.5 var(--mono);color:var(--tx2);margin-top:4px}
+.c .tick{margin-left:auto;font:11px/1 var(--mono);color:var(--tx2);flex:none;text-align:right}
+.c .sold{opacity:.45}
+.c .tabs{position:absolute;top:0;right:0;bottom:0;width:34px;display:flex;flex-direction:column;
+  border-left:2px solid var(--rule);background:var(--pa2)}
+.c .tabs i{flex:1;writing-mode:vertical-rl;font:700 10px/34px var(--mono);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--tx2);text-align:center;border-bottom:1px solid var(--rule);font-style:normal}
+.c .tabs i.on{background:var(--ac);color:#1a1509}
+.c .pad{padding-right:34px}
+</style>
+</head>
+<body data-money="off">
+
+<div class="top">
+  <h1>Гараж — три направления</h1>
+  <p>Один экран, ваши настоящие данные, 430×932. Первый вариант — нынешний, доведённый. Два других отходят по всем четырём осям: характер, компоновка, движение и сама сцена. Прокрутите каждый макет внутри рамки.</p>
+  <div class="knobs">
+    <button class="knob" id="money" aria-pressed="false">Показать цены</button>
+    <span class="knob" style="cursor:default;border-style:dashed">Жена mode включён — как у гостя по умолчанию</span>
+  </div>
+</div>
+
+<div class="canvas">
+
+  <!-- ═══════════ A ═══════════ -->
+  <figure class="art" data-screen-label="A · Мастерская">
+    <figcaption>
+      <div class="tag">Направление A · знакомое</div>
+      <div class="nm">Мастерская</div>
+      <div class="desc">Нынешний язык, доведённый до ритма: сцена полосой, плитки, список работ. Движение сдержанное. Спокойно и предсказуемо.</div>
+    </figcaption>
+    <div class="frame"><div class="scroller"><div class="a">
+      <div class="hd"><h2>Гараж</h2><div class="sub">4 в парке · 1 продан</div></div>
+      <div class="scene">
+        <svg viewBox="0 0 400 100" preserveAspectRatio="none" style="position:absolute;bottom:44px;left:0;width:100%;height:96px;opacity:.96">
+          <path d="M4 100V80h30v20z M52 100V76l15-5 15 5v24z M88 100V78h22v22z M94 78V62h10v16z M99 7l5 55h-10z
+                   M126 100V76h52v24z M141 76V58h30v18z M141 58a15 15 0 0130 0z M148 44h5v-4h-5z
+                   M196 100V60h7v40z M191 56h17v4h-17z M199.5 45l4.5 11h-9z
+                   M214 100V60h7v40z M209 56h17v4h-17z M217.5 45l4.5 11h-9z
+                   M240 100V74h28v26z M247 74V54h14v20z M254 15l4 39h-8z
+                   M300 100V78h32v22z M340 100L345.4 15 348 5l2.6 10L356 100z M380 100V85h20v15z" fill="#0b1727"/>
+        </svg>
+        <div class="road"></div>
+        <div class="strip">
+          <span style="flex:0 0 auto;text-align:center">
+            <svg width="86" height="62" viewBox="0 0 100 72"><circle cx="22" cy="50" r="17" fill="none" stroke="#d95926" stroke-width="3"/><circle cx="78" cy="50" r="17" fill="none" stroke="#d95926" stroke-width="3"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h11" stroke="#d95926" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M32 23h12" stroke="#d95926" stroke-width="4" stroke-linecap="round"/></svg>
+            <span style="display:block;font:800 10.5px/1 var(--mono);background:rgba(0,0,0,.45);padding:3px 8px;margin-top:3px">Rider</span></span>
+          <span style="flex:0 0 auto;text-align:center">
+            <svg width="70" height="50" viewBox="0 0 100 72"><circle cx="22" cy="50" r="13" fill="none" stroke="#199e70" stroke-width="3"/><circle cx="78" cy="50" r="13" fill="none" stroke="#199e70" stroke-width="3"/><path d="M50 50L40 30M50 50L68 31M40 30L68 31M22 50h28M68 31L78 50M67 22h11" stroke="#199e70" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M34 27h12" stroke="#199e70" stroke-width="4" stroke-linecap="round"/></svg>
+            <span style="display:block;font:800 10.5px/1 var(--mono);background:rgba(0,0,0,.45);padding:3px 8px;margin-top:3px">HAGEN</span></span>
+          <span style="flex:0 0 auto;text-align:center">
+            <svg width="86" height="62" viewBox="0 0 100 72"><circle cx="22" cy="50" r="17" fill="none" stroke="#3987e5" stroke-width="3"/><circle cx="78" cy="50" r="17" fill="none" stroke="#3987e5" stroke-width="3"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h8q4 0 4 4v4" stroke="#3987e5" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M32 23h12" stroke="#3987e5" stroke-width="4" stroke-linecap="round"/></svg>
+            <span style="display:block;font:800 10.5px/1 var(--mono);background:rgba(0,0,0,.45);padding:3px 8px;margin-top:3px">Faraoll</span></span>
+          <span style="flex:0 0 auto;text-align:center">
+            <svg width="86" height="62" viewBox="0 0 100 72"><circle cx="22" cy="50" r="17" fill="none" stroke="#c98500" stroke-width="3"/><circle cx="78" cy="50" r="17" fill="none" stroke="#c98500" stroke-width="3"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h11" stroke="#c98500" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M32 23h12" stroke="#c98500" stroke-width="4" stroke-linecap="round"/></svg>
+            <span style="display:block;font:800 10.5px/1 var(--mono);background:rgba(0,0,0,.45);padding:3px 8px;margin-top:3px">Speedone</span></span>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="k">В парке</span><span class="v">4</span><span class="s">1 продан</span></div>
+        <div class="kpi"><span class="k">Сделать</span><span class="v" style="color:#fb7185">1</span><span class="s">просрочено</span></div>
+        <div class="kpi"><span class="k">Купить</span><span class="v">25</span><span class="s money">234 240 ₽</span></div>
+      </div>
+      <div class="lbl">Требует внимания <b>1</b></div>
+      <div class="card">
+        <div class="att"><span class="dot"></span>
+          <span style="flex:1;min-width:0"><span class="t1">Вилка — обслуживание нижних ног</span>
+          <span class="t2">Rider · просрочено на 1 200 км</span></span>
+          <span class="chip">пора</span></div>
+      </div>
+      <div class="lbl">В парке <b>4</b></div>
+      <div style="padding:0 18px">
+        <div class="bike"><span class="bar" style="background:var(--b2)"></span><span class="bbody">
+          <span class="ph">⛰️</span><span style="flex:1;min-width:0"><span class="bn" style="display:block">Twitter Rider Boost 27.5"</span>
+          <span class="bm" style="display:block">МТБ хардтейл · Наташа</span><span class="bs"><span>8 200 км</span><span class="money">162 462 ₽</span></span></span></span></div>
+        <div class="bike"><span class="bar" style="background:var(--b3)"></span><span class="bbody">
+          <span class="ph">🧒</span><span style="flex:1;min-width:0"><span class="bn" style="display:block">HAGEN Teen Pro 20 Carbon</span>
+          <span class="bm" style="display:block">детский · Ваня</span><span class="bs"><span>900 км</span><span class="money">101 063 ₽</span></span></span></span></div>
+        <div class="bike"><span class="bar" style="background:var(--b1)"></span><span class="bbody">
+          <span class="ph">🚵</span><span style="flex:1;min-width:0"><span class="bn" style="display:block">Faraoll G50</span>
+          <span class="bm" style="display:block">гравий · Данил</span><span class="bs"><span>1 450 км</span><span class="money">234 240 ₽</span></span></span></span></div>
+        <div class="bike"><span class="bar" style="background:var(--b4)"></span><span class="bbody">
+          <span class="ph">⛰️</span><span style="flex:1;min-width:0"><span class="bn" style="display:block">Speedone 27.5 Floater</span>
+          <span class="bm" style="display:block">МТБ хардтейл · Данил</span><span class="bs"><span>в сборке</span></span></span></span></div>
+      </div>
+      <div style="height:40px"></div>
+    </div></div>
+    <div class="a" style="min-height:0;padding:0"><div class="nav">
+      <i class="on"><span>⌂</span>Гараж</i><i><span>◷</span>ТО</i><i><span>▥</span>Деньги</i><i><span>≡</span>Сборка</i><i><span>◎</span>Выбор</i>
+    </div></div>
+    </div>
+  </figure>
+
+  <!-- ═══════════ B ═══════════ -->
+  <figure class="art" data-screen-label="B · Набережная">
+    <figcaption>
+      <div class="tag">Направление B · смелое</div>
+      <div class="nm">Набережная</div>
+      <div class="desc">Сцена занимает весь первый экран, содержимое поднимается поверх неё панелью. Ночной город, крупная лёгкая типографика, минимум рамок. Движение: панель едет при прокрутке.</div>
+    </figcaption>
+    <div class="frame"><div class="scroller"><div class="b">
+      <div class="sky"></div><div class="moon"></div>
+      <svg class="sil" viewBox="0 0 400 120" preserveAspectRatio="none">
+        <path d="M0 120V96h34v24z M46 120V92l16-6 16 6v28z M92 120V94h24v26z M98 94V76h12v18z M104 12l6 64h-12z
+                 M136 120V92h56v28z M152 92V72h24v20z M152 72a12 12 0 0124 0z M161 60h6v-5h-6z
+                 M206 120V72h8v48z M201 68h18v4h-18z M210 54l5 14h-10z
+                 M226 120V72h8v48z M221 68h18v4h-18z M230 54l5 14h-10z
+                 M252 120V88h30v32z M259 88V64h16v24z M267 20l5 44h-10z
+                 M310 120V94h34v26z M352 120L358 22 361 10l3 12L370 120z M386 120V100h14v20z" fill="#050a12"/>
+      </svg>
+      <div class="water"><i style="top:24px"></i><i style="top:52px"></i><i style="top:88px"></i>
+        <svg style="position:absolute;left:50%;transform:translateX(-50%);bottom:12px;width:190px;height:44px" viewBox="0 0 200 44">
+          <path d="M0 42h34l30-34" fill="none" stroke="#050a12" stroke-width="6" stroke-linecap="round"/>
+          <path d="M200 42h-34l-30-34" fill="none" stroke="#050a12" stroke-width="6" stroke-linecap="round"/>
+        </svg></div>
+      <div class="title"><h2>Четыре<br>велосипеда</h2><p>Санкт-Петербург · август</p></div>
+      <div class="bhero">
+        <svg width="96" height="70" viewBox="0 0 100 72"><circle cx="22" cy="50" r="17" fill="none" stroke="#d95926" stroke-width="2.6"/><circle cx="78" cy="50" r="17" fill="none" stroke="#d95926" stroke-width="2.6"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h11M32 23h12" stroke="#d95926" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+        <svg width="78" height="57" viewBox="0 0 100 72"><circle cx="22" cy="50" r="13" fill="none" stroke="#199e70" stroke-width="2.6"/><circle cx="78" cy="50" r="13" fill="none" stroke="#199e70" stroke-width="2.6"/><path d="M50 50L40 30M50 50L68 31M40 30L68 31M22 50h28M68 31L78 50M67 22h11M34 27h12" stroke="#199e70" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+        <svg width="96" height="70" viewBox="0 0 100 72"><circle cx="22" cy="50" r="17" fill="none" stroke="#3987e5" stroke-width="2.6"/><circle cx="78" cy="50" r="17" fill="none" stroke="#3987e5" stroke-width="2.6"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h8q4 0 4 4v4M32 23h12" stroke="#3987e5" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+        <svg width="96" height="70" viewBox="0 0 100 72"><circle cx="22" cy="50" r="17" fill="none" stroke="#c98500" stroke-width="2.6"/><circle cx="78" cy="50" r="17" fill="none" stroke="#c98500" stroke-width="2.6"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h11M32 23h12" stroke="#c98500" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="urgent">
+          <div class="k">Требует внимания</div>
+          <div class="t">Вилка — обслуживание нижних ног</div>
+          <div class="s">Twitter Rider Boost · просрочено на 1 200 км</div>
+        </div>
+        <div class="row3">
+          <div><div class="k">В парке</div><div class="v">4</div></div>
+          <div><div class="k">Сделать</div><div class="v" style="color:#e8916f">1</div></div>
+          <div><div class="k">Купить</div><div class="v">25</div></div>
+        </div>
+        <div class="sect">Парк</div>
+        <div class="brow"><span class="swatch" style="background:#d95926"></span>
+          <span style="flex:1"><span class="bn" style="display:block">Twitter Rider Boost</span><span class="bm" style="display:block">МТБ · Наташа · 8 200 км</span></span><span class="go">›</span></div>
+        <div class="brow"><span class="swatch" style="background:#199e70"></span>
+          <span style="flex:1"><span class="bn" style="display:block">HAGEN Teen Pro 20</span><span class="bm" style="display:block">детский · Ваня · 900 км</span></span><span class="go">›</span></div>
+        <div class="brow"><span class="swatch" style="background:#3987e5"></span>
+          <span style="flex:1"><span class="bn" style="display:block">Faraoll G50</span><span class="bm" style="display:block">гравий · Данил · в сборке</span></span><span class="go">›</span></div>
+        <div class="brow"><span class="swatch" style="background:#c98500"></span>
+          <span style="flex:1"><span class="bn" style="display:block">Speedone 27.5 Floater</span><span class="bm" style="display:block">МТБ · Данил · в сборке</span></span><span class="go">›</span></div>
+        <div class="sect">Продано</div>
+        <div class="brow" style="opacity:.45;border:0"><span class="swatch" style="background:#d55181"></span>
+          <span style="flex:1"><span class="bn" style="display:block">Twitter Gravel V1 GeX</span><span class="bm" style="display:block">продан · июль 2026</span></span></div>
+      </div>
+    </div></div>
+    <div class="b" style="min-height:0"><div class="nav">
+      <i class="on">Гараж</i><i>ТО</i><i>Деньги</i><i>Сборка</i><i>Выбор</i></div></div>
+    </div>
+  </figure>
+
+  <!-- ═══════════ C ═══════════ -->
+  <figure class="art" data-screen-label="C · Сервисная книжка">
+    <figcaption>
+      <div class="tag">Направление C · смелое</div>
+      <div class="nm">Сервисная книжка</div>
+      <div class="desc">Не приложение, а документ мастерской: линованная бумага, штамп, нумерованные записи, закладки разделов сбоку. Сцена сжата до штампа. Движение: перелистывание.</div>
+    </figcaption>
+    <div class="frame"><div class="scroller"><div class="c pad">
+      <div class="tabs">
+        <i class="on">Гараж</i><i>ТО</i><i>Деньги</i><i>Сборка</i><i>Выбор</i>
+      </div>
+      <div class="top" style="max-width:none;margin:0">
+        <div class="stamp">
+          <svg viewBox="0 0 100 72"><circle cx="22" cy="50" r="16" fill="none" stroke="#c8a951" stroke-width="3"/><circle cx="78" cy="50" r="16" fill="none" stroke="#c8a951" stroke-width="3"/><path d="M50 50L38 26M50 50L68 28M38 26L68 28M22 50h28M68 28L78 50M67 19h11M32 23h12" stroke="#c8a951" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h2>СЕРВИСНАЯ<br>КНИЖКА</h2>
+          <div class="meta">Северянов Д. · Санкт-Петербург<br>записей 4 · в архиве 1</div>
+        </div>
+      </div>
+      <div class="band">
+        <div><div class="k">В парке</div><div class="v">4</div></div>
+        <div><div class="k">Сделать</div><div class="v" style="color:#c25c4a">1</div></div>
+        <div><div class="k">Купить</div><div class="v">25</div></div>
+      </div>
+      <div class="sec">Требует внимания</div>
+      <div class="warn">
+        <div class="t">Вилка — обслуживание нижних ног</div>
+        <div class="s">Rider Boost · просрочено на 1 200 км<br>по регламенту RockShox — каждые 50 часов</div>
+      </div>
+      <div class="sec">Парк</div>
+      <div class="entry"><span class="no">01</span><span style="flex:1">
+        <span class="en" style="display:block">Twitter Rider Boost 27.5"</span>
+        <span class="em" style="display:block">МТБ хардтейл · Наташа</span></span>
+        <span class="tick">8 200 км<br><span class="money">162 462 ₽</span></span></div>
+      <div class="entry"><span class="no">02</span><span style="flex:1">
+        <span class="en" style="display:block">HAGEN Teen Pro 20 Carbon</span>
+        <span class="em" style="display:block">детский · Ваня</span></span>
+        <span class="tick">900 км<br><span class="money">101 063 ₽</span></span></div>
+      <div class="entry"><span class="no">03</span><span style="flex:1">
+        <span class="en" style="display:block">Faraoll G50</span>
+        <span class="em" style="display:block">гравий · Данил · в сборке</span></span>
+        <span class="tick">1 450 км<br><span class="money">234 240 ₽</span></span></div>
+      <div class="entry"><span class="no">04</span><span style="flex:1">
+        <span class="en" style="display:block">Speedone 27.5 Floater</span>
+        <span class="em" style="display:block">МТБ хардтейл · Данил · в сборке</span></span>
+        <span class="tick">—</span></div>
+      <div class="sec">Архив</div>
+      <div class="entry sold"><span class="no">05</span><span style="flex:1">
+        <span class="en" style="display:block">Twitter Gravel V1 GeX</span>
+        <span class="em" style="display:block">продан 12.07.2026</span></span>
+        <span class="tick money">70 000 ₽</span></div>
+      <div style="height:50px"></div>
+    </div></div></div>
+  </figure>
+
+</div>
+
+<script>
+  var btn = document.getElementById('money');
+  btn.addEventListener('click', function () {
+    var on = document.body.dataset.money === 'on';
+    document.body.dataset.money = on ? 'off' : 'on';
+    btn.setAttribute('aria-pressed', String(!on));
+    btn.textContent = on ? 'Показать цены' : 'Скрыть цены';
+  });
+</script>
+</body>
+</html>

@@ -11,78 +11,87 @@ __CSP__
 <title>Гараж — велосипеды, ТО и затраты</title>
 <style>
 /* ============================================================ tokens
-   Dark is the primary look; light is a courtesy for daylight. Bike identity
-   colours are the validated categorical slots — one hue per bike, never cycled,
-   never reused for anything else. */
+   Оформление привязано ко времени суток: рассвет, день, закат, ночь.
+   Меняется не только небо, а вся палитра — днём светло, ночью темно.
+   Живой сайт берёт время по часам; выбор вручную его перекрывает. */
+@font-face{
+  font-family:"Unbounded";
+  src:url(data:font/woff2;base64,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) format("woff2");
+  font-weight:700;font-style:normal;font-display:swap;
+  unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;
+}
 :root{
-  color-scheme: dark;
-  --bg:#0a0a0c;
-  --surface:#141417;
-  --surface2:#1c1c21;
-  --line:#26262c;
-  --line2:#34343d;
-  --ink:#f4f4f6;
-  --ink2:#9e9ea8;
-  --ink3:#6a6a74;
-  --accent:#2dd4bf;
-  --accent-dim:rgba(45,212,191,.14);
-  --danger:#fb7185;
-  --danger-dim:rgba(251,113,133,.13);
-  --warn:#fbbf24;
-  --warn-dim:rgba(251,191,36,.13);
-  --ok:#4ade80;
-  --ok-dim:rgba(74,222,128,.13);
-  --b1:#3987e5; --b2:#d95926; --b3:#199e70; --b4:#c98500; --b5:#d55181;
-  --hdr:#0a0a0c;
+  --disp:"Unbounded",-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Roboto Mono","Cascadia Mono",monospace;
+  --ease:cubic-bezier(.22,.68,0,1);
+  --b1:#4a90e2; --b2:#e2703a; --b3:#2ba676; --b4:#d9a441; --b5:#d8608f;
   --safe-t:env(safe-area-inset-top,0px);
   --safe-b:env(safe-area-inset-bottom,0px);
   --safe-l:env(safe-area-inset-left,0px);
   --safe-r:env(safe-area-inset-right,0px);
-  --r-card:0px; --r-in:0px; --r-ctl:0px;
+  --r-card:16px; --r-in:12px; --r-ctl:11px;
   --spring:cubic-bezier(.34,1.4,.64,1);
 }
-/* Светлая тема применяется, когда её просит система И пользователь не выбрал
-   тёмную вручную. Ручной выбор ниже перебивает системный в обе стороны. */
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    color-scheme: light;
-    --bg:#f6f6f7;
-    --surface:#ffffff;
-    --surface2:#f1f1f3;
-    --line:#e5e5e9;
-    --line2:#d3d3da;
-    --ink:#141417;
-    --ink2:#5f5f6b;
-    --ink3:#8e8e9a;
-    --accent:#0d9488;
-    --accent-dim:rgba(13,148,136,.1);
-    --danger:#dc2626;
-    --danger-dim:rgba(220,38,38,.09);
-    --warn:#b45309;
-    --warn-dim:rgba(180,83,9,.1);
-    --ok:#15803d;
-    --ok-dim:rgba(21,128,61,.1);
-    --b1:#2a78d6; --b2:#eb6834; --b3:#1baf7a; --b4:#eda100; --b5:#e87ba4;
-    --hdr:#f6f6f7;
-  }
+:root,[data-part="night"]{
+  color-scheme:dark;
+  --s1:#05070c;--s2:#0a1220;--s3:#132234;--s4:#1d3247;--s5:#0e1a28;
+  --orb:#e9eff8;--orbGlow:rgba(186,208,240,.14);--orbX:72%;--orbY:74px;--orbSize:46px;
+  --city:#060d17;--fog:rgba(23,40,58,.72);--fogH:76px;
+  --w1:#16293c;--w2:#0b1622;--w3:#080f18;--lamp:1;--glint:.18;
+  --bg:#08090c;--surface:#0e1116;--surface2:#161a20;
+  --panel1:rgba(14,17,22,.90);--panel2:rgba(10,12,16,.97);
+  --ink:#f4f1ea;--ink2:#9aa4b2;--ink3:#5f6875;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);
+  --accent:#e5bd6a;--accent-dim:rgba(229,189,106,.15);--kicker:#8ea3bd;
+  --danger:#f0805e;--danger-dim:rgba(240,128,94,.15);
+  --warn:#e5bd6a;--warn-dim:rgba(229,189,106,.14);
+  --ok:#5fbf92;--ok-dim:rgba(95,191,146,.14);
+  --grainO:.5;--shadow:0 -30px 70px rgba(0,0,0,.6);--onAcc:#20180a;
 }
-:root{ --mono: ui-monospace,"SF Mono",SFMono-Regular,Menlo,"Roboto Mono","Cascadia Mono",monospace; }
-/* Ручной выбор: перебивает системный и в светлую, и в тёмную сторону. */
-:root[data-theme="light"]{
-  color-scheme: light;
-  --bg:#f6f6f7; --surface:#ffffff; --surface2:#f1f1f3; --line:#e5e5e9; --line2:#d3d3da;
-  --ink:#141417; --ink2:#5f5f6b; --ink3:#8e8e9a;
-  --accent:#0d9488; --accent-dim:rgba(13,148,136,.1);
-  --danger:#dc2626; --danger-dim:rgba(220,38,38,.09);
-  --warn:#b45309; --warn-dim:rgba(180,83,9,.1);
-  --ok:#15803d; --ok-dim:rgba(21,128,61,.1);
-  --b1:#2a78d6; --b2:#eb6834; --b3:#1baf7a; --b4:#eda100; --b5:#e87ba4;
-  --hdr:#f6f6f7; --sil:#5b7fa6; --pine:#4a7a63; --neva:#a7cbe4;
+[data-part="dawn"]{
+  color-scheme:dark;
+  --s1:#0f1523;--s2:#232c46;--s3:#5b4d6b;--s4:#b8836f;--s5:#d8a184;
+  --orb:#ffd9c4;--orbGlow:rgba(255,205,180,.30);--orbX:22%;--orbY:236px;--orbSize:52px;
+  --city:#0a0f1c;--fog:rgba(120,130,165,.60);--fogH:100px;
+  --w1:#3b4560;--w2:#1a2135;--w3:#10141f;--lamp:.45;--glint:.14;
+  --bg:#0b0e15;--surface:#111520;--surface2:#181d29;
+  --panel1:rgba(17,20,28,.90);--panel2:rgba(12,14,20,.97);
+  --ink:#eef0f5;--ink2:#98a0b4;--ink3:#5f6678;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);
+  --accent:#d8a184;--accent-dim:rgba(216,161,132,.18);--kicker:#a291a8;
+  --danger:#e08a72;--danger-dim:rgba(224,138,114,.16);
+  --warn:#d8a184;--warn-dim:rgba(216,161,132,.15);
+  --ok:#79b39a;--ok-dim:rgba(121,179,154,.15);
+  --grainO:.5;--shadow:0 -30px 70px rgba(0,0,0,.6);--onAcc:#1d1210;
 }
-:root[data-theme="light"] .scene{background:linear-gradient(#7fb4e2 0%,#a8d0ea 42%,#d9ecf8 70%,#c2dff0 100%);}
-:root[data-theme="light"] .sun{background:#fff3c4; box-shadow:0 0 44px 18px rgba(255,243,196,.8);}
-:root[data-theme="light"] .cloud{background:rgba(255,255,255,.85);}
-:root[data-theme="light"] .road{background:linear-gradient(#7c8fa3 0%,#68798c 100%);}
+[data-part="day"]{
+  color-scheme:light;
+  --s1:#7fb2e0;--s2:#a4cbe9;--s3:#c8e0f0;--s4:#dceaf3;--s5:#cfe0ec;
+  --orb:#fffdf2;--orbGlow:rgba(255,253,235,.55);--orbX:70%;--orbY:60px;--orbSize:58px;
+  --city:#8098ae;--fog:rgba(215,232,244,.55);--fogH:70px;
+  --w1:#87b0cf;--w2:#6b95b6;--w3:#5b86a8;--lamp:0;--glint:.30;
+  --bg:#eaeef3;--surface:#ffffff;--surface2:#f2f6fa;
+  --panel1:rgba(255,255,255,.88);--panel2:rgba(250,252,254,.97);
+  --ink:#101720;--ink2:#4e5967;--ink3:#818d9c;--line:rgba(10,25,45,.11);--line2:rgba(10,25,45,.20);
+  --accent:#1d6fa8;--accent-dim:rgba(29,111,168,.13);--kicker:#4a6580;
+  --danger:#c2482c;--danger-dim:rgba(194,72,44,.11);
+  --warn:#9a6a12;--warn-dim:rgba(154,106,18,.13);
+  --ok:#1c7a52;--ok-dim:rgba(28,122,82,.12);
+  --grainO:.28;--shadow:0 -26px 60px rgba(40,70,100,.16);--onAcc:#ffffff;
+}
+[data-part="dusk"]{
+  color-scheme:dark;
+  --s1:#150f1d;--s2:#3a2340;--s3:#7d3f45;--s4:#c2673f;--s5:#e59a4e;
+  --orb:#fff0c9;--orbGlow:rgba(255,190,110,.40);--orbX:74%;--orbY:250px;--orbSize:66px;
+  --city:#0e0912;--fog:rgba(120,70,70,.55);--fogH:86px;
+  --w1:#5a3a3c;--w2:#2a1a22;--w3:#170f16;--lamp:.7;--glint:.20;
+  --bg:#0d0a0d;--surface:#151016;--surface2:#1d161d;
+  --panel1:rgba(22,16,20,.90);--panel2:rgba(14,10,14,.97);
+  --ink:#f6efe8;--ink2:#a99a95;--ink3:#6d625f;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.16);
+  --accent:#e59a4e;--accent-dim:rgba(229,154,78,.16);--kicker:#c08a6a;
+  --danger:#e8734f;--danger-dim:rgba(232,115,79,.16);
+  --warn:#e59a4e;--warn-dim:rgba(229,154,78,.15);
+  --ok:#7fb98f;--ok-dim:rgba(127,185,143,.15);
+  --grainO:.5;--shadow:0 -30px 70px rgba(0,0,0,.62);--onAcc:#20140a;
+}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button,a,summary,.it,.att,.kpi,.bikecard,.glyph{touch-action:manipulation;}
@@ -110,7 +119,7 @@ th{font-family:var(--mono);}
 
 /* ============================================================ header */
 header{
-  position:sticky; top:0; z-index:50; background:var(--hdr);
+  position:relative; z-index:6; background:none;
   border-bottom:1px solid var(--line2);
   padding:calc(var(--safe-t) + 12px) calc(var(--safe-r) + 18px) 12px calc(var(--safe-l) + 18px);
 }
@@ -135,8 +144,34 @@ h1{margin:0; font-size:24px; font-weight:750; letter-spacing:-.035em; flex:1; mi
 #sdot.on{background:var(--ok);} #sdot.dirty{background:var(--warn);} #sdot.err{background:var(--danger);}
 .sub{margin:2px 0 0; font-size:13.5px; color:var(--ink2);}
 
+
+/* ============================================================ каркас
+   Сцена — фон всей страницы, содержимое поднимается над ней панелью.
+   Панель наезжает на линию земли, поэтому шва между ними нет. */
+#scene-slot{position:absolute;top:0;left:0;right:0;z-index:0;pointer-events:none}
+#scene-slot .scene{margin:0}
+header{
+  position:relative;z-index:6;background:none;border:0;
+  padding:calc(var(--safe-t) + 26px) calc(var(--safe-r) + 20px) 0 calc(var(--safe-l) + 20px);
+}
+h1{margin:0;font:700 38px/.98 var(--disp);letter-spacing:-.045em;color:var(--ink);
+  text-shadow:0 2px 40px color-mix(in srgb,var(--bg) 55%,transparent)}
+.sub{margin:12px 0 0;font:12.5px/1.6 var(--mono);color:var(--kicker);letter-spacing:.04em}
+.hrow{display:flex;align-items:flex-start;gap:10px}
+main{
+  position:relative;z-index:5;margin-top:318px;padding:0;max-width:none;
+  background:linear-gradient(var(--panel1),var(--panel2));
+  -webkit-backdrop-filter:blur(26px) saturate(130%);backdrop-filter:blur(26px) saturate(130%);
+  border-top:1px solid var(--line);border-radius:22px 22px 0 0;
+  box-shadow:var(--shadow);min-height:70vh;
+}
+main .wrap{padding:24px calc(var(--safe-r) + 20px) 40px calc(var(--safe-l) + 20px);max-width:1180px;margin:0 auto}
+main::before{content:"";display:block;width:36px;height:4px;border-radius:2px;
+  background:color-mix(in srgb,var(--ink) 20%,transparent);margin:12px auto 0}
+body{padding-bottom:calc(76px + var(--safe-b))}
+
 /* ============================================================ layout */
-main{padding:18px calc(var(--safe-r) + 18px) 28px calc(var(--safe-l) + 18px); max-width:820px; margin:0 auto;}
+
 .view{display:none;} .view.on{display:block;}
 /* Подпись раздела — штамп на сервисной карте: моноширинный, разрядка,
    тонкая черта. Раньше это была толстая цветная полоса, спорившая со сценой. */
@@ -206,7 +241,9 @@ textarea{min-height:78px; resize:vertical;}
 
 /* ============================================================ tabbar */
 nav{
-  position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex; background:var(--hdr);
+  position:fixed; left:0; right:0; bottom:0; z-index:60; display:flex;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
   border-top:1px solid var(--line2);
   padding:5px calc(var(--safe-r) + 4px) calc(var(--safe-b) + 5px) calc(var(--safe-l) + 4px);
 }
@@ -226,26 +263,20 @@ nav .badge{
 }
 
 /* ============================================================ bike card */
-.bikecard{
-  display:flex; width:100%; border:0; padding:0; background:var(--surface); cursor:pointer;
-  text-align:left; overflow:hidden;
-  transition:transform .12s var(--spring);
-}
+
 .bikecard:active{transform:scale(.985);}
-.bar{width:8px; flex:none; align-self:stretch;}
-.bikebody{flex:1; min-width:0; padding:15px 16px; display:flex; gap:13px; align-items:center;}
+
+
 .ph{
   width:54px; height:54px; flex:none; overflow:hidden;
   display:flex; align-items:center; justify-content:center; font-size:23px;
   background:var(--surface2);
 }
 .ph img{width:100%;height:100%;object-fit:cover;}
-.bname{display:block; font-size:16.5px; font-weight:700; letter-spacing:-.015em; line-height:1.25;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.bmeta{display:block; font-size:13px; color:var(--ink2); margin-top:3px;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-.bstat{font-size:12.5px; color:var(--ink3); margin-top:5px; display:flex; gap:8px; flex-wrap:wrap;}
-.sold .bikebody{opacity:.62;}
+
+
+
+
 
 /* ============================================================ attention */
 .att{display:flex; align-items:center; gap:12px; padding:14px 16px; width:100%;
@@ -326,144 +357,57 @@ details[open] summary .arw{transform:rotate(90deg);}
 .it .pr{margin-left:auto; font-size:13.5px; font-weight:700; text-align:right; white-space:nowrap; flex:none;}
 .it .pr small{display:block; font-weight:400; font-size:11px; color:var(--ink3); white-space:normal; max-width:105px;}
 
-/* ============================================================ scene
-   Layered flat illustration: sky, clouds, two ridges, a road with the bikes on
-   it. Layers drift at different speeds on scroll, which is what makes it read
-   as depth rather than as a picture. */
+/* ============================================================ мир
+   Разделы — места по маршруту, из города за город. Небо общее и не едет;
+   земля разбита на три плана, каждый смещается со своей скоростью, поэтому
+   переключение читается как проезд, а не как подмена картинки. */
 .scene{
-  position:relative; height:280px; margin:-18px calc(var(--safe-l) * -1 - 18px) 20px calc(var(--safe-r) * -1 - 18px);
-  overflow:hidden; background:linear-gradient(#0c1a2f 0%, #182d49 40%, #2f5279 68%, #20395c 100%);
-  border-bottom:1px solid var(--line);
+  position:relative; height:600px; overflow:hidden;
+  margin:0 calc(var(--safe-l) * -1 - 18px) 0 calc(var(--safe-r) * -1 - 18px);
 }
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]) .scene{background:linear-gradient(#7fb4e2 0%, #a8d0ea 42%, #d9ecf8 70%, #c2dff0 100%);}
-}
-.scene .layer{position:absolute; left:0; right:0; will-change:transform;}
-.sunpath{position:absolute; top:0; left:0; width:100%; height:150px; pointer-events:none;}
-.sun{
-  position:absolute; width:42px; height:42px; border-radius:50%;
-  background:#f6d365; box-shadow:0 0 34px 12px rgba(246,211,101,.28); opacity:.92;
-  animation:sunride 150s linear infinite;
-}
-/* восход слева, зенит по центру, закат справа — один медленный проход */
-@keyframes sunride{
-  0%  { left:-9%;  top:104px; }
-  25% { top:40px; }
-  50% { left:47%;  top:16px; }
-  75% { top:40px; }
-  100%{ left:103%; top:104px; }
-}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .sun{background:#fff3c4; box-shadow:0 0 44px 18px rgba(255,243,196,.8);} }
-.cloud{position:absolute; background:rgba(255,255,255,.13); border-radius:100px; height:13px;}
-.cloud::before,.cloud::after{content:''; position:absolute; background:inherit; border-radius:50%;}
-.cloud::before{width:19px;height:19px;top:-8px;left:12px;}
-.cloud::after{width:13px;height:13px;top:-5px;left:33px;}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .cloud{background:rgba(255,255,255,.85);} }
-@keyframes drift{ from{transform:translateX(-90px);} to{transform:translateX(460px);} }
-.ridge{position:absolute; bottom:126px; left:0; width:100%; height:104px; display:block; opacity:.96;}
-@media (min-width:900px){ .ridge{bottom:126px; height:118px;} }
-:root{ --sil:#0b1727; --pine:#0d2033; --neva:#1d3f66; }
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){ --sil:#5b7fa6; --pine:#4a7a63; --neva:#a7cbe4; } }
-/* морось — в Петербурге это состояние по умолчанию */
-.rain{top:0; height:170px; pointer-events:none;}
-.drop{
-  position:absolute; top:-14px; width:1px; height:13px;
-  background:linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.75));
-  animation-name:fall; animation-timing-function:linear; animation-iteration-count:infinite;
-}
-@keyframes fall{ to{ transform:translateY(168px); } }
-.gull{position:absolute; top:34px; left:0; opacity:.75; animation:gullfly 34s linear infinite;}
-@keyframes gullfly{
-  0%{transform:translate(-40px,0);} 45%{transform:translate(220px,-14px);}
-  70%{transform:translate(330px,6px);} 100%{transform:translate(480px,-8px);}
-}
-.neva{bottom:88px; height:42px; background:var(--neva); box-shadow:inset 0 2px 0 rgba(255,255,255,.10);}
-.neva::after{
-  content:''; position:absolute; inset:auto 0 0 0; height:10px;
-  background:repeating-linear-gradient(90deg, rgba(255,255,255,.09) 0 9px, transparent 9px 22px);
-}
-.bridge{position:absolute; left:50%; transform:translateX(-50%); bottom:0; width:min(58%,260px); height:42px;}
-.boat{position:absolute; bottom:2px; left:0; animation:sail 46s linear infinite;}
-@keyframes sail{ from{transform:translateX(-40px);} to{transform:translateX(470px);} }
-.pines{position:absolute; bottom:54px; left:0; width:100%; height:36px;}
-.mosq{
-  position:absolute; left:9%; bottom:96px; font-size:14px; opacity:.9;
-  animation:buzz 6s ease-in-out infinite; transform-origin:center;
-}
-@keyframes buzz{
-  0%,100%{transform:translate(0,0) rotate(0);}
-  25%{transform:translate(-13px,-9px) rotate(-12deg);}
-  50%{transform:translate(7px,-15px) rotate(9deg);}
-  75%{transform:translate(-6px,-4px) rotate(-6deg);}
-}
-.road{
-  position:absolute; bottom:0; left:0; right:0; height:54px;
-  background:linear-gradient(#2f4a6b 0%, #263d59 100%); border-top:2px solid rgba(255,255,255,.14);
-}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .road{background:linear-gradient(#7c8fa3 0%,#68798c 100%);} }
-.road::after{
-  content:''; position:absolute; top:26px; left:0; right:0; height:2px;
-  background:repeating-linear-gradient(90deg, rgba(255,255,255,.32) 0 14px, transparent 14px 30px);
-}
-.strip{
-  position:absolute; left:0; right:0; bottom:8px; display:flex; align-items:flex-end; gap:6px;
-  padding:0 14px; overflow-x:auto; scroll-snap-type:x proximity;
-  scrollbar-width:none; -webkit-overflow-scrolling:touch;
-}
-.strip::-webkit-scrollbar{display:none;}
-.glyph{
-  flex:0 0 auto; border:0; background:none; padding:0 2px 2px; cursor:pointer;
-  scroll-snap-align:center; display:flex; flex-direction:column; align-items:center; gap:3px;
-  min-height:48px; transition:transform .22s var(--spring);
-}
-.glyph:active{transform:translateY(-4px) scale(1.04);}
-/* на наведении велосипед трогается с места: колёса раскручиваются */
-@media (hover:hover){
-  .glyph:hover{transform:translateY(-3px);}
-  .glyph:hover .wh{animation-duration:.9s;}
-}
-.wh{animation-duration:5.5s;}
-.glyph svg{display:block; overflow:visible;}
-.glyph .tagname{
-  font-size:10.5px; font-weight:800; letter-spacing:.02em; color:#fff;
-  background:rgba(0,0,0,.45); padding:3px 8px; white-space:nowrap;
-  max-width:112px; overflow:hidden; text-overflow:ellipsis;
-}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .glyph .tagname{background:rgba(0,0,0,.42);} }
-.glyph.gone svg{opacity:.4; filter:grayscale(.7);}
-.glyph.gone .tagname{opacity:.6;}
-.glyph .alert{
-  position:absolute; margin-top:-6px; margin-left:34px; width:9px; height:9px;
-  border-radius:50%; background:var(--danger); box-shadow:0 0 0 2px rgba(0,0,0,.3);
-}
-@keyframes ride{ from{transform:translateX(-70px);} to{transform:translateX(470px);} }
-.rider{position:absolute; bottom:22px; left:0; opacity:.55;}
-@keyframes spin{ to{transform:rotate(360deg);} }
-.wh{transform-box:fill-box; transform-origin:center; }
+.sky-base{position:absolute;inset:0;
+  background:linear-gradient(var(--s1) 0%,var(--s2) 30%,var(--s3) 54%,var(--s4) 74%,var(--s5) 100%);
+  transition:background 1s var(--ease)}
+.bloom{position:absolute;left:calc(var(--orbX) - 34%);top:calc(var(--orbY) - 118px);
+  width:78%;height:300px;transition:all 1s var(--ease);
+  background:radial-gradient(58% 54% at 46% 42%,var(--orbGlow),transparent 72%)}
+.orb{position:absolute;left:var(--orbX);top:var(--orbY);width:var(--orbSize);height:var(--orbSize);
+  border-radius:50%;transition:all 1s var(--ease);
+  background:radial-gradient(circle,var(--orb) 0%,var(--orb) 42%,transparent 72%)}
+/* Луна — не тот же тёплый шар: холодный диск с кратерами и затенением снизу. */
+[data-part="night"] .orb{
+  background:
+    radial-gradient(circle at 62% 62%,rgba(120,140,175,.34) 0 6%,transparent 7%),
+    radial-gradient(circle at 38% 34%,rgba(120,140,175,.28) 0 8%,transparent 9%),
+    radial-gradient(circle at 52% 24%,rgba(120,140,175,.20) 0 4%,transparent 5%),
+    radial-gradient(circle at 34% 68%,rgba(120,140,175,.16) 0 5%,transparent 6%),
+    radial-gradient(circle at 40% 36%,#f4f7fc 0%,#dfe7f2 62%,#c3cfe1 88%,#b3c1d6 100%);
+  box-shadow:0 0 34px 6px rgba(190,212,245,.16),inset -6px -7px 12px -6px rgba(60,78,110,.55);}
 
-.chizhik{
-  position:absolute; right:5%; bottom:52px; width:44px; height:44px; border:0; background:none;
-  cursor:pointer; padding:0; display:flex; align-items:flex-end; justify-content:center;
-  opacity:.9; transition:transform .2s var(--spring);
-}
-.chizhik:active{transform:translateY(-6px) scale(1.1);}
-@media (hover:hover){ .chizhik:hover{transform:translateY(-3px);} }
-
-/* ============================================================ переходы
-   Кадр уезжает влево, новый приходит справа — как листают. При открытии
-   карточки направление обратное, потому что это движение «внутрь». */
-::view-transition-old(root),
-::view-transition-new(root){ animation-duration:.34s; animation-timing-function:cubic-bezier(.32,.72,0,1); }
-::view-transition-old(root){ animation-name:vt-out; }
-::view-transition-new(root){ animation-name:vt-in; }
-@keyframes vt-out{ to{ opacity:0; transform:translateX(-14px) scale(.995); } }
-@keyframes vt-in{ from{ opacity:0; transform:translateX(16px) scale(.995); } }
-:root[data-vt="in"] ::view-transition-old(root){ animation-name:vt-out-deep; }
-:root[data-vt="in"] ::view-transition-new(root){ animation-name:vt-in-deep; }
-@keyframes vt-out-deep{ to{ opacity:0; transform:scale(1.02); } }
-@keyframes vt-in-deep{ from{ opacity:0; transform:scale(.97); } }
-/* общий элемент летит по своей дуге, не растворяясь */
-::view-transition-group(*){ animation-duration:.42s; animation-timing-function:cubic-bezier(.34,1.12,.42,1); }
+.world{position:absolute;left:0;right:0;bottom:0;height:330px;z-index:1;overflow:hidden}
+.band{position:absolute;left:0;bottom:0;width:500%;height:100%;display:flex;
+  transition:transform 1.05s cubic-bezier(.32,.74,.06,1)}
+.band > .place{width:20%;height:100%;position:relative;flex:none}
+.band.far {transform:translateX(calc(var(--i,0) * -6%))}
+.band.mid {transform:translateX(calc(var(--i,0) * -13%))}
+.band.near{transform:translateX(calc(var(--i,0) * -20%))}
+.band svg{position:absolute;bottom:0;left:0;width:100%;height:100%}
+.far-p{fill:var(--city);opacity:.42;transition:fill 1s var(--ease)}
+.mid-p{fill:var(--city);opacity:.78;transition:fill 1s var(--ease)}
+.near-p{fill:color-mix(in srgb,var(--city) 88%,black);transition:fill 1s var(--ease)}
+.warm{fill:var(--orb);opacity:calc(var(--lamp) * .85);transition:opacity 1s}
+.water{position:absolute;left:0;right:0;bottom:0;height:104px;
+  background:linear-gradient(var(--w1),var(--w2) 70%,var(--w3));transition:background 1s var(--ease)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:74px;
+  background:linear-gradient(color-mix(in srgb,var(--city) 55%,#3a3a3a),color-mix(in srgb,var(--city) 80%,#1a1a1a));
+  transition:background 1s var(--ease)}
+.ground::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:color-mix(in srgb,var(--ink) 18%,transparent)}
+.placename{position:absolute;left:calc(var(--safe-l) + 20px);bottom:16px;z-index:4;
+  font:700 10px/1 var(--mono);letter-spacing:.26em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--ink) 46%,transparent);pointer-events:none}
+.grain{position:absolute;inset:0;pointer-events:none;z-index:60;opacity:var(--grainO);
+  mix-blend-mode:overlay;transition:opacity 1s}
 
 /* ============================================================ motion */
 .view{opacity:1;}
@@ -596,15 +540,17 @@ ul.pm li.m::before{content:'–';color:var(--danger);}
   .navstate{padding:8px 20px 0; font-size:11.5px; color:var(--ink3); line-height:1.4;}
   #sbtn,#mbtn{display:none;}
 
-  header{margin-left:232px; padding:14px 32px 12px;}
+  header{margin-left:232px; padding:calc(var(--safe-t) + 24px) 32px 0;}
   /* шапка обязана стоять по одной вертикали с контентом, иначе на 1920
      заголовок уезжает на 222px левее первой карточки */
   header .hrow, header .sub{max-width:1180px; margin-left:auto; margin-right:auto;}
-  h1{font-size:24px;}
-  main{margin-left:232px; max-width:none; padding:24px 32px 48px;}
+  h1{font-size:46px;}
+  main{margin-left:232px;}
+  #scene-slot{left:232px}
+  main .wrap{padding:26px 32px 56px}
   .wrap{max-width:1180px; margin:0 auto;}
 
-  .scene{height:260px; margin:-24px calc(50% - 50vw + 116px) 22px;}
+
   .strip{justify-content:center; padding:0 32px;}
   .dash{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,240px)); gap:12px;
     align-items:start; justify-content:start;}
@@ -669,6 +615,7 @@ a{color:var(--accent);}
   <p class="sub" id="sub"></p>
 </header>
 
+<div id="scene-slot"></div>
 <main>
   <div class="wrap">
     <div class="view on" id="v-garage"></div>
@@ -718,18 +665,7 @@ const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':
    поэтому переключается одним флагом и ни одна цифра не проскакивает мимо. */
 let SHOWMONEY = localStorage.getItem('bikes:money') === '1';
 
-/* Тема: 'auto' идёт за системой, 'light' и 'dark' — ручной выбор. */
-let THEME = localStorage.getItem('bikes:theme') || 'auto';
-function applyTheme() {
-  if (THEME === 'auto') document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', THEME);
-  const m = document.querySelector('meta[name="theme-color"]');
-  if (m) m.setAttribute('content', getComputedStyle(document.body).backgroundColor || '#0a0a0c');
-}
-function setTheme(t) {
-  THEME = t; localStorage.setItem('bikes:theme', t);
-  applyTheme(); render();
-}
+
 const rub = n => !SHOWMONEY ? '—'
   : (n==null ? '—' : Math.round(n).toLocaleString('ru-RU').replace(/ /g,' ') + ' ₽');
 function toggleMoney() {
@@ -1195,170 +1131,88 @@ function renderNav() {
        </div>`;
 }
 
-/* ---------------------------------------------------------- scene
-   Each bike is drawn, not photographed: same flat side view, but the silhouette
-   follows the real machine — drop bar for gravel, suspension fork and flat bar
-   for the hardtails, small wheels for the 20". Painted in the bike's own hue. */
-function bikeGlyph(b, w) {
-  const c = HUE(b.id);
-  const kid = b.type === 'детский';
-  const mtb = b.type === 'МТБ хардтейл';
-  const R = kid ? 13 : 17;                      // wheel radius
-  const y = 50, rx = 22, fx = 78;               // hub positions
-  const bb = [50, y], seat = [38, kid ? 30 : 26], head = [68, kid ? 31 : 28];
-  const L = (a, z, sw) => `<path d="M${a[0]} ${a[1]}L${z[0]} ${z[1]}" stroke="${c}" stroke-width="${sw||3}" stroke-linecap="round"/>`;
-  const wheel = cx => `
-    <g class="wh" style="animation:spin 5.5s linear infinite">
-      ${[0,60,120].map(a=>`<line x1="${cx-R*0.82*Math.cos(a*Math.PI/180)}" y1="${y-R*0.82*Math.sin(a*Math.PI/180)}"
-         x2="${cx+R*0.82*Math.cos(a*Math.PI/180)}" y2="${y+R*0.82*Math.sin(a*Math.PI/180)}"
-         stroke="${c}" stroke-width="1" opacity=".45"/>`).join('')}
-    </g>
-    <circle cx="${cx}" cy="${y}" r="${R}" fill="none" stroke="${c}" stroke-width="3"/>`;
-  const bar = mtb || kid
-    ? `<path d="M${head[0]-1} ${head[1]-9}h11" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`
-    : `<path d="M${head[0]-1} ${head[1]-9}h8q4 0 4 4v4" stroke="${c}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
-  return `<svg width="${w}" height="${Math.round(w*0.72)}" viewBox="0 0 100 72" aria-hidden="true">
-    ${wheel(rx)}${wheel(fx)}
-    ${L(bb, [rx, y], 2.6)}${L(seat, [rx, y], 2.6)}
-    ${L(bb, seat)}${L(bb, head)}${L(seat, head)}
-    ${mtb ? `<path d="M${head[0]} ${head[1]}L${fx} ${y}" stroke="${c}" stroke-width="5" stroke-linecap="round" opacity=".85"/>`
-          : L(head, [fx, y], 2.6)}
-    <path d="M${head[0]-2} ${head[1]}L${head[0]+1} ${head[1]-9}" stroke="${c}" stroke-width="2.6" stroke-linecap="round"/>
-    ${bar}
-    <path d="M${seat[0]-6} ${seat[1]-3}h12" stroke="${c}" stroke-width="4" stroke-linecap="round"/>
-    <circle cx="${bb[0]}" cy="${bb[1]}" r="3.4" fill="${c}"/>
-  </svg>`;
+/* ---------------------------------------------------------- мир
+   Разделы — места по маршруту, из города за город. Каждое место рисуется
+   тремя планами, которые едут с разной скоростью: так переключение читается
+   как проезд, а не как подмена картинки. Схематичных велосипедов больше нет —
+   их место занимает кадр под настоящее фото в карточке. */
+const PLACES = [
+ {tab:"garage", name:"Английская набережная",
+  far:"M0 148V128h34v20z M52 148V122h26v26z M58 122V104h14v18z M65 20l6 84h-12z M104 148V124h48v24z M118 124V102h22v22z M118 102a11 11 0 0122 0z M126 90h6v-6h-6z M176 148V104h8v44z M171 100h18v4h-18z M180 86l5 14h-10z M196 148V104h8v44z M191 100h18v4h-18z M200 86l5 14h-10z M226 148V122h28v26z M233 122V98h14v24z M240 34l5 64h-10z M272 148V128h32v20z M346 148L352 46 355 32l3 14L364 148z M386 148V132h14v16z",
+  mid:"M0 148v-16h56l8-6 8 6h44v16z M140 148v-14h70l10-7 10 7h60v14z M300 148v-15h58l9-6 9 6h24v15z",
+  near:"bridge", water:1},
+ {tab:"service", name:"Двор-колодец",
+  far:"M0 148V54h90v94z M104 148V40h74v108z M192 148V60h84v88z M290 148V34h70v114z M374 148V66h26v82z",
+  mid:"M0 148V78h120v70z M136 148V92h96v56z M248 148V70h152v78z",
+  near:"arch", win:[[18,92],[42,92],[66,92],[18,116],[66,116],[150,100],[174,100],[264,88],[288,88],[312,112],[336,112]]},
+ {tab:"money", name:"Проспект",
+  far:"M0 148V96h60v52z M74 148V84h52v64z M140 148V102h46v46z M200 148V78h62v70z M276 148V94h54v54z M344 148V88h56v60z",
+  mid:"M0 148V116h84v32z M100 148V108h74v40z M190 148V120h68v28z M272 148V104h60v44z M346 148V118h54v30z",
+  near:"lamps"},
+ {tab:"build", name:"Мастерская",
+  far:"M0 148V70h400v78z", mid:"M0 148V96h400v52z",
+  near:"bench", win:[[40,44],[70,44],[100,44]]},
+ {tab:"frames", name:"Грунтовка, Ленобласть",
+  far:"pines", mid:"pines", near:"road"}
+];
+
+function pinesPath(n, base) {
+  let d = "";
+  for (let i = 0; i < n; i++) {
+    const x = i * (400 / n) + ((i * 37) % 13) - 6, h = base + ((i * 53) % 34);
+    d += `M${x} 148V${148 - h/4}z M${x-9} ${148 - h/4}l9 -${h*0.8}l9 ${h*0.8}z `;
+  }
+  return d;
 }
 
-/* Силуэт города рисуется из именованных построек, а не одной строкой: у каждой
-   свои пропорции, и они не должны плыть. Раскладок две — на телефоне пять
-   доминант крупно, на компьютере те же плюс фоновая застройка, чтобы силуэт
-   не пришлось растягивать вдесятеро. Базовая линия y=100. */
-const LM = {
-  // Петропавловский собор: игла с ангелом — самый узнаваемый профиль города
-  peterpaul: x => `M${x-11} 100V78h22v22z M${x-6} 78V62h12v16z M${x} 7l5 55h-10z `
-                + `M${x-0.7} 8V2h1.4V8z M${x-2.2} 2.6a2.2 2.2 0 014.4 0 2.2 2.2 0 01-4.4 0z`,
-  // Исаакиевский собор: барабан, купол, четыре звонницы
-  isaac: x => `M${x-26} 100V76h52v24z M${x-22} 76V63h7v13z M${x+15} 76V63h7v13z `
-            + `M${x-15} 76V58h30v18z M${x-15} 58a15 15 0 0130 0z `
-            + `M${x-2.5} 44h5v-4h-5z M${x-0.6} 40v-6h1.2v6z`,
-  // Ростральная колонна с факелом
-  rostral: x => `M${x-3.5} 100V60h7v40z M${x-5.5} 60v-4h11v4z M${x} 45l4.5 11h-9z`,
-  // Адмиралтейство: шпиль с корабликом
-  admiralty: x => `M${x-14} 100V74h28v26z M${x-7} 74V54h14v20z M${x} 15l4 39h-8z `
-                + `M${x-0.6} 15V9h1.2v6z M${x+0.6} 9c3-.6 5.4-2 7-3.6v4.4c-1.6 1.6-4 3-7 3.6z`,
-  // Лахта-центр: сужающаяся закрученная башня, самая высокая точка
-  lakhta: x => `M${x-8} 100L${x-2.6} 15 ${x} 5 ${x+2.6} 15 ${x+8} 100z`,
-  block: (x, w, h) => `M${x-w/2} 100V${100-h}h${w}v${h}z`,
-  // жилая застройка с двускатным профилем — фон, не доминанта
-  house: (x, w, h) => `M${x-w/2} 100V${100-h}l${w/2} -5 ${w/2} 5v${h}z`
-};
-
-const SKY_NARROW = [
-  LM.block(18, 34, 20), LM.house(52, 30, 24),
-  LM.peterpaul(88),
-  LM.block(112, 26, 18),
-  LM.isaac(160),
-  LM.rostral(200), LM.rostral(214),
-  LM.block(236, 30, 20),
-  LM.admiralty(268),
-  LM.house(300, 32, 22), LM.block(330, 26, 17),
-  LM.lakhta(364),
-  LM.block(390, 24, 15)
-].join(' ');
-
-const SKY_WIDE = [
-  LM.block(24, 44, 19), LM.house(74, 40, 25), LM.block(120, 34, 17),
-  LM.peterpaul(178),
-  LM.block(214, 34, 20), LM.house(256, 38, 23),
-  LM.isaac(330),
-  LM.block(392, 36, 18),
-  LM.rostral(436), LM.rostral(452),
-  LM.house(490, 40, 24), LM.block(534, 32, 19),
-  LM.admiralty(596),
-  LM.block(646, 36, 21), LM.house(692, 42, 25), LM.block(740, 34, 18),
-  LM.lakhta(812),
-  LM.house(858, 38, 22), LM.block(902, 34, 19), LM.block(950, 40, 16)
-].join(' ');
+function nearShape(kind, p) {
+  if (kind === "bridge") return '<path class="near-p" d="M0 148v-18h300v18z"/>'
+    + '<path d="M118 130l32-30M282 130l-32-30" stroke="var(--city)" stroke-width="7" stroke-linecap="round" fill="none"/>'
+    + '<path class="near-p" d="M0 130h4v-22h-4z M60 130h4v-22h-4z M340 130h4v-26h-4z M396 130h4v-26h-4z"/>';
+  if (kind === "arch") return '<path class="near-p" d="M0 148V26h400v122z M150 148v-72a50 50 0 01100 0v72z" fill-rule="evenodd"/>'
+    + (p.win||[]).map(w => `<rect class="warm" x="${w[0]}" y="${w[1]}" width="15" height="19" rx="1"/>`).join("");
+  if (kind === "lamps") return '<path class="near-p" d="M0 148v-14h400v14z"/>'
+    + [40,150,260,370].map(x => `<path class="near-p" d="M${x} 134V64h3v70z M${x-9} 64h21v4h-21z"/>`
+      + `<ellipse class="warm" cx="${x+1.5}" cy="60" rx="11" ry="7"/>`).join("");
+  if (kind === "bench") return '<path class="near-p" d="M0 148v-40h400v40z M30 108V92h150v16z"/>'
+    + '<path class="near-p" d="M60 92V60h6v32z M120 92V56h6v36z"/>'
+    + (p.win||[]).map(w => `<rect class="warm" x="${w[0]}" y="${w[1]}" width="16" height="26" rx="2"/>`).join("");
+  if (kind === "road") return '<path class="near-p" d="M0 148v-26h400v26z"/>'
+    + '<path d="M0 136h400" stroke="color-mix(in srgb,var(--ink) 16%,transparent)" stroke-width="2" stroke-dasharray="14 22"/>';
+  return "";
+}
 
 function heroScene() {
-  const list = [...ownedBikes(), ...soldBikes()];
-  const wide = window.matchMedia('(min-width:900px)').matches;
-  const sky = wide ? SKY_WIDE : SKY_NARROW;
-  const skyW = wide ? 1000 : 400;
-  const clouds = [[12,'.5',86,'-6s'],[34,'.36',108,'-37s'],[22,'.3',64,'-66s'],[50,'.24',92,'-91s']];
-  const drops = Array.from({length: 22}, (_, i) =>
-    `<i class="drop" style="left:${(i*4.7+2)%100}%;animation-duration:${(.7+(i%5)*.16).toFixed(2)}s;
-      animation-delay:-${(i*0.19).toFixed(2)}s;opacity:${(.1+(i%4)*.05).toFixed(2)}"></i>`).join('');
+  const seg = (cls, pick) => `<div class="band ${cls}">` + PLACES.map(p =>
+    `<div class="place"><svg viewBox="0 0 400 148" preserveAspectRatio="none">`
+    + (cls === "near"
+        ? nearShape(p.near, p) + `</svg>` + (p.water ? '<div class="water"></div>' : '<div class="ground"></div>')
+        : `<path class="${cls}-p" d="${pick(p)}"/></svg>`)
+    + `</div>`).join("") + `</div>`;
 
-  return `<div class="scene" id="scene">
-    <div class="sunpath layer" data-depth="0.05">
-      <div class="sun" title="Солнце. Да, в Петербурге. Ходит редко, но ходит."></div>
+  const idx = Math.max(0, PLACES.findIndex(p => p.tab === tab));
+  return `<div class="scene" id="scene" style="--i:${idx}">
+    <div class="sky-base"></div><div class="bloom"></div><div class="orb"></div>
+    <div class="world">
+      ${seg("far",  p => p.far === "pines" ? pinesPath(26, 30) : p.far)}
+      ${seg("mid",  p => p.mid === "pines" ? pinesPath(20, 44) : p.mid)}
+      ${seg("near", () => "")}
     </div>
-    <div class="layer" data-depth="0.12" style="top:0;height:96px">
-      ${clouds.map(([top,op,w,delay])=>`<i class="cloud" style="top:${top}px;width:${w}px;opacity:${op};
-        animation:drift ${64+w}s linear infinite ${delay}"></i>`).join('')}
-    </div>
-    <div class="rain layer" data-depth="0.08">${drops}</div>
-
-    <svg class="gull" viewBox="0 0 40 16" width="26" height="11" aria-hidden="true">
-      <path d="M2 10q7-9 13 0 6-9 13 0" fill="none" stroke="#e9eef5" stroke-width="2" stroke-linecap="round"/>
+    <div class="placename">${esc(PLACES[idx].name)}</div>
+    <svg class="grain" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <filter id="grf"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/></filter>
+      <rect width="100%" height="100%" filter="url(#grf)" opacity="0.55"/>
     </svg>
-
-    <!-- город: пропорции держатся, силуэт не растягивается -->
-    <svg class="ridge layer" data-depth="0.2" viewBox="0 0 ${skyW} 100"
-         preserveAspectRatio="none" aria-hidden="true">
-      <path d="${sky}" fill="var(--sil)"/>
-    </svg>
-
-    <!-- Нева: разведённый Дворцовый мост по центру, под ним идёт кораблик -->
-    <div class="neva layer" data-depth="0.3">
-      <svg class="bridge" viewBox="0 0 200 44" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
-        <path d="M0 42h34l30-34" fill="none" stroke="var(--sil)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-        <path d="M200 42h-34l-30-34" fill="none" stroke="var(--sil)" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
-        <path d="M30 42V30M170 42V30" stroke="var(--sil)" stroke-width="3"/>
-      </svg>
-      <svg class="boat" viewBox="0 0 40 20" width="30" height="15" aria-hidden="true">
-        <path d="M2 15h34l-4 5H6z M18 14V3h12l-8 5h-4" fill="var(--sil)"/>
-      </svg>
-    </div>
-
-    <!-- Ленобласть подступает к городу -->
-    <svg class="pines layer" data-depth="0.42" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
-      ${Array.from({length: 26}, (_, i) => {
-        const x = i * 16 + (i % 3) * 4, hgt = 30 + (i * 7 % 22);
-        return `<path d="M${x} 60V${60-hgt/4} M${x-7} ${60-hgt/4}l7-${hgt*0.78}l7 ${hgt*0.78}z" fill="var(--pine)" stroke="var(--pine)" stroke-width="2"/>`;
-      }).join('')}
-    </svg>
-
-    <div class="road"></div>
-    <div class="strip" id="strip">
-      ${list.map(b => {
-        const gone = !isOwned(b.id);
-        const dueN = gone ? 0 : RULES.filter(r => r.bikes.includes(b.id) && dueStatus(b.id, r).state === 'due').length;
-        return `<button class="glyph${gone?' gone':''}" data-bike="${b.id}" aria-label="${esc(b.name)}">
-          ${dueN?'<i class="alert"></i>':''}
-          ${bikeGlyph(b, b.type==='детский' ? 78 : 100)}
-          <span class="tagname">${esc(SHORT[b.id])}${gone?' · продан':''}</span>
-        </button>`;
-      }).join('')}
-    </div>
-
-    <span class="mosq" title="Комар. Ленобласть, июнь.">🦟</span>
-
-    <!-- Чижик-Пыжик на парапете. Маленький, как и настоящий. -->
-    <button class="chizhik" data-chizhik="1" aria-label="Чижик-Пыжик">
-      <svg viewBox="0 0 22 20" width="18" height="16" aria-hidden="true">
-        <ellipse cx="11" cy="11" rx="6.5" ry="5" fill="#e8c15a"/>
-        <circle cx="16" cy="7.5" r="3.4" fill="#e8c15a"/>
-        <path d="M19 7.2l3.4 1-3.4 1z" fill="#d08a2a"/>
-        <circle cx="17" cy="6.8" r=".9" fill="#2a2118"/>
-        <path d="M7 10.5q4 3 8 .6" stroke="#c9a33f" stroke-width="1.2" fill="none"/>
-        <path d="M9 16v3M13 16v3" stroke="#d08a2a" stroke-width="1.3" stroke-linecap="round"/>
-      </svg>
-    </button>
   </div>`;
 }
+
+/* Время суток. Живой сайт идёт по часам; ручной выбор его перекрывает. */
+function partNow(){ const h = new Date().getHours();
+  return h < 5 ? "night" : h < 8 ? "dawn" : h < 17 ? "day" : h < 21 ? "dusk" : "night"; }
+let PART = localStorage.getItem("bikes:part") || "auto";
+function applyPart(){ document.documentElement.dataset.part = PART === "auto" ? partNow() : PART; }
+function setPart(p){ PART = p; localStorage.setItem("bikes:part", p); applyPart(); render(); }
 
 /* what is still unbought: priced checklist lines nobody has ticked off */
 function shoppingList() {
@@ -1384,7 +1238,7 @@ function viewGarage() {
   const spendOwned = owned.reduce((s,b)=>s+purchaseTotal(b.id), 0);
   const dueN = attention().filter(a => a.st.state === 'due').length;
 
-  let h = heroScene();
+  let h = '';
 
   /* the dashboard: three numbers that answer "what have I got, what does it
      owe me, what do I still need to buy" — each one opens where it came from */
@@ -1455,22 +1309,30 @@ function bikeCard(b) {
   const photo = DOC().photos[b.id];
   const dueN = own.state === 'owned'
     ? RULES.filter(r => r.bikes.includes(b.id) && dueStatus(b.id, r).state === 'due').length : 0;
-  return `<button class="bikecard${own.state==='sold'?' sold':''}" data-bike="${b.id}">
-    <span class="bar" style="background:${HUE(b.id)};view-transition-name:bar-${b.id}"></span>
-    <span class="bikebody">
-      <span class="ph" style="view-transition-name:ph-${b.id}">${photo?`<img src="${esc(photo)}" alt="" width="54" height="54" loading="lazy">`:(EMOJI[b.type]||'🚲')}</span>
-      <span style="flex:1;min-width:0">
-        <span class="bname">${esc(b.name)}</span>
-        <span class="bmeta">${esc(b.type)} · ${esc(b.owner)}</span>
-        <span class="bstat">
-          ${own.state==='sold'
-            ? `<span class="chip">продан${(SHOWMONEY&&own.soldPrice)?' · '+rub(own.soldPrice):''}</span>`
-            : `${odo?`<span>${km(odo)}</span>`:''}${SHOWMONEY?`<span>${spend?rub(spend):'состав не заведён'}</span>`:''}
-               ${b.status==='в сборке'?'<span class="chip warn">в сборке</span>':''}
-               ${dueN?`<span class="chip danger">${dueN} к замене</span>`:''}`}
-        </span>
+  const gone = own.state === 'sold';
+  /* Кадр под настоящее фото. Пока его нет — намеренное состояние: глубокое
+     поле в цвете велосипеда и его имя призраком, а не пустая заглушка. */
+  const shot = photo
+    ? `<img src="${esc(photo)}" alt="" loading="lazy">`
+    : `<span class="field" style="background:radial-gradient(90% 70% at 28% 18%,
+         color-mix(in srgb,${HUE(b.id)} 42%,transparent),transparent 66%),
+         linear-gradient(150deg,color-mix(in srgb,${HUE(b.id)} 16%,#141013),#141013 62%,var(--surface))"></span>
+       <span class="ghost">${esc(b.name.toUpperCase())}</span>
+       ${EDITOR ? '<span class="add">Добавить фото</span>' : ''}`;
+  return `<button class="bikecard${gone?' sold':''}" data-bike="${b.id}">
+    <span class="shot" style="view-transition-name:shot-${b.id}">${shot}
+      <span class="vig"></span><span class="fade"></span></span>
+    <span class="binfo">
+      <span class="bnm" style="view-transition-name:bname-${b.id}">${esc(b.name)}</span>
+      <span class="bmt">${esc(b.type)} · ${esc(b.owner)}</span>
+      <span class="bfoot">
+        ${gone ? `<span class="chip">продан${(SHOWMONEY&&own.soldPrice)?' · '+rub(own.soldPrice):''}</span>`
+               : `${odo?`<span class="n">${km(odo)}</span>`:''}
+                  ${SHOWMONEY&&spend?`<span class="n">${rub(spend)}</span>`:''}
+                  <span class="sp"></span>
+                  ${b.status==='в сборке'?'<span class="chip warn">в сборке</span>':''}
+                  ${dueN?`<span class="chip danger">${dueN} к замене</span>`:''}`}
       </span>
-      <span class="arw" style="color:var(--ink3);font-size:19px">›</span>
     </span>
   </button>`;
 }
@@ -2269,11 +2131,14 @@ function openSyncSheet() {
         <button class="btn ghost" id="s-cancel">Отмена</button>
         <button class="btn pri" id="s-login">Войти</button>
       </div>`}
-    <div class="lbl" style="margin-top:26px">Тема</div>
-    <div class="seg" id="s-theme">
-      <button data-theme="auto"  class="${THEME==='auto'?'on':''}">Как в системе</button>
-      <button data-theme="light" class="${THEME==='light'?'on':''}">Светлая</button>
-      <button data-theme="dark"  class="${THEME==='dark'?'on':''}">Тёмная</button>
+    <div class="lbl" style="margin-top:26px">Время суток</div>
+    <p class="tiny">Оформление меняется само по часам: рассвет, день, закат, ночь. Можно закрепить одно.</p>
+    <div class="seg" id="s-part">
+      <button data-part="auto"  class="${PART==='auto'?'on':''}">По часам</button>
+      <button data-part="dawn"  class="${PART==='dawn'?'on':''}">Рассвет</button>
+      <button data-part="day"   class="${PART==='day'?'on':''}">День</button>
+      <button data-part="dusk"  class="${PART==='dusk'?'on':''}">Закат</button>
+      <button data-part="night" class="${PART==='night'?'on':''}">Ночь</button>
     </div>
 
     <div class="lbl" style="margin-top:26px">Резервная копия файлом</div>
@@ -2383,6 +2248,7 @@ function render(fromHistory) {
     : tab === 'money' ? YEAR + ' год'
     : tab === 'frames' ? (framesMode === 'short' ? 'гравел под рост 180 · шорт-лист' : FRAMES.length + ' рам в базе')
     : 'Faraoll G50 и Speedone Floater';
+  $('scene-slot').innerHTML = heroScene();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
   $('v-' + tab).classList.add('on');
   ({garage:viewGarage, service:viewService, money:viewMoney, frames:viewFrames, build:viewBuild})[tab]();
@@ -2394,11 +2260,11 @@ function render(fromHistory) {
 let lastScreen = '';
 
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money],[data-part],[data-chizhik],[data-theme]');
+  const t = e.target.closest('[data-tab],[data-bike],[data-back],[data-addevent],[data-delevent],[data-mbike],[data-fmode],[data-smode],[data-bkey],[data-check],[data-att],[data-own],[data-sheet],[data-money],[data-part],[data-chizhik]');
   if (!t) { if (e.target === $('sheet')) closeSheet(); return; }
 
   if (t.dataset.chizhik) { openChizhik(); return; }
-  if (t.dataset.theme)   { setTheme(t.dataset.theme); openSyncSheet(); return; }
+  if (t.dataset.part)    { setPart(t.dataset.part); openSyncSheet(); return; }
   if (t.dataset.part) {
     if (!EDITOR) return openSyncSheet();
     const [bid, pid] = t.dataset.part.split('|');
@@ -2561,7 +2427,7 @@ function afterRender(swapped) {
 
 /* ============================================================ boot */
 routeFrom();                        // раздел из адреса до первой отрисовки
-applyTheme();
+applyPart();
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.documentElement.classList.add('booting');
   setTimeout(() => document.documentElement.classList.remove('booting'), 1400);

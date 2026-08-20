@@ -41,7 +41,7 @@ csp = (
     f"script-src 'sha256-{digest}'; "
     "style-src 'unsafe-inline'; "          # разметка построена на style=""
     "img-src 'self' data:; "
-    "font-src 'self'; "
+    "font-src 'self' data:; "   # гарнитура вшита как data:
     "connect-src https://bikes-sync.severyanov.workers.dev; "
     "base-uri 'none'; form-action 'none'"
 )
