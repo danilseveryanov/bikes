@@ -125,7 +125,12 @@ NGINX
   echo "  nginx: конфиг создан"
 fi
 
-ln -sf /etc/nginx/sites-available/bikes /etc/nginx/sites-enabled/bikes
+# Ссылка называется zz-bikes нарочно: sites-enabled подключается по маске и
+# сортируется по алфавиту, а первый блок становится сервером по умолчанию для
+# запросов с незнакомым Host. «bikes» встал бы раньше «dit-budget» и молча
+# перехватил бы эту роль у бюджета.
+rm -f /etc/nginx/sites-enabled/bikes
+ln -sf /etc/nginx/sites-available/bikes /etc/nginx/sites-enabled/zz-bikes
 nginx -t >/dev/null 2>&1 && systemctl reload nginx && echo "  nginx перезагружен"
 
 # Чистка старых копий состояния — сервер кладёт по одной в день.
