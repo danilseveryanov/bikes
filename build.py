@@ -42,7 +42,7 @@ csp = (
     "style-src 'unsafe-inline'; "          # разметка построена на style=""
     "img-src 'self' data:; "
     "font-src 'self' data:; "   # гарнитура вшита как data:
-    "connect-src https://bikes-sync.severyanov.workers.dev; "
+    "connect-src 'self'; "          # данные отдаёт тот же сервер, что и страницу
     "base-uri 'none'; form-action 'none'"
 )
 out = out.replace("__CSP__", f'<meta http-equiv="Content-Security-Policy" content="{csp}">')

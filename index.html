@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0c">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-82xwZtDCDjluLJHv+9IqE2cWGa7EwizZzWZXp8911oc='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src https://bikes-sync.severyanov.workers.dev; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-agnDP5i2qERVbxup7Lk2eYogU1TeDArBO5vBhTYYa78='; style-src 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="description" content="Парк велосипедов: состав, регламент ТО, затраты, обзор гравийных рам 2027 и чек-листы сборки">
 <title>Гараж — велосипеды, ТО и затраты</title>
 <style>
@@ -686,7 +686,10 @@ const shavas = n => (SHOWMONEY && n >= SHAVA * 20) ? ` — это ${Math.round(n
 const LS = 'bikes:v1';
 /* Адрес хранилища зашит: гость открывает ссылку и сразу видит данные,
    ничего не настраивая. Токен появляется только после входа по паролю. */
-const API = 'https://bikes-sync.severyanov.workers.dev';
+// Свой сервер отдаёт и страницу, и данные — один источник, никакого CORS.
+// Cloudflare пришлось оставить: зона workers.dev в России заблокирована,
+// и синхронизация работала только через VPN.
+const API = '/api';
 const TOK_KEY = 'bikes:token';
 const blankDoc = () => ({ v:1, mtime:0, odo:{}, annualKm:{}, ownership:{}, parts:{},
                           events:[], checks:{}, photos:{}, migratedAt:null });
@@ -1357,7 +1360,7 @@ function viewBikeDetail(id) {
         <div style="flex:1;min-width:0">
           <div style="font-size:19px;font-weight:800;letter-spacing:-.025em;line-height:1.2">${esc(b.name)}</div>
           <div class="muted" style="margin-top:3px">${esc(b.type)} · ${esc(b.wheel)} · ${esc(b.owner)}</div>
-          <div class="tiny" style="margin-top:4px">Нажмите на иконку, чтобы добавить фото</div>
+          <div class="tiny" style="margin-top:4px">${EDITOR ? (photo ? 'Нажмите на фото, чтобы заменить' : 'Нажмите на иконку, чтобы добавить фото') : ''}</div>
         </div>
       </div>
     </div>
@@ -2338,18 +2341,27 @@ document.addEventListener('change', e => {
   if (el.dataset.soldprice) { (DOC().ownership[el.dataset.soldprice] ||= {}).soldPrice = num(el.value); persist(); render(); sync(true); return; }
   if (el.dataset.photo)     {
     const f = el.files[0]; if (!f) return;
-    // downscale so a photo costs ~40 KB in the synced document, not 4 MB
-    const img = new Image();
-    img.onload = () => {
-      const s = Math.min(1, 640 / Math.max(img.width, img.height));
-      const c = document.createElement('canvas');
-      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      DOC().photos[el.dataset.photo] = c.toDataURL('image/jpeg', .72);
-      URL.revokeObjectURL(img.src);
-      persist(); render(); sync(true);
+    const id = el.dataset.photo;
+    // Читаем файл как data:, а не через createObjectURL. Политика безопасности
+    // разрешает картинки только из 'self' и data: — blob: она молча блокирует,
+    // и onload не срабатывал вовсе. Это и был баг «фото не добавляются».
+    const fr = new FileReader();
+    fr.onerror = () => toast('Файл не читается');
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = () => toast('Такой формат не открывается — сохраните как JPEG');
+      img.onload = () => {
+        // ужимаем: фото должно стоить ~40 КБ в синхронизируемом документе, а не 4 МБ
+        const k = Math.min(1, 640 / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        DOC().photos[id] = c.toDataURL('image/jpeg', .72);
+        persist(); render(); sync(true); toast('Фото добавлено');
+      };
+      img.src = fr.result;
     };
-    img.src = URL.createObjectURL(f);
+    fr.readAsDataURL(f);
   }
 });
 
