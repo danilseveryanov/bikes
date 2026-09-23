@@ -59,6 +59,10 @@ fi
 echo "==> заливаю приложение"
 rsync -az -e "$RSYNC_E" "$HERE/index.html" "$HERE/server/server.js" "$TARGET:/opt/bikes/"
 rsync -az -e "$RSYNC_E" "$HERE/assets/" "$TARGET:/opt/bikes/assets/"
+# Права ставим на сервере, а не переносим с Мака: там файлы бывают 600, и
+# сервис, работающий не от root, не может их прочитать — 23.09 сайт так уже
+# падал. rsync --chmod не годится: системный rsync в macOS его не знает.
+"${SSH[@]}" 'find /opt/bikes -type d -exec chmod 755 {} + && find /opt/bikes -type f -exec chmod 644 {} +'
 
 echo "==> сервис и nginx"
 "${SSH[@]}" DOMAIN="$DOMAIN" bash -s <<'REMOTE'
