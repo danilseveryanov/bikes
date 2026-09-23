@@ -10,7 +10,6 @@
  */
 import { pbkdf2Sync, randomBytes } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { createInterface } from "node:readline";
 import { homedir } from "node:os";
 
 /* На своём сервере потолка процессорного времени нет — в отличие от Worker'а,
@@ -20,23 +19,40 @@ const TARGET = process.argv[2] || process.env.BIKES_TARGET || "root@109.68.212.3
 const KEY = process.env.SSH_KEY || `${homedir()}/.ssh/dit_vps_rsa`;
 const b64url = b => b.toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 
+/* Пароль читается в «сыром» режиме терминала: символы вообще не выводятся.
+   Прежний способ — дать readline напечатать символ и тут же стереть строку —
+   в терминальной панели Claude не стирал, и пароль оставался на экране. */
 function ask(question) {
-  return new Promise(resolve => {
-    const rl = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    // гасим эхо, чтобы пароль не остался в терминале и в истории
-    const onData = () => rl.output.write("\x1B[2K\x1B[200D" + question);
-    rl.output.write(question);
-    rl.input.on("data", onData);
-    rl.question("", a => { rl.input.off("data", onData); rl.output.write("\n"); rl.close(); resolve(a); });
+  return new Promise((resolve, reject) => {
+    const { stdin, stdout } = process;
+    if (!stdin.isTTY) return reject(new Error("Запустите в терминале: пароль читается с клавиатуры."));
+    stdout.write(question);
+    stdin.setRawMode(true); stdin.setEncoding("utf8"); stdin.resume();
+    let buf = "";
+    const done = err => {
+      stdin.off("data", onData); stdin.setRawMode(false); stdin.pause(); stdout.write("\n");
+      err ? reject(err) : resolve(buf);
+    };
+    const onData = chunk => {
+      if (chunk.startsWith("\x1b")) return;              // стрелки и прочие клавиши
+      for (const ch of chunk) {
+        if (ch === "\r" || ch === "\n") return done();
+        if (ch === "\u0003") return done(new Error("Отменено."));
+        if (ch === "\u007f" || ch === "\b") { buf = [...buf].slice(0, -1).join(""); continue; }
+        if (ch >= " ") buf += ch;
+      }
+    };
+    stdin.on("data", onData);
   });
 }
 
-const pw = (await ask("Придумайте пароль: ")).trim();
-if (pw.length < 10) {
-  console.error("\nСлишком короткий — нужно хотя бы 10 символов. Этот пароль защищает запись в ваш журнал.");
-  process.exit(1);
-}
-if ((await ask("Повторите пароль: ")).trim() !== pw) { console.error("\nПароли не совпали."); process.exit(1); }
+let pw, again;
+try {
+  pw = (await ask("Придумайте пароль (на экране не появится): ")).trim();
+  if (!pw) { console.error("Пустой пароль пустил бы править любого. Введите хоть что-нибудь."); process.exit(1); }
+  again = (await ask("Повторите пароль: ")).trim();
+} catch (e) { console.error(e.message); process.exit(1); }
+if (again !== pw) { console.error("Пароли не совпали."); process.exit(1); }
 
 const salt = randomBytes(16);
 const secret = `pbkdf2$${ITER}$${b64url(salt)}$${b64url(pbkdf2Sync(pw, salt, ITER, 32, "sha256"))}`;
