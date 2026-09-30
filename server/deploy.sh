@@ -104,15 +104,30 @@ systemctl restart bikes
 sleep 2
 systemctl is-active --quiet bikes && echo "  сервис запущен" || { journalctl -u bikes -n 30 --no-pager; exit 1; }
 
-# Конфиг не перезаписываем, если certbot уже дописал в него блок HTTPS.
-if grep -q "listen 443" /etc/nginx/sites-available/bikes 2>/dev/null; then
-  echo "  nginx: конфиг с HTTPS уже есть, не трогаю"
-else
+# Главный адрес сайта — https://${DOMAIN}:8443, а 443 и 80 только отправляют
+# туда. Причина: домашний провайдер владельца (SkyNet, Петербург) с 26.09
+# периодически глушит порт 443 этого сервера — TCP-рукопожатие проходит, а
+# первый пакет с данными пропадает по дороге, при любом имени сайта. Порт 80
+# и 8443 в это время проходят. Один главный адрес, а не два равноправных:
+# браузер считает :443 и :8443 разными сайтами, и вход с настройками пришлось
+# бы делать дважды.
+#
+# Редирект 302, а не 301: 301 браузер запоминает навсегда, и если провайдер
+# перестанет глушить 443, вернуть стандартный адрес было бы нельзя.
+# Внутри location, а не на уровне server: certbot при продлении вставляет
+# точное location для проверки домена, и оно должно выигрывать.
+CERT=/etc/letsencrypt/live/${DOMAIN}
+if [ -f "$CERT/fullchain.pem" ]; then
+  [ -f "$CERT/shortchain.pem" ] || /usr/local/bin/dit-trim-chain
 cat > /etc/nginx/sites-available/bikes <<NGINX
 server {
-    listen 80;
-    listen [::]:80;
+    listen 8443 ssl;
+    listen [::]:8443 ssl;
     server_name ${DOMAIN};
+    ssl_certificate ${CERT}/shortchain.pem;
+    ssl_certificate_key ${CERT}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
     # документ вместе с фотографиями
     client_max_body_size 12m;
@@ -125,19 +140,44 @@ server {
         proxy_read_timeout 30s;
     }
 }
-NGINX
-  echo "  nginx: конфиг создан"
-fi
 
-# Запасной вход на 8443. Домашний провайдер (SkyNet, Петербург) с 26.09
-# периодически глушит порт 443 именно этого сервера: TCP-рукопожатие проходит,
-# а первый же пакет с данными пропадает по дороге — у любого имени сайта,
-# даже у обычного HTTP на 443. Порт 80 и 8443 в это же время проходят, из
-# дата-центров Москвы и Петербурга 443 открывается. У бюджета такой вход уже
-# есть. Добавляем строки в блок, который выписал certbot, — сертификат тот же.
-if grep -q "listen 443 ssl" /etc/nginx/sites-available/bikes && ! grep -q "listen 8443" /etc/nginx/sites-available/bikes; then
-  sed -i "0,/listen 443 ssl;.*/s//&\n    listen 8443 ssl;\n    listen [::]:8443 ssl;/" /etc/nginx/sites-available/bikes
-  echo "  nginx: добавлен запасной порт 8443"
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name ${DOMAIN};
+    ssl_certificate ${CERT}/shortchain.pem;
+    ssl_certificate_key ${CERT}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    location / { return 302 https://${DOMAIN}:8443\$request_uri; }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ${DOMAIN};
+    location / { return 302 https://${DOMAIN}:8443\$request_uri; }
+}
+NGINX
+  echo "  nginx: главный адрес — :8443, порты 443 и 80 отправляют туда"
+else
+# Сертификата ещё нет: временный конфиг на 80, чтобы certbot смог выпустить.
+cat > /etc/nginx/sites-available/bikes <<NGINX
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ${DOMAIN};
+    client_max_body_size 12m;
+    location / {
+        proxy_pass http://127.0.0.1:8788;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_http_version 1.1;
+        proxy_read_timeout 30s;
+    }
+}
+NGINX
+  echo "  nginx: сертификата нет — временный конфиг на 80; выпустите сертификат и запустите раскатку ещё раз"
 fi
 ufw allow 8443/tcp >/dev/null 2>&1 || true
 
@@ -163,5 +203,5 @@ echo "==> проверка"
 
 echo
 echo "==> готово. Дальше, когда домен уже смотрит на сервер:"
-echo "    ssh -i $KEY $TARGET \"certbot --nginx -d $DOMAIN --agree-tos -m danilseveryanov@gmail.com --redirect -n\""
+echo "    ssh -i $KEY $TARGET \"certbot certonly --nginx -d $DOMAIN --agree-tos -m danilseveryanov@gmail.com -n\""
 echo "    node server/set-password.mjs $TARGET"
